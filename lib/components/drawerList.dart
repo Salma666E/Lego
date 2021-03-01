@@ -1,3 +1,4 @@
+import 'package:LegoApp/features/themes/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 // import 'package:flutter/services.dart';
@@ -44,7 +45,12 @@ class DrawerList extends StatelessWidget {
             Icons.arrow_forward,
             color: Colors.blue,
           ),
-          onTap: () => {},
+          onTap: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Themes()),
+            ),
+          },
         ),
         ListTile(
           leading: Text(translator.translate('ShopBy')),
@@ -93,23 +99,23 @@ class DrawerList extends StatelessWidget {
             ),
             title: Text(translator.translate('About')),
             onTap: () => {
-              showDialog(
-  context: context,
-  builder: (_) => Material(
-    type: MaterialType.transparency,
-    child: MyCardCustom(),
-    // Center(
-    //   // Aligns the container to center
-    //   child: Container(
-    //     // A simplified version of dialog.
-    //     width: 100.0,
-    //     height: 56.0,
-    //     color: Colors.green,
-    //     child: Text('jojo'),
-    //   ),
-    // ),
-  ),
-  )
+                  showDialog(
+                    context: context,
+                    builder: (_) => Material(
+                      type: MaterialType.transparency,
+                      child: MyCardCustom(),
+                      // Center(
+                      //   // Aligns the container to center
+                      //   child: Container(
+                      //     // A simplified version of dialog.
+                      //     width: 100.0,
+                      //     height: 56.0,
+                      //     color: Colors.green,
+                      //     child: Text('jojo'),
+                      //   ),
+                      // ),
+                    ),
+                  )
                   // Navigator.push(context,
                   //     MaterialPageRoute(builder: (context) => MyCardCustom())),
                 }),
