@@ -2,41 +2,55 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
-
 Widget buildListItem(BuildContext context, DocumentSnapshot document) {
-    return Card(
-      child: Center(
-        child: new Column(children: [
-          ListTile(
-            title: Image(
-                image: AssetImage(document['image']),
-                height: 150,
-                width: 300,
-                fit: BoxFit.fill),
-            trailing: IconButton(
-              icon: new Icon(
-                Icons.favorite_border_outlined,
-                color: Colors.blue,
+  return Card(
+    child: Center(
+      child: new Column(children: [
+        Stack(children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 3.0, left: 3.0, top: 15.0),
+            child: Image.network(document['image'],
+                height: 150, width: 350, fit: BoxFit.fill),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10.0, top: 10.0),
+              child: IconButton(
+                icon: new Icon(
+                  Icons.favorite_border_outlined,
+                  color: Colors.blue,
+                ),
+                onPressed: () {/* Your code */},
               ),
-              onPressed: () {/* Your code */},
             ),
           ),
-          ListTile(
-            title: Text(
-              document['name'],
-              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              document['price'].toString(),
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+        ]),
+        ListTile(
+          title: Text(
+            translator.currentLanguage == 'en'
+                ? document['name'].toString()
+                : document['arabicName'].toString(),
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
           ),
-          ListTile(
-            title: Text(document['description']),
-            subtitle: Text(translator.translate('AvailableItems') + document['stock'].toString()),
+          subtitle: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                child: Text(
+                  translator.translate('Price') + document['price'].toString(),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Text(translator.translate('AvailableItems') +
+                  document['stock'].toString()),
+            ],
           ),
-          const SizedBox(height: 30),
-          RaisedButton(
+        ),
+        // const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: RaisedButton(
             onPressed: () {},
             textColor: Colors.black,
             padding: const EdgeInsets.all(0.0),
@@ -70,8 +84,9 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document) {
                     )),
               ),
             ),
-          )
-        ]),
-      ),
-    );
-  }
+          ),
+        )
+      ]),
+    ),
+  );
+}

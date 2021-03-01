@@ -48,7 +48,9 @@ class _SplashState extends State<Splash> {
       debugShowCheckedModeBanner: false,
       themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
       darkTheme: ThemeData(brightness: Brightness.dark),
-      theme: ThemeData(brightness: Brightness.light),
+      theme: ThemeData(brightness: Brightness.light,
+      fontFamily: 'Poppins',
+      ),
       //Language
       localizationsDelegates: translator.delegates,
       locale: translator.locale,

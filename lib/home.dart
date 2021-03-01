@@ -78,16 +78,6 @@ class _HomeState extends State<Home> {
               ),
             ),
           )),
-          // Center(
-          //     child: IconButton(
-          //   icon: Icon(
-          //     Icons.person,
-          //     color: Colors.black,
-          //   ),
-          //   onPressed: () {
-          //     // do something
-          //   },
-          // )),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Stack(
@@ -154,7 +144,7 @@ class _HomeState extends State<Home> {
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
             child: Container(
               height: 50,
-              child: header(),
+              child: header(widget.isDarkTheme),
             ),
           ),
           Padding(
@@ -212,7 +202,7 @@ class _HomeState extends State<Home> {
                   return Center(child: Text(translator.translate('Lodding')));
                 return ListView.builder(
                   padding: const EdgeInsets.all(8),
-                  itemExtent: 430.0,
+                  itemExtent: 370.0,
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
@@ -346,18 +336,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-// StreamBuilder<QuerySnapshot>(
-//           stream: Firestore.instance.collection('products').snapshots(),
-//           builder: (context, snapshot) {
-//             if (!snapshot.hasData) return Center(child: Text('Lodding...'));
-//             return ListView.builder(
-//               padding: const EdgeInsets.all(8),
-//               physics: NeverScrollableScrollPhysics(),
-//               itemExtent: 430.0,
-//               itemCount: snapshot.data.documents.length,
-//               itemBuilder: (context, int index) =>
-//                   buildListItem(context, snapshot.data.documents[index]),
-//             );
-//           }),
-//     );

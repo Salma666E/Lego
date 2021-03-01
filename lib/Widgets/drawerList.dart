@@ -93,8 +93,25 @@ class DrawerList extends StatelessWidget {
             ),
             title: Text(translator.translate('About')),
             onTap: () => {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyCardCustom())),
+              showDialog(
+  context: context,
+  builder: (_) => Material(
+    type: MaterialType.transparency,
+    child: MyCardCustom(),
+    // Center(
+    //   // Aligns the container to center
+    //   child: Container(
+    //     // A simplified version of dialog.
+    //     width: 100.0,
+    //     height: 56.0,
+    //     color: Colors.green,
+    //     child: Text('jojo'),
+    //   ),
+    // ),
+  ),
+  )
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => MyCardCustom())),
                 }),
         ListTile(
           leading: Icon(

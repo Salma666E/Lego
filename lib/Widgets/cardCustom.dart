@@ -5,14 +5,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 class MyCardCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.grey,
-        fontFamily: 'Poppins',
-      ),
-      home: Card(),
-    );
+    return Card();
   }
 }
 
@@ -24,32 +17,38 @@ class Card extends StatefulWidget {
 class _CardState extends State<Card> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder(
-        initialData: false,
-        stream: slimyCard.stream, //Stream of SlimyCard
-        builder: ((BuildContext context, AsyncSnapshot snapshot) {
-          return ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              SizedBox(height: 100),
-              SlimyCard(
-                topCardWidget: topCardWidget((snapshot.data)
-                    ? 'assets/images/bfcm-gift-card-Quicklink.png'
-                    : 'assets/images/lego.png'),
-                bottomCardWidget: bottomCardWidget(),
-              ),
-            ],
-          );
-        }),
-      ),
+    return StreamBuilder(
+      initialData: false,
+      stream: slimyCard.stream, //Stream of SlimyCard
+      builder: ((BuildContext context, AsyncSnapshot snapshot) {
+        return ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            SizedBox(height: 100),
+            SlimyCard(
+              topCardWidget: topCardWidget((snapshot.data)
+                  ? 'assets/images/bfcm-gift-card-Quicklink.png'
+                  : 'assets/images/lego.png'),
+              bottomCardWidget: bottomCardWidget(),
+            ),
+          ],
+        );
+      }),
     );
   }
+
   // This widget will be passed as Top Card's Widget.
   Widget topCardWidget(String imagePath) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        ListTile(
+          trailing: Icon(
+            Icons.close,
+            color: Colors.white,
+          ),
+          onTap: () => Navigator.of(context).pop(),
+        ),
         Container(
           height: 70,
           width: 70,
@@ -69,9 +68,11 @@ class _CardState extends State<Card> {
         SizedBox(height: 15),
         Center(
           child: Padding(
-          padding: const EdgeInsets.all(10.0),
-            child: Text(translator.translate('About1'),
-              style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.center,
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              translator.translate('About1'),
+              style: TextStyle(color: Colors.white, fontSize: 20),
+              textAlign: TextAlign.center,
             ),
           ),
         ),
@@ -82,7 +83,8 @@ class _CardState extends State<Card> {
 
   // This widget will be passed as Bottom Card's Widget.
   Widget bottomCardWidget() {
-    return Text(translator.translate('About2'),
+    return Text(
+      translator.translate('About2'),
       style: TextStyle(
         color: Colors.white,
         fontSize: 12,
