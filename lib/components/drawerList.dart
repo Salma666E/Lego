@@ -1,3 +1,4 @@
+import 'package:LegoApp/components/CheckOut.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 // import 'package:flutter/services.dart';
@@ -93,23 +94,23 @@ class DrawerList extends StatelessWidget {
             ),
             title: Text(translator.translate('About')),
             onTap: () => {
-              showDialog(
-  context: context,
-  builder: (_) => Material(
-    type: MaterialType.transparency,
-    child: MyCardCustom(),
-    // Center(
-    //   // Aligns the container to center
-    //   child: Container(
-    //     // A simplified version of dialog.
-    //     width: 100.0,
-    //     height: 56.0,
-    //     color: Colors.green,
-    //     child: Text('jojo'),
-    //   ),
-    // ),
-  ),
-  )
+                  showDialog(
+                    context: context,
+                    builder: (_) => Material(
+                      type: MaterialType.transparency,
+                      child: MyCardCustom(),
+                      // Center(
+                      //   // Aligns the container to center
+                      //   child: Container(
+                      //     // A simplified version of dialog.
+                      //     width: 100.0,
+                      //     height: 56.0,
+                      //     color: Colors.green,
+                      //     child: Text('jojo'),
+                      //   ),
+                      // ),
+                    ),
+                  )
                   // Navigator.push(context,
                   //     MaterialPageRoute(builder: (context) => MyCardCustom())),
                 }),
@@ -121,6 +122,20 @@ class DrawerList extends StatelessWidget {
           title: Text(translator.translate('Store')),
           onTap: () => {},
         ),
+        ListTile(
+          leading: Icon(
+            Icons.vpn_key_outlined,
+            color: Colors.blue,
+          ),
+          title: Text(translator.translate('CheckOut')),
+          // onTap: () => {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CheckOut()),
+            );
+          },
+        )
       ],
     ));
   }
