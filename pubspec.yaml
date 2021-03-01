@@ -31,6 +31,7 @@ dependencies:
   flutter_animated_button: ^1.1.0
   localize_and_translate: ^3.0.3
   rflutter_alert: ^1.0.3
+  flutter_rating_bar: ^3.2.0+1
   flutter_localizations:
     sdk: flutter
   intl: ^0.16.1

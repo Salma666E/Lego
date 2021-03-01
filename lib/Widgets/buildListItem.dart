@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 Widget buildListItem(BuildContext context, DocumentSnapshot document) {
@@ -47,6 +48,49 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document) {
             ],
           ),
         ),
+        // Start Rating
+        RatingBar.builder(
+          initialRating: double.parse(document['rating'].toString()),
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+          itemBuilder: (context, initialRating) {
+            switch (initialRating) {
+              case 0:
+                return Icon(
+                  Icons.sentiment_very_dissatisfied,
+                  color: Colors.red,
+                );
+              case 1:
+                return Icon(
+                  Icons.sentiment_dissatisfied,
+                  color: Colors.redAccent,
+                );
+              case 2:
+                return Icon(
+                  Icons.sentiment_neutral,
+                  color: Colors.amber,
+                );
+              case 3:
+                return Icon(
+                  Icons.sentiment_satisfied,
+                  color: Colors.lightGreen,
+                );
+              case 4:
+                return Icon(
+                  Icons.sentiment_very_satisfied,
+                  color: Colors.green,
+                );
+            }
+          },
+          onRatingUpdate: (rating) {
+            print(rating);
+          },
+          updateOnDrag: true,
+        ),
+        // End Ratimg
         // const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.only(top: 15.0),
@@ -85,7 +129,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document) {
               ),
             ),
           ),
-        )
+        ),
       ]),
     ),
   );

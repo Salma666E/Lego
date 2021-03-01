@@ -202,7 +202,7 @@ class _HomeState extends State<Home> {
                   return Center(child: Text(translator.translate('Lodding')));
                 return ListView.builder(
                   padding: const EdgeInsets.all(8),
-                  itemExtent: 370.0,
+                  itemExtent: 450.0,
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
