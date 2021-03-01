@@ -1,4 +1,5 @@
 import 'package:LegoApp/components/CheckOut.dart';
+import 'package:LegoApp/features/themes/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 // import 'package:flutter/services.dart';
@@ -45,7 +46,12 @@ class DrawerList extends StatelessWidget {
             Icons.arrow_forward,
             color: Colors.blue,
           ),
-          onTap: () => {},
+          onTap: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Themes()),
+            ),
+          },
         ),
         ListTile(
           leading: Text(translator.translate('ShopBy')),
