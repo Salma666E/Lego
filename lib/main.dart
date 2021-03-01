@@ -1,4 +1,4 @@
-import 'package:LegoApp/splash.dart';
+import 'package:LegoApp/features/home/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
