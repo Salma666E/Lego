@@ -1,3 +1,4 @@
+import 'package:LegoApp/helper/addNotification.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,12 +24,25 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isDarkTheme = false;
-  int favNotificationCount = 1;
+  int favNotificationCount = 0;
   int shoppingNotificationCount = 0;
+  String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
 
   @override
   void initState() {
     super.initState();
+    getBagsLength();
+    getWishlistsLength();
+  }
+
+  Future<void> getBagsLength() async {
+    shoppingNotificationCount = await getBagArrayLength(_userID);
+    setState(() {});
+  }
+
+  Future<void> getWishlistsLength() async {
+    favNotificationCount = await getWishListArrayLength(_userID);
+    setState(() {});
   }
 
   @override
@@ -206,8 +220,10 @@ class _HomeState extends State<Home> {
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, int index) =>
-                      buildListItem(context, snapshot.data.documents[index]),
+                  itemBuilder: (context, int index) => buildListItem(
+                      context,
+                      snapshot
+                          .data.documents[index] /*, favNotificationCount*/),
                 );
               }),
           Container(
@@ -316,9 +332,7 @@ class _HomeState extends State<Home> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
-                        child:
-                            // Text(translator.translate('appTitle')),
-                            Text(
+                        child: Text(
                           translator.translate('Endfooter'),
                           // textAlign: TextAlign.center,
                           style: TextStyle(
