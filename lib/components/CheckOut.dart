@@ -28,7 +28,7 @@ class _CheckOutState extends State<CheckOut> {
                     ),
                     TextField(
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.store_mall_directory),
+                        prefixIcon: Icon(Icons.store_mall_directory_outlined),
                         labelText: "City ",
                       ),
                     ),

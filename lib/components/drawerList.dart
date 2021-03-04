@@ -1,7 +1,10 @@
 import 'package:LegoApp/components/CheckOut.dart';
+import 'package:LegoApp/components/MyBag.dart';
+import 'package:LegoApp/components/WishList.dart';
 import 'package:LegoApp/features/themes/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:flutter/services.dart';
 import 'cardCustom.dart';
 import 'storeCustom.dart';
 
@@ -83,7 +86,13 @@ class DrawerList extends StatelessWidget {
             color: Colors.blue,
           ),
           title: Text(translator.translate('Wishlist')),
-          onTap: () => {},
+          // onTap: () => {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WishList()),
+            );
+          },
         ),
         ListTile(
           leading: Icon(
@@ -91,7 +100,13 @@ class DrawerList extends StatelessWidget {
             color: Colors.blue,
           ),
           title: Text(translator.translate('MyBag')),
-          onTap: () => {},
+          // onTap: () => {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyBag()),
+            );
+          },
         ),
         ListTile(
             leading: Icon(

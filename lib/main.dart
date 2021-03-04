@@ -26,3 +26,5 @@ main() async {
     ),
   );
 }
+
+// Widget DevicePreview({LocalizedApp Function(context) builder, bool enabled}) {}
