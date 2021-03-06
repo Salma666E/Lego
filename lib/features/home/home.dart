@@ -7,6 +7,18 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import '../../components/buildListItem.dart';
 import '../../components/drawerList.dart';
 import '../../components/slider.dart';
+import '../../components/app_bar.dart';
+
+Firestore firestore = Firestore.instance;
+List<String> wishList;
+Future<List<String>> getWishListArray(String documentId) async {
+  DocumentSnapshot snapshot =
+      await firestore.collection('wishlist').document(documentId).get();
+  List<String> productsIDs = List.from(snapshot.data['productsIDs']);
+  print('productsIDs: ' + productsIDs.toString());
+  wishList = productsIDs;
+  return productsIDs;
+}
 
 class Home extends StatefulWidget {
   const Home({
@@ -24,25 +36,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isDarkTheme = false;
-  int favNotificationCount = 0;
-  int shoppingNotificationCount = 0;
   String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
 
   @override
   void initState() {
     super.initState();
-    getBagsLength();
-    getWishlistsLength();
+    getWishListArray(_userID);
   }
 
-  Future<void> getBagsLength() async {
-    shoppingNotificationCount = await getBagArrayLength(_userID);
-    setState(() {});
-  }
-
-  Future<void> getWishlistsLength() async {
-    favNotificationCount = await getWishListArrayLength(_userID);
-    setState(() {});
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -53,6 +57,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
       drawer: DrawerList(),
       // Drawer Class
       appBar: AppBar(
@@ -153,6 +158,10 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
+=======
+      drawer: DrawerList(), // Drawer Class
+      appBar: appBar(context),
+>>>>>>> 5983ca19b7f39853691a1573c57f37d009b9de25
       body: ListView(
         children: <Widget>[
           Padding(
@@ -174,7 +183,7 @@ class _HomeState extends State<Home> {
             child: Text(
               translator.translate('TrandNow'),
               style: TextStyle(
-                color: Colors.black,
+                color: widget.isDarkTheme ? Colors.white : Colors.black,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -204,7 +213,7 @@ class _HomeState extends State<Home> {
                 child: Text(
                   translator.translate('Recommended'),
                   style: TextStyle(
-                    color: Colors.black,
+                    color: widget.isDarkTheme ? Colors.white : Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -222,9 +231,7 @@ class _HomeState extends State<Home> {
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, int index) => buildListItem(
-                      context,
-                      snapshot
-                          .data.documents[index] /*, favNotificationCount*/),
+                      context, snapshot.data.documents[index], _userID, wishList),
                 );
               }),
           Container(

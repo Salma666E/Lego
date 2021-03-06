@@ -23,5 +23,8 @@
     "TrandNow": "Trending now",
     "SuperMario": "LEGO® Super Mario™ Starter Course",
     "SuperMarioDescr": "Unlock action-packed challenges with LEGO® Super Mario™ Starter Course with highly interactive LEGO® Mario™ figure!",
-    "Price":"Price: "
+    "Price":"Price: ",
+    "AddSuccessfully":"Added successfully",
+    "RemoveWishList":"Removed From your favorites list",
+    "AddWishList":"Add to your favorites list"
 }

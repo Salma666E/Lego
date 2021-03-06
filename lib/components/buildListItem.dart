@@ -3,10 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:like_button/like_button.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:toast/toast.dart';
 
-Widget buildListItem(
-    BuildContext context, DocumentSnapshot document /*, int favNotificationCount*/) {
-  String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
+Widget buildListItem(BuildContext context, DocumentSnapshot document,
+    String _userID, List<String> wishList) {
+  Future<bool> changedata(status) async {
+    print("status: " + status.toString());
+    if (status ) {
+      // Remove From WishList
+      Firestore.instance.collection("wishlist").document(_userID).updateData({
+        "productsIDs": FieldValue.arrayRemove([document.documentID])
+      });
+      Toast.show(translator.translate('RemoveWishList'), context,
+          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+    } else {
+      // Add To WishList
+      Firestore.instance.collection("wishlist").document(_userID).updateData({
+        "productsIDs": FieldValue.arrayUnion([document.documentID])
+      });
+      Toast.show(translator.translate('AddWishList'), context,
+          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+    }
+    return Future.value(!status);
+  }
+
   return Card(
     child: Center(
       child: new Column(children: [
@@ -21,6 +41,11 @@ Widget buildListItem(
             child: Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0),
               child: LikeButton(
+                onTap: (isLiked) {
+                  return changedata(
+                    isLiked,
+                  );
+                },
                 circleColor: CircleColor(
                     start: Color(0xff00ddff), end: Color(0xff0099cc)),
                 bubblesColor: BubblesColor(
@@ -28,34 +53,17 @@ Widget buildListItem(
                   dotSecondaryColor: Color(0xff0099cc),
                 ),
                 mainAxisAlignment: MainAxisAlignment.start,
-                likeBuilder: (bool isLiked) {
-                  if (isLiked) {
-                    // Add To WishList
-                    // favNotificationCount++;
-                    Firestore.instance
-                        .collection("wishlist")
-                        .document(_userID)
-                        .updateData({
-                      "productsIDs":
-                          FieldValue.arrayUnion([document.documentID])
-                    });
-                  } else {
-                    // if (favNotificationCount != 0) favNotificationCount--;
-                    // Remove From WishList
-                    Firestore.instance
-                        .collection("wishlist")
-                        .document(_userID)
-                        .updateData({
-                      "productsIDs":
-                          FieldValue.arrayRemove([document.documentID])
-                    });
+                likeBuilder: (isLiked) {
+                  if (wishList.contains(document.documentID)) {
+                    isLiked = true;
+                    wishList.remove(document.documentID);
                   }
                   return Padding(
                     padding: const EdgeInsets.only(top: 6.0, right: 0.0),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Icon(
-                        isLiked
+                        (isLiked || wishList.contains(document.documentID))
                             ? Icons.favorite
                             : Icons.favorite_border_outlined,
                         color: Colors.blue,
@@ -147,6 +155,8 @@ Widget buildListItem(
                   .updateData({
                 "productsIDs": FieldValue.arrayUnion([document.documentID])
               });
+              Toast.show(translator.translate('AddSuccessfully'), context,
+                  duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
             },
             textColor: Colors.black,
             padding: const EdgeInsets.all(0.0),
