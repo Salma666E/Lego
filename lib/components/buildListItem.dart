@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'product.dart';
 
 Widget buildListItem(BuildContext context, DocumentSnapshot document) {
   return Card(
@@ -10,8 +11,18 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document) {
         Stack(children: [
           Padding(
             padding: const EdgeInsets.only(right: 3.0, left: 3.0, top: 15.0),
-            child: Image.network(document['image'],
-                height: 150, width: 350, fit: BoxFit.fill),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Product(document:document)),
+                );
+              },
+              child: Image.network(document['image'],
+                  height: 150, width: 350, fit: BoxFit.fill),
+            ),
+            // child: Image.network(document['image'],
+            //     height: 150, width: 350, fit: BoxFit.fill),
           ),
           Align(
             alignment: Alignment.topRight,
