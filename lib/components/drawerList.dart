@@ -1,8 +1,12 @@
+import 'package:LegoApp/components/CheckOut.dart';
+import 'package:LegoApp/components/MyBag.dart';
+import 'package:LegoApp/components/WishList.dart';
 import 'package:LegoApp/features/themes/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-// import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
 import 'cardCustom.dart';
+import 'storeCustom.dart';
 
 class DrawerList extends StatelessWidget {
   @override
@@ -22,9 +26,9 @@ class DrawerList extends StatelessWidget {
         ListTile(
           leading: CircleAvatar(
               backgroundImage: NetworkImage(
-                  "https://i1.wp.com/codesundar.com/wp-content/uploads/2019/08/cropped-codesundar-favicon.png")),
-          title: Text("codesundar"),
-          subtitle: Text("me@codesundar.com"),
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIMJf32XCdIMPR005aLZbkk5TldBubjW2CfA&usqp=CAU")),
+          title: Text("lego's user"),
+          subtitle: Text("me@lego.com"),
           trailing: Icon(
             Icons.close,
             color: Colors.blue,
@@ -82,7 +86,13 @@ class DrawerList extends StatelessWidget {
             color: Colors.blue,
           ),
           title: Text(translator.translate('Wishlist')),
-          onTap: () => {},
+          // onTap: () => {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WishList()),
+            );
+          },
         ),
         ListTile(
           leading: Icon(
@@ -90,7 +100,13 @@ class DrawerList extends StatelessWidget {
             color: Colors.blue,
           ),
           title: Text(translator.translate('MyBag')),
-          onTap: () => {},
+          // onTap: () => {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyBag()),
+            );
+          },
         ),
         ListTile(
             leading: Icon(
@@ -104,16 +120,6 @@ class DrawerList extends StatelessWidget {
                     builder: (_) => Material(
                       type: MaterialType.transparency,
                       child: MyCardCustom(),
-                      // Center(
-                      //   // Aligns the container to center
-                      //   child: Container(
-                      //     // A simplified version of dialog.
-                      //     width: 100.0,
-                      //     height: 56.0,
-                      //     color: Colors.green,
-                      //     child: Text('jojo'),
-                      //   ),
-                      // ),
                     ),
                   )
                   // Navigator.push(context,
@@ -125,8 +131,25 @@ class DrawerList extends StatelessWidget {
             color: Colors.blue,
           ),
           title: Text(translator.translate('Store')),
-          onTap: () => {},
+          onTap: () => {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyStoreCustom())),
+          },
         ),
+        ListTile(
+          leading: Icon(
+            Icons.vpn_key_outlined,
+            color: Colors.blue,
+          ),
+          title: Text(translator.translate('CheckOut')),
+          // onTap: () => {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CheckOut()),
+            );
+          },
+        )
       ],
     ));
   }

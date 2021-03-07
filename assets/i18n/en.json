@@ -26,5 +26,8 @@
     "Price":"Price: ",
     "Reviews":"Reviews",
     "SubmitReviews":"Submit Reviews",
-    "Avaliblenow":"Avalible now "
+    "Avaliblenow":"Avalible now ",
+    "AddSuccessfully":"Added successfully",
+    "RemoveWishList":"Removed From your favorites list",
+    "AddWishList":"Add to your favorites list"
 }

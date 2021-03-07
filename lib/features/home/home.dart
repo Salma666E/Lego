@@ -1,3 +1,4 @@
+import 'package:LegoApp/helper/addNotification.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,18 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import '../../components/buildListItem.dart';
 import '../../components/drawerList.dart';
 import '../../components/slider.dart';
+import '../../components/app_bar.dart';
+
+Firestore firestore = Firestore.instance;
+List<String> wishList;
+Future<List<String>> getWishListArray(String documentId) async {
+  DocumentSnapshot snapshot =
+      await firestore.collection('wishlist').document(documentId).get();
+  List<String> productsIDs = List.from(snapshot.data['productsIDs']);
+  print('productsIDs: ' + productsIDs.toString());
+  wishList = productsIDs;
+  return productsIDs;
+}
 
 class Home extends StatefulWidget {
   const Home({
@@ -23,12 +36,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isDarkTheme = false;
-  int favNotificationCount = 1;
-  int shoppingNotificationCount = 0;
+  String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
 
   @override
   void initState() {
     super.initState();
+    getWishListArray(_userID);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -39,7 +57,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: DrawerList(), // Drawer Class
+<<<<<<< HEAD
+      drawer: DrawerList(),
+      // Drawer Class
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
@@ -138,6 +158,10 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
+=======
+      drawer: DrawerList(), // Drawer Class
+      appBar: appBar(context),
+>>>>>>> 5983ca19b7f39853691a1573c57f37d009b9de25
       body: ListView(
         children: <Widget>[
           Padding(
@@ -159,7 +183,7 @@ class _HomeState extends State<Home> {
             child: Text(
               translator.translate('TrandNow'),
               style: TextStyle(
-                color: Colors.black,
+                color: widget.isDarkTheme ? Colors.white : Colors.black,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -189,7 +213,7 @@ class _HomeState extends State<Home> {
                 child: Text(
                   translator.translate('Recommended'),
                   style: TextStyle(
-                    color: Colors.black,
+                    color: widget.isDarkTheme ? Colors.white : Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -206,8 +230,8 @@ class _HomeState extends State<Home> {
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, int index) =>
-                      buildListItem(context, snapshot.data.documents[index]),
+                  itemBuilder: (context, int index) => buildListItem(
+                      context, snapshot.data.documents[index], _userID, wishList),
                 );
               }),
           Container(
@@ -316,9 +340,7 @@ class _HomeState extends State<Home> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
-                        child:
-                            // Text(translator.translate('appTitle')),
-                            Text(
+                        child: Text(
                           translator.translate('Endfooter'),
                           // textAlign: TextAlign.center,
                           style: TextStyle(

@@ -26,5 +26,8 @@
     "Price":" السعر: ",
     "Reviews":"التعليقات",
     "SubmitReviews":"إرسال التعليقات",
-    "Avaliblenow":"متاح الآن"
+    "Avaliblenow":"متاح الآن",
+    "AddSuccessfully":"اضيف بنجاح",
+    "RemoveWishList":"تمت إزالته من قائمة الرغبات الخاصة بك",
+    "AddWishList":"أضف إلى قائمة الرغبات الخاصة بك"
 }

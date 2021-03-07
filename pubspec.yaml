@@ -32,6 +32,8 @@ dependencies:
   localize_and_translate: ^3.0.3
   rflutter_alert: ^1.0.3
   flutter_rating_bar: ^3.2.0+1
+  toast: ^0.1.5
+  like_button: ^1.0.4
   flutter_localizations:
     sdk: flutter
   intl: ^0.16.1
@@ -45,6 +47,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+    
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
