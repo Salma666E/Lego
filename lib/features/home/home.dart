@@ -57,111 +57,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< HEAD
-      drawer: DrawerList(),
-      // Drawer Class
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(
-              Icons.menu_rounded,
-              color: Colors.blue,
-            ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        title: Text(
-          "Lego",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        actions: <Widget>[
-          Center(
-              child: GestureDetector(
-            onTap: () {
-              translator.setNewLanguage(
-                context,
-                newLanguage: translator.currentLanguage == 'ar' ? 'en' : 'ar',
-                remember: true,
-                restart: true,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-              child: Text(
-                translator.translate('Language'),
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: Colors.blue),
-              ),
-            ),
-          )),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Center(
-                    child: IconButton(
-                  icon: Icon(
-                    Icons.favorite_border,
-                    color: Colors.blue,
-                  ),
-                  onPressed: () {
-                    // do something
-                  },
-                )),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.red),
-                    alignment: Alignment.center,
-                    child: Text('$favNotificationCount'),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 8.0),
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Center(
-                    child: IconButton(
-                  icon: Icon(
-                    Icons.shopping_bag_outlined,
-                    color: Colors.blue,
-                  ),
-                  onPressed: () {
-                    // do something
-                  },
-                )),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.red),
-                    alignment: Alignment.center,
-                    child: Text('$shoppingNotificationCount'),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-=======
       drawer: DrawerList(), // Drawer Class
       appBar: appBar(context),
->>>>>>> 5983ca19b7f39853691a1573c57f37d009b9de25
       body: ListView(
         children: <Widget>[
           Padding(
@@ -192,7 +89,7 @@ class _HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
             child: Container(
-                height: 330,
+                height: 500,
                 child: Column(
                   children: [
                     Image(

@@ -5,13 +5,48 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'drawerList.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'drawerList.dart';
+import 'package:LegoApp/models/review.dart';
+
+Future<List<Review>> getReviews(String prdId) async {
+  List<Review> reviews = [];
+  final QuerySnapshot snapshot =
+      await Firestore.instance.collection('Reviews').getDocuments();
+      
+  final documents = snapshot.documents;
+  documents.forEach((element) {
+    if (element.data['productId'] == prdId) {
+      reviews.add(Review(
+          element.data['OverallRating'],
+          element.data['productId'],
+          element.data['review'],
+          element.data['recommend'],
+          element.data['reviewTitle']));
+    }
+  });
+  return reviews;
+}
+
+Future<int> getReviewsLength(String prdId) async {
+  List<Review> reviews = [];
+  int revNumber = 0;
+  final QuerySnapshot snapshot =
+      await Firestore.instance.collection('Reviews').getDocuments();
+  final documents = snapshot.documents;
+  documents.forEach((element) {
+    if (element.data['productId'] == prdId) {
+      revNumber++;
+    }
+  });
+  return revNumber;
+}
 
 class Product extends StatefulWidget {
+
   DocumentSnapshot document;
   Product({this.document});
-
   @override
   _ProductState createState() => _ProductState();
+
 }
 
 class MyItem {
@@ -29,12 +64,13 @@ class _ProductState extends State<Product> {
   String image;
   String rate;
   int count = 0;
-  int reviews_count = 0;
   int favNotificationCount = 0;
   int shoppingNotificationCount = 0;
   String description;
   List<MyItem> _items = <MyItem>[];
   List<MyItem> _items2 = <MyItem>[];
+  List<Review> revList = [];
+  int revCount = 0;
 
   Widget _buildListPanel() {
     return ExpansionPanelList(
@@ -81,15 +117,16 @@ class _ProductState extends State<Product> {
                   child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Overall Rating"),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
+                        child: Text(
+                          "Overall Rating",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ),
                       Row(
                         children: [
                           Icon(Icons.star_border_outlined,
@@ -107,6 +144,7 @@ class _ProductState extends State<Product> {
                     ],
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       RaisedButton(
                         color: Colors.blue[500],
@@ -201,7 +239,46 @@ class _ProductState extends State<Product> {
                         child: Text("Write a Review"),
                       )
                     ],
-                  )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      child: FutureBuilder(
+                        future: getReviews(widget.document.documentID),
+                        builder: (context, AsyncSnapshot snapshot) {
+                          if (!snapshot.hasData)
+                            return Center(child: CircularProgressIndicator());
+                          else {
+                            return Container(
+                                height: 100,
+                                child: ListView.builder(
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    Review rev = snapshot.data[index];
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          rev.reviewTitle,
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(rev.review),
+                                        Divider(
+                                          color: Colors.grey,
+                                        )
+                                      ],
+                                    );
+                                  },
+                                ));
+                          }
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               )),
             ),
@@ -218,9 +295,19 @@ class _ProductState extends State<Product> {
     imgList = widget.document['images'];
     image = widget.document['image'];
     description = widget.document['description'].toString();
+    
     _items.add(MyItem(header: "Description", body: description));
     _items.add(MyItem(header: "Deliveries and Returns", body: ""));
     _items2.add(MyItem(header: "Customer Reviews", body: ""));
+    
+    getReviews(widget.document.documentID).then((value) {
+      for (var v in value) {
+        revList.add(v);
+        setState(() {
+          revCount++;
+        });
+      }
+    });
   }
 
   @override
@@ -335,6 +422,10 @@ class _ProductState extends State<Product> {
                                 color: Colors.grey[300])
                           ],
                         ),
+                        Text(
+                          '(' + '$revCount' + ')',
+                          style: TextStyle(color: Colors.blue),
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
@@ -349,8 +440,8 @@ class _ProductState extends State<Product> {
                               print("rev");
                             },
                             child: Text(
-                             translator.translate("Submit Reviews"),
-                            style: TextStyle(color: Colors.blue),
+                              translator.translate("Submit Reviews"),
+                              style: TextStyle(color: Colors.blue),
                             ),
                           ),
                         )
@@ -377,8 +468,7 @@ class _ProductState extends State<Product> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          Text(
-                               translator.translate("Avalible now "),
+                          Text(translator.translate("Avalible now "),
                               style: TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold,
@@ -461,7 +551,7 @@ class _ProductState extends State<Product> {
                         child: RaisedButton(
                           color: Colors.orange[900],
                           onPressed: () {
-                            print("add to bag");
+                            //getReviews(widget.document.documentID);
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(18.0),
