@@ -1,3 +1,4 @@
+import 'package:LegoApp/components/login.dart';
 import 'package:LegoApp/helper/addNotification.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
@@ -19,8 +20,6 @@ Future<List<String>> getWishListArray(String documentId) async {
   wishList = productsIDs;
   return productsIDs;
 }
-
-import '../../components/login.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -129,8 +128,8 @@ class _HomeState extends State<Home> {
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, int index) => buildListItem(
-                      context, snapshot.data.documents[index], _userID, wishList),
+                  itemBuilder: (context, int index) => buildListItem(context,
+                      snapshot.data.documents[index], _userID, wishList),
                 );
               }),
           Container(
@@ -235,31 +234,16 @@ class _HomeState extends State<Home> {
                       borderRadius: 50,
                       borderWidth: 1,
                     ),
-<<<<<<< HEAD
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child:
-                          // Text(translator.translate('appTitle')),
-                          Text(
+                      child: Text(
                         translator.translate('Endfooter'),
                         // textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
                           fontSize: 12.0,
-=======
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text(
-                          translator.translate('Endfooter'),
-                          // textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 12.0,
-                          ),
->>>>>>> 151a94688439a65b17174fdba546708987271e63
                         ),
                       ),
                     ),
