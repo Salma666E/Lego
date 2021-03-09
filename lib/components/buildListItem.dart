@@ -107,7 +107,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document) {
                       blurRadius: 10, color: Colors.grey, offset: Offset(1, 3))
                 ],
                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                gradient: LinearGradient(
+                /*gradient: LinearGradient(
                   colors: <Color>[
                     Color(0xFFB3E5FC),
                     Color(0xFF0277BD),
@@ -117,7 +117,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document) {
                     Color(0xFF0288D1),
                     Color(0xFFB3E5FC),
                   ],
-                ),
+                ),*/
               ),
               padding: const EdgeInsets.all(10.0),
               child: Center(
