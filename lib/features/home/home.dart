@@ -1,3 +1,4 @@
+import 'package:LegoApp/components/login.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -121,7 +122,7 @@ class _HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
             child: Container(
-                height: 330,
+                height: 500,
                 child: Column(
                   children: [
                     Image(
@@ -167,119 +168,131 @@ class _HomeState extends State<Home> {
             height: 400,
             child: Center(
               child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    new Center(
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          new Container(
-                              height: 45.0,
-                              width: 45.0,
-                              child: Center(
-                                child: Card(
-                                  elevation: 5.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        25.0), // half of height and width of Image
-                                  ),
-                                  child: IconButton(
-                                    icon: widget.isDarkTheme
-                                        ? Transform.rotate(
-                                            angle: .55,
-                                            child: Icon(
-                                              Icons.brightness_3,
-                                              size: 20.0,
-                                            ))
-                                        : Icon(Icons.brightness_7),
-                                    onPressed: () => widget
-                                        .onThemeChanged(!widget.isDarkTheme),
-                                    tooltip: 'Switch brightness',
-                                  ),
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  new Center(
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        new Container(
+                            height: 45.0,
+                            width: 45.0,
+                            child: Center(
+                              child: Card(
+                                elevation: 5.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      25.0), // half of height and width of Image
                                 ),
-                              )),
-                          new Container(
-                              height: 45.0,
-                              width: 45.0,
-                              child: Center(
-                                child: Card(
-                                  elevation: 5.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        25.0), // half of height and width of Image
-                                  ),
-                                  child: IconButton(
-                                    icon: new Icon(
-                                      Icons.person,
-                                      size: 20.0,
-                                    ),
-                                    onPressed: () {},
-                                  ),
+                                child: IconButton(
+                                  icon: widget.isDarkTheme
+                                      ? Transform.rotate(
+                                          angle: .55,
+                                          child: Icon(
+                                            Icons.brightness_3,
+                                            size: 20.0,
+                                          ))
+                                      : Icon(Icons.brightness_7),
+                                  onPressed: () => widget
+                                      .onThemeChanged(!widget.isDarkTheme),
+                                  tooltip: 'Switch brightness',
                                 ),
-                              )),
-                          new Container(
-                              height: 45.0,
-                              width: 45.0,
-                              child: Center(
-                                child: Card(
-                                  elevation: 5.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        25.0), // half of height and width of Image
-                                  ),
-                                  child: IconButton(
-                                    icon: new Icon(
-                                      Icons.call,
-                                      size: 20.0,
-                                    ),
-                                    onPressed: () {},
-                                  ),
+                              ),
+                            )),
+                        new Container(
+                            height: 45.0,
+                            width: 45.0,
+                            child: Center(
+                              child: Card(
+                                elevation: 5.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      25.0), // half of height and width of Image
                                 ),
-                              )),
-                        ],
-                      ),
+                                child: IconButton(
+                                  icon: new Icon(
+                                    Icons.person,
+                                    size: 20.0,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            )),
+                        new Container(
+                            height: 45.0,
+                            width: 45.0,
+                            child: Center(
+                              child: Card(
+                                elevation: 5.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      25.0), // half of height and width of Image
+                                ),
+                                child: IconButton(
+                                  icon: new Icon(
+                                    Icons.call,
+                                    size: 20.0,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            )),
+                      ],
                     ),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: translator.translate('EnterYourEmail'),
-                          ),
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: translator.translate('EnterYourEmail'),
                         ),
                       ),
                     ),
-                    Center(
-                      child: AnimatedButton(
-                        onPress: () {},
-                        height: 60,
-                        width: 200,
-                        text: translator.translate('Submit'),
-                        isReverse: true,
-                        selectedTextColor: Colors.black,
-                        transitionType: TransitionType.CENTER_ROUNDER,
-                        backgroundColor: Colors.black,
-                        borderColor: Colors.black,
-                        borderRadius: 50,
-                        borderWidth: 1,
-                      ),
+                  ),
+                  Center(
+                    child: AnimatedButton(
+                      onPress: () {},
+                      height: 60,
+                      width: 200,
+                      text: translator.translate('Submit'),
+                      isReverse: true,
+                      selectedTextColor: Colors.black,
+                      transitionType: TransitionType.CENTER_ROUNDER,
+                      backgroundColor: Colors.black,
+                      borderColor: Colors.black,
+                      borderRadius: 50,
+                      borderWidth: 1,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text(
-                          translator.translate('Endfooter'),
-                          // textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 12.0,
-                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        translator.translate('Endfooter'),
+                        // textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 12.0,
                         ),
                       ),
                     ),
-                  ]),
+                  ),
+                  new FloatingActionButton(
+                    elevation: 0.0,
+                    child: new Icon(Icons.add),
+                    backgroundColor: Colors.black,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],

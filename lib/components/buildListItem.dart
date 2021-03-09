@@ -7,7 +7,8 @@ import 'product.dart';
 import 'package:toast/toast.dart';
 
 Widget buildListItem(BuildContext context, DocumentSnapshot document,
-    String _userID, List<String> wishList) {
+ 
+  String _userID, List<String> wishList) {
   Future<bool> changedata(status) async {
     print("status: " + status.toString());
     if (status ) {
@@ -18,7 +19,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
       Toast.show(translator.translate('RemoveWishList'), context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     } else {
-      // Add To WishList
+    // Add To WishList
       Firestore.instance.collection("wishlist").document(_userID).updateData({
         "productsIDs": FieldValue.arrayUnion([document.documentID])
       });
