@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../components/drawerList.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 
 class CheckOut extends StatefulWidget {
   @override
@@ -10,6 +12,117 @@ class _CheckOutState extends State<CheckOut> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //////////////////////////////////////////////////
+      drawer: DrawerList(),
+      // Drawer Class
+      appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(
+              Icons.menu_rounded,
+              color: Colors.blue,
+            ),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        title: Text(
+          "Lego",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        actions: <Widget>[
+          /////////////////Second Header///////////////////
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
+          //   child: Container(
+          //     height: 50,
+          //     child: header(widget.isDarkTheme),
+          //   ),
+          // ),
+          ////////////////////////////////////
+          Center(
+              child: GestureDetector(
+            onTap: () {
+              translator.setNewLanguage(
+                context,
+                newLanguage: translator.currentLanguage == 'ar' ? 'en' : 'ar',
+                remember: true,
+                restart: true,
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+              child: Text(
+                translator.translate('Language'),
+                style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Colors.blue),
+              ),
+            ),
+          )),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Center(
+                    child: IconButton(
+                  icon: Icon(
+                    Icons.favorite_border,
+                    color: Colors.blue,
+                  ),
+                  onPressed: () {
+                    // do something
+                  },
+                )),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.red),
+                    alignment: Alignment.center,
+                    // child: Text('$favNotificationCount'),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, right: 8.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Center(
+                    child: IconButton(
+                  icon: Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Colors.blue,
+                  ),
+                  onPressed: () {
+                    // do something
+                  },
+                )),
+                // Positioned(
+                //   top: 0,
+                //   right: 0,
+                //   child: Container(
+                //     padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                //     decoration: BoxDecoration(
+                //         shape: BoxShape.circle, color: Colors.red),
+                //     alignment: Alignment.center,
+                //     child: Text('$shoppingNotificationCount'),
+                //   ),
+                // )
+              ],
+            ),
+          ),
+        ],
+      ),
+      //////////////////////////////
       body: Center(
         child: ListView(
           shrinkWrap: true,
@@ -28,7 +141,7 @@ class _CheckOutState extends State<CheckOut> {
                     ),
                     TextField(
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.store_mall_directory),
+                        prefixIcon: Icon(Icons.store_mall_directory_outlined),
                         labelText: "City ",
                       ),
                     ),

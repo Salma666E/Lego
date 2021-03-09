@@ -1,3 +1,4 @@
+import 'package:LegoApp/helper/addNotification.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,18 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import '../../components/buildListItem.dart';
 import '../../components/drawerList.dart';
 import '../../components/slider.dart';
+import '../../components/app_bar.dart';
+
+Firestore firestore = Firestore.instance;
+List<String> wishList;
+Future<List<String>> getWishListArray(String documentId) async {
+  DocumentSnapshot snapshot =
+      await firestore.collection('wishlist').document(documentId).get();
+  List<String> productsIDs = List.from(snapshot.data['productsIDs']);
+  print('productsIDs: ' + productsIDs.toString());
+  wishList = productsIDs;
+  return productsIDs;
+}
 
 import '../../components/login.dart';
 
@@ -25,12 +38,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isDarkTheme = false;
-  int favNotificationCount = 1;
-  int shoppingNotificationCount = 0;
+  String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
 
   @override
   void initState() {
     super.initState();
+    getWishListArray(_userID);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -42,104 +60,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: DrawerList(), // Drawer Class
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(
-              Icons.menu_rounded,
-              color: Colors.blue,
-            ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        title: Text(
-          "Lego",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        actions: <Widget>[
-          Center(
-              child: GestureDetector(
-            onTap: () {
-              translator.setNewLanguage(
-                context,
-                newLanguage: translator.currentLanguage == 'ar' ? 'en' : 'ar',
-                remember: true,
-                restart: true,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-              child: Text(
-                translator.translate('Language'),
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: Colors.blue),
-              ),
-            ),
-          )),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Center(
-                    child: IconButton(
-                  icon: Icon(
-                    Icons.favorite_border,
-                    color: Colors.blue,
-                  ),
-                  onPressed: () {
-                    // do something
-                  },
-                )),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.red),
-                    alignment: Alignment.center,
-                    child: Text('$favNotificationCount'),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 8.0),
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Center(
-                    child: IconButton(
-                  icon: Icon(
-                    Icons.shopping_bag_outlined,
-                    color: Colors.blue,
-                  ),
-                  onPressed: () {
-                    // do something
-                  },
-                )),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.red),
-                    alignment: Alignment.center,
-                    child: Text('$shoppingNotificationCount'),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
+      appBar: appBar(context),
       body: ListView(
         children: <Widget>[
           Padding(
@@ -161,7 +82,7 @@ class _HomeState extends State<Home> {
             child: Text(
               translator.translate('TrandNow'),
               style: TextStyle(
-                color: Colors.black,
+                color: widget.isDarkTheme ? Colors.white : Colors.black,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -170,7 +91,7 @@ class _HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
             child: Container(
-                height: 330,
+                height: 500,
                 child: Column(
                   children: [
                     Image(
@@ -191,7 +112,7 @@ class _HomeState extends State<Home> {
                 child: Text(
                   translator.translate('Recommended'),
                   style: TextStyle(
-                    color: Colors.black,
+                    color: widget.isDarkTheme ? Colors.white : Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -208,8 +129,8 @@ class _HomeState extends State<Home> {
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, int index) =>
-                      buildListItem(context, snapshot.data.documents[index]),
+                  itemBuilder: (context, int index) => buildListItem(
+                      context, snapshot.data.documents[index], _userID, wishList),
                 );
               }),
           Container(
@@ -314,6 +235,7 @@ class _HomeState extends State<Home> {
                       borderRadius: 50,
                       borderWidth: 1,
                     ),
+<<<<<<< HEAD
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -326,6 +248,18 @@ class _HomeState extends State<Home> {
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
                           fontSize: 12.0,
+=======
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          translator.translate('Endfooter'),
+                          // textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 12.0,
+                          ),
+>>>>>>> 151a94688439a65b17174fdba546708987271e63
                         ),
                       ),
                     ),
