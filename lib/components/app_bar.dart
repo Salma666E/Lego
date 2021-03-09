@@ -30,14 +30,19 @@ Widget appBar(BuildContext context) {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.only(right: 15.0, left: 10.0),
+          padding: const EdgeInsets.only(right: 20.0, left: 10.0),
           child: Text(
             translator.translate('Language'),
-            style: TextStyle(
+            style: translator.currentLanguage != 'ar' ? TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 20,
+                color: Colors.blue)
+           : TextStyle(
                 fontWeight: FontWeight.normal,
                 fontSize: 16,
                 color: Colors.blue),
           ),
+            
         ),
       )),
     ],
