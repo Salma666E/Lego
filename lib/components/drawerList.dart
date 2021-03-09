@@ -1,16 +1,34 @@
 import 'package:LegoApp/components/CheckOut.dart';
 import 'package:LegoApp/components/MyBag.dart';
 import 'package:LegoApp/components/WishList.dart';
+import 'package:LegoApp/features/home/home.dart';
 import 'package:LegoApp/features/themes/themes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:flutter/services.dart';
 import 'cardCustom.dart';
-import 'storeCustom.dart';
+
+// String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
+// Firestore firestore = Firestore.instance;
+// List<String> bags;
+// Future<List<String>> getBagsArray(String documentId) async {
+//   DocumentSnapshot snapshot =
+//       await firestore.collection('bags').document(documentId).get();
+//   List<String> productsIDs = List.from(snapshot.data['productsIDs']);
+//   print('productsIDs: ' + productsIDs.toString());
+//   bags = productsIDs;
+//   print('bags: ' + bags.toString());
+//   return bags;
+// }
 
 class DrawerList extends StatelessWidget {
+  DrawerList({this.userName = "LegoName", this.userEmail = "LegoEmail.com", this.bags});
+  final String userName;
+  final String userEmail;
+  final List<String> bags;
   @override
   Widget build(BuildContext context) {
+  // getBagsArray(_userID);
     //    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     //   statusBarColor: Colors.transparent,
     //   statusBarIconBrightness: Brightness.dark,
@@ -27,13 +45,27 @@ class DrawerList extends StatelessWidget {
           leading: CircleAvatar(
               backgroundImage: NetworkImage(
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIMJf32XCdIMPR005aLZbkk5TldBubjW2CfA&usqp=CAU")),
-          title: Text("lego's user"),
-          subtitle: Text("me@lego.com"),
+          title: Text(userName,
+              style: TextStyle(
+                color: Colors.blue,
+              )),
+          subtitle: Text(
+            userEmail,
+            style: TextStyle(
+              fontSize: 12,
+            ),
+          ),
           trailing: Icon(
             Icons.close,
             color: Colors.blue,
           ),
-          onTap: () => Navigator.of(context).pop(),
+          onTap: () {
+            Navigator.of(context).pop();
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => EditProfile()),
+            // );
+          },
         ),
         ListTile(
           leading: Text(translator.translate('Home')),
@@ -41,7 +73,14 @@ class DrawerList extends StatelessWidget {
             Icons.arrow_forward,
             color: Colors.blue,
           ),
-          onTap: () => Navigator.of(context).pop(),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Home(),
+              ),
+            );
+          },
         ),
         ListTile(
           leading: Text(translator.translate('Themes')),
@@ -86,7 +125,6 @@ class DrawerList extends StatelessWidget {
             color: Colors.blue,
           ),
           title: Text(translator.translate('Wishlist')),
-          // onTap: () => {},
           onTap: () {
             Navigator.push(
               context,
@@ -100,11 +138,10 @@ class DrawerList extends StatelessWidget {
             color: Colors.blue,
           ),
           title: Text(translator.translate('MyBag')),
-          // onTap: () => {},
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyBag()),
+              MaterialPageRoute(builder: (context) => MyBag(bags:bags)),
             );
           },
         ),
@@ -122,8 +159,6 @@ class DrawerList extends StatelessWidget {
                       child: MyCardCustom(),
                     ),
                   )
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => MyCardCustom())),
                 }),
         ListTile(
           leading: Icon(
@@ -132,8 +167,8 @@ class DrawerList extends StatelessWidget {
           ),
           title: Text(translator.translate('Store')),
           onTap: () => {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MyStoreCustom())),
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => MyStoreCustom())),
           },
         ),
         ListTile(

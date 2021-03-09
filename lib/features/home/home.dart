@@ -1,4 +1,3 @@
-import 'package:LegoApp/helper/addNotification.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,15 +19,40 @@ Future<List<String>> getWishListArray(String documentId) async {
   return productsIDs;
 }
 
+String userName;
+String userEmail;
+bool flageDrawer = false;
+Future<String> getUserName(String _userID) async {
+  DocumentSnapshot snapshot =
+      await firestore.collection('users').document(_userID).get();
+  userName = snapshot.data['displayName'];
+  userEmail = snapshot.data['email'];
+  print('userName: ' + userName.toString());
+  print('userEmail: ' + userEmail.toString());
+  flageDrawer = true;
+  return "Name: " + userName + " Email: " + userEmail;
+}
+
+//
+List<String> bags;
+Future<List<String>> getBagsArray(String documentId) async {
+  DocumentSnapshot snapshot =
+      await firestore.collection('bags').document(documentId).get();
+  bags = List.from(snapshot.data['productsIDs']);
+  flageDrawer = true;
+  print('flageDrawer+bags: ' + bags.toString());
+  return bags;
+}
+//
 class Home extends StatefulWidget {
   const Home({
-    Key key,
-    this.isDarkTheme,
-    this.onThemeChanged,
-  }) : super(key: key);
+    this.isDarkTheme = false,
+    this.onThemeChanged = _dummyOnFocusChange,
+  }) : assert(onThemeChanged != null);
 
   final bool isDarkTheme;
   final ValueChanged<bool> onThemeChanged;
+  static dynamic _dummyOnFocusChange(bool val) {}
 
   @override
   _HomeState createState() => _HomeState();
@@ -36,17 +60,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isDarkTheme = false;
-  String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
+  String _userID = "ggt6vACGkxTV6ZlQeLi7Xm2FOiW2";
 
   @override
   void initState() {
     super.initState();
     getWishListArray(_userID);
+    getUserName(_userID);
+    getBagsArray(_userID);
+    setState(() {});
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // setState(() {});
   }
 
   @override
@@ -56,112 +84,13 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {});
     return Scaffold(
-<<<<<<< HEAD
-      drawer: DrawerList(),
+      drawer: flageDrawer
+          ? DrawerList(userName: userName, userEmail: userEmail, bags:bags)
+          : DrawerList(userName: "LegoName", userEmail: "LegoEmail.com", bags:['1','2']),
       // Drawer Class
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(
-              Icons.menu_rounded,
-              color: Colors.blue,
-            ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        title: Text(
-          "Lego",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        actions: <Widget>[
-          Center(
-              child: GestureDetector(
-            onTap: () {
-              translator.setNewLanguage(
-                context,
-                newLanguage: translator.currentLanguage == 'ar' ? 'en' : 'ar',
-                remember: true,
-                restart: true,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-              child: Text(
-                translator.translate('Language'),
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: Colors.blue),
-              ),
-            ),
-          )),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Center(
-                    child: IconButton(
-                  icon: Icon(
-                    Icons.favorite_border,
-                    color: Colors.blue,
-                  ),
-                  onPressed: () {
-                    // do something
-                  },
-                )),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.red),
-                    alignment: Alignment.center,
-                    child: Text('$favNotificationCount'),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 8.0),
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Center(
-                    child: IconButton(
-                  icon: Icon(
-                    Icons.shopping_bag_outlined,
-                    color: Colors.blue,
-                  ),
-                  onPressed: () {
-                    // do something
-                  },
-                )),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.red),
-                    alignment: Alignment.center,
-                    child: Text('$shoppingNotificationCount'),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-=======
-      drawer: DrawerList(), // Drawer Class
       appBar: appBar(context),
->>>>>>> 5983ca19b7f39853691a1573c57f37d009b9de25
       body: ListView(
         children: <Widget>[
           Padding(
@@ -230,8 +159,8 @@ class _HomeState extends State<Home> {
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, int index) => buildListItem(
-                      context, snapshot.data.documents[index], _userID, wishList),
+                  itemBuilder: (context, int index) => buildListItem(context,
+                      snapshot.data.documents[index], _userID, wishList),
                 );
               }),
           Container(
