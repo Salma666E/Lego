@@ -29,5 +29,26 @@
     "Avaliblenow":"Avalible now ",
     "AddSuccessfully":"Added successfully",
     "RemoveWishList":"Removed From your favorites list",
-    "AddWishList":"Add to your favorites list"
+    "AddWishList":"Add to your favorites list",
+
+    "LegoSpiderManTitle": "LEGO® Marvel Spider-Man",
+    "LegoSpiderManDescription": "Our friendly neighborhood Spider-Man is going places! Can’t poor Peter Parker go on a nice, quiet school trip like a normal teen? More trouble for Spider-Man means more fun for you – with new friends and foes, new battles and locations, and new adventures and toy playsets to build, rebuild, roleplay and reimagine.",
+    "Spider":"Spider-Man",
+    "Avengers":"Avengers",
+    "Characters":"Characters",
+    "Games":"Games",
+    "MoltenTitle":"76128 – MOLTEN MAN BATTLE",
+    "MoltenDescription":"Rush to the heat of the action with this fully buildable action figure toy set. Includes a 6-beam rapid shooter, fun “melting” items to build, and 3 minifigures – Spider-Man, Mysterio and a firefighter – for roleplaying and collecting.",
+    "ShopNow":"Shop now",
+    "HydroTitle": "76129 – HYDRO-MAN ATTACK",
+    "HydroDescription": "Enjoy a gondola ride, a coffee-and-pizza date, and battling Hydro-Man as he blasts massive waves across the canal. Ah, Venice! Includes buildable bridge with explode function, a coffee machine, and 4 collectable Marvel Universe minifigures.",
+    "StarkTitle": "76130 – STARK JET ATTACK",
+    "StarkDescription": "Fly straight into the fight with this jet airplane playset equipped with beam shooters, adjustable wings, an opening hatch, heaps of movable elements, spider web string for Spider-Man to swing, and 4 Marvel Universe minifigures to play and collect.",
+    "Questions": "Questions about the LEGO® Marvel sets?",
+    "FindUs": "How do you find the perfect LEGO® superhero toy? Have you lost your building instructions or a piece from a set? Our team of caped, masked heroes are standing by to help!",
+    "GoToFAQ": "Go to FAQ Section",
+    "SelectCategory": "Select Category",
+    "NewProduct": "New",
+    "TabAbout": "About",
+    "TabProducts": "Products"
 }

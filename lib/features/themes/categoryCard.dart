@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 
 class CategoryCard extends StatelessWidget {
   final Color containerColor;
@@ -51,7 +52,9 @@ class CategoryCard extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Shop now'),
+                        Text(
+                          translator.translate('ShopNow'),
+                        ),
                         Icon(Icons.arrow_right),
                       ],
                     ),
