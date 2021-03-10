@@ -7,6 +7,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'drawerList.dart';
 import 'package:LegoApp/models/review.dart';
 
+addToBag(){
+
+}
+addToWishList(){
+
+}
+addReview(){
+  
+}
 Future<List<Review>> getReviews(String prdId) async {
   List<Review> reviews = [];
   final QuerySnapshot snapshot =
