@@ -598,10 +598,10 @@ class _ProductState extends State<Product> {
                             if (bagID == "") {
                               Firestore.instance.collection("bags").add({
                                 "userID": _userID,
-                                "productsIDs": {
+                                "productsIDs": [{
                                   "id": widget.document.documentID,
                                   "qty": count
-                                }
+                                }]
                               }).then((value) => {
                                     setState(() {
                                       bagID = value.documentID;
