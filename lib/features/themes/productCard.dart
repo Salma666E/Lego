@@ -67,9 +67,12 @@ Widget productCard(BuildContext context, DocumentSnapshot document) {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               color: Colors.orange[800],
-              onPressed: () {},
+              disabledColor: Colors.orange[200],
+              onPressed: document['stock'] <= 0 ? null : () {},
               child: Text(
-                translator.translate('AddToBag'),
+                document['stock'] <= 0
+                    ? translator.translate('OutOfBag')
+                    : translator.translate('AddToBag'),
                 style: TextStyle(fontSize: 18),
               ),
             ),
