@@ -8,11 +8,21 @@ import './profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Register extends StatefulWidget {
+  const Register({
+    this.isDarkTheme = false,
+    this.onThemeChanged = _dummyOnFocusChange,
+  }) : assert(onThemeChanged != null);
+
+  final bool isDarkTheme;
+  final ValueChanged<bool> onThemeChanged;
+  static dynamic _dummyOnFocusChange(bool val) {}
   @override
   _RegisterState createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
+  bool isDarkTheme = false;
+  
   bool _obscureText = true;
   bool _confirmObscureText = true;
 
@@ -603,6 +613,25 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                     ],
+                  ),
+                  new FloatingActionButton(
+                    elevation: 0.0,
+                    child: new IconButton(
+                                  icon: widget.isDarkTheme
+                                      ? Transform.rotate(
+                                          angle: .55,
+                                          child: Icon(
+                                            Icons.brightness_3,
+                                            size: 20.0,
+                                          ))
+                                      : Icon(Icons.brightness_7),
+                                  onPressed: () {
+                                    widget.onThemeChanged(!widget.isDarkTheme);
+                                    print("widget.isDarkTheme: " +
+                                        widget.isDarkTheme.toString());
+                                  },
+                                  tooltip: 'Switch brightness',
+                                )
                   ),
                 ],
               ),

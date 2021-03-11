@@ -2,6 +2,7 @@ import 'package:LegoApp/features/themes/categoryAvatar.dart';
 import 'package:LegoApp/features/themes/categoryCard.dart';
 import 'package:LegoApp/features/themes/staticCarousel.dart';
 import 'package:flutter/material.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 
 class About extends StatelessWidget {
   @override
@@ -12,9 +13,8 @@ class About extends StatelessWidget {
           containerColor: Color(0xFF00051B),
           imgURL:
               "https://www.lego.com/cdn/cs/set/assets/bltf7be226735a5d446/Marvel_-_SpidersMan_-_Intro_-_Sidekick-Standard.jpg?fit=crop&format=jpg&quality=80&width=800&height=426&dpr=1",
-          title: 'LEGO® Marvel Spider-Man',
-          description:
-              'Our friendly neighborhood Spider-Man is going places! Can’t poor Peter Parker go on a nice, quiet school trip like a normal teen? More trouble for Spider-Man means more fun for you – with new friends and foes, new battles and locations, and new adventures and toy playsets to build, rebuild, roleplay and reimagine.',
+          title: translator.translate('LegoSpiderManTitle'),
+          description: translator.translate('LegoSpiderManDescription'),
           showBtn: false,
         ),
         SizedBox(
@@ -26,22 +26,22 @@ class About extends StatelessWidget {
             CategoryAvatar(
               imgURL:
                   'https://www.lego.com/cdn/cs/set/assets/blt3ac76cef4c1e5604/marvel-spider-man-icon.jpg?fit=crop&format=jpg&quality=80&width=80&height=65&dpr=1',
-              name: 'Spider-man',
+              name: translator.translate('Spider'),
             ),
             CategoryAvatar(
               imgURL:
                   'https://www.lego.com/cdn/cs/set/assets/bltb92ef962613e63b5/marvel-avengers-icon.jpg?fit=crop&format=jpg&quality=80&width=80&height=65&dpr=1',
-              name: 'Avengers',
+              name: translator.translate('Avengers'),
             ),
             CategoryAvatar(
               imgURL:
                   'https://www.lego.com/cdn/cs/set/assets/blt6e68f542cdc174f5/marvel-characters-icon.jpg?fit=crop&format=jpg&quality=80&width=80&height=65&dpr=1',
-              name: 'Characters',
+              name: translator.translate('Characters'),
             ),
             CategoryAvatar(
               imgURL:
                   'https://www.lego.com/cdn/cs/set/assets/blt6fb7bec5706340a4/marvel-games-icon.jpg?fit=crop&format=jpg&quality=80&width=80&height=65&dpr=1',
-              name: 'Games',
+              name: translator.translate('Games'),
             ),
           ],
         ),
@@ -52,9 +52,8 @@ class About extends StatelessWidget {
           containerColor: Color(0xFFA92F26),
           imgURL:
               "https://www.lego.com/cdn/cs/set/assets/bltc34159ed9f8d873c/Marvel_-_SpidersMan_-Molten_Man_-_Sidekick-Tall.jpg?fit=crop&format=jpg&quality=80&width=800&height=600&dpr=1",
-          title: '76128 – MOLTEN MAN BATTLE',
-          description:
-              'Rush to the heat of the action with this fully buildable action figure toy set. Includes a 6-beam rapid shooter, fun “melting” items to build, and 3 minifigures – Spider-Man, Mysterio and a firefighter – for roleplaying and collecting.',
+          title: translator.translate('MoltenTitle'),
+          description: translator.translate('MoltenDescription'),
           showBtn: true,
         ),
         StaticCarousel(
@@ -69,9 +68,8 @@ class About extends StatelessWidget {
           containerColor: Color(0xFF08306C),
           imgURL:
               "https://www.lego.com/cdn/cs/set/assets/blt6e619e8cff57a8d3/Marvel_-_SpidersMan_-_Hydo_Man_-_Sidekick-Tall.jpg?fit=crop&format=jpg&quality=80&width=800&height=600&dpr=1",
-          title: '76129 – HYDRO-MAN ATTACK',
-          description:
-              'Enjoy a gondola ride, a coffee-and-pizza date, and battling Hydro-Man as he blasts massive waves across the canal. Ah, Venice! Includes buildable bridge with explode function, a coffee machine, and 4 collectable Marvel Universe minifigures.',
+          title: translator.translate('HydroTitle'),
+          description: translator.translate('HydroDescription'),
           showBtn: true,
         ),
         StaticCarousel(
@@ -86,9 +84,8 @@ class About extends StatelessWidget {
           containerColor: Color(0xFF023823),
           imgURL:
               "https://www.lego.com/cdn/cs/set/assets/blt9d8345703e38a2f7/Marvel_-_SpidersMan_-_Stark_Jet_-_Sidekick-Tall.jpg?fit=crop&amp;format=jpg&amp;quality=80&amp;width=800&amp;height=600&amp;dpr=1",
-          title: '76130 – STARK JET ATTACK',
-          description:
-              'Fly straight into the fight with this jet airplane playset equipped with beam shooters, adjustable wings, an opening hatch, heaps of movable elements, spider web string for Spider-Man to swing, and 4 Marvel Universe minifigures to play and collect.',
+          title: translator.translate('StarkTitle'),
+          description: translator.translate('StarkDescription'),
           showBtn: true,
         ),
         StaticCarousel(
@@ -108,7 +105,7 @@ class About extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Questions about the LEGO® Marvel sets?',
+                    translator.translate('Questions'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -123,7 +120,7 @@ class About extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'How do you find the perfect LEGO® superhero toy? Have you lost your building instructions or a piece from a set? Our team of caped, masked heroes are standing by to help!',
+                    translator.translate('FindUs'),
                     style: TextStyle(
                       height: 2,
                       color: Colors.white,
@@ -138,7 +135,9 @@ class About extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Go to FAQ Section'),
+                        Text(
+                          translator.translate('GoToFAQ'),
+                        ),
                         Icon(Icons.arrow_right),
                       ],
                     ),

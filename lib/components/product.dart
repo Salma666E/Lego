@@ -1,17 +1,19 @@
+import 'package:LegoApp/components/review.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'drawerList.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'drawerList.dart';
 import 'package:LegoApp/models/review.dart';
+import 'package:toast/toast.dart';
+
+String _userID = 'GodEdO1YDAKTE2LNDp1V';
 
 Future<List<Review>> getReviews(String prdId) async {
   List<Review> reviews = [];
   final QuerySnapshot snapshot =
       await Firestore.instance.collection('Reviews').getDocuments();
-      
+
   final documents = snapshot.documents;
   documents.forEach((element) {
     if (element.data['productId'] == prdId) {
@@ -41,12 +43,10 @@ Future<int> getReviewsLength(String prdId) async {
 }
 
 class Product extends StatefulWidget {
-
   DocumentSnapshot document;
   Product({this.document});
   @override
   _ProductState createState() => _ProductState();
-
 }
 
 class MyItem {
@@ -63,7 +63,7 @@ class _ProductState extends State<Product> {
   List imgList;
   String image;
   String rate;
-  int count = 0;
+  int count = 1;
   int favNotificationCount = 0;
   int shoppingNotificationCount = 0;
   String description;
@@ -71,6 +71,17 @@ class _ProductState extends State<Product> {
   List<MyItem> _items2 = <MyItem>[];
   List<Review> revList = [];
   int revCount = 0;
+  String bagID = "";
+  String wishlist = "";
+  double overallrate = 0;
+  int overallratefloor = 0;
+  String revTitle = "";
+  String revBody = "";
+  IconData star1 = Icons.star_border_outlined;
+  IconData star2 = Icons.star_border_outlined;
+  IconData star3 = Icons.star_border_outlined;
+  IconData star4 = Icons.star_border_outlined;
+  IconData star5 = Icons.star_border_outlined;
 
   Widget _buildListPanel() {
     return ExpansionPanelList(
@@ -122,23 +133,18 @@ class _ProductState extends State<Product> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "Overall Rating",
+                          translator.translate('OverallRating'),
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       ),
                       Row(
                         children: [
-                          Icon(Icons.star_border_outlined,
-                              color: Colors.grey[300]),
-                          Icon(Icons.star_border_outlined,
-                              color: Colors.grey[300]),
-                          Icon(Icons.star_border_outlined,
-                              color: Colors.grey[300]),
-                          Icon(Icons.star_border_outlined,
-                              color: Colors.grey[300]),
-                          Icon(Icons.star_border_outlined,
-                              color: Colors.grey[300])
+                          Icon(star1, color: Colors.grey[300]),
+                          Icon(star2, color: Colors.grey[300]),
+                          Icon(star3, color: Colors.grey[300]),
+                          Icon(star4, color: Colors.grey[300]),
+                          Icon(star5, color: Colors.grey[300]),
                         ],
                       )
                     ],
@@ -149,94 +155,101 @@ class _ProductState extends State<Product> {
                       RaisedButton(
                         color: Colors.blue[500],
                         onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  title: Text("write review"),
-                                  content: SingleChildScrollView(
-                                    child: Column(children: [
-                                      Row(
-                                        children: [
-                                          Text("Rate :"),
-                                          Flexible(
-                                            child: Row(children: [
-                                              Container(
-                                                width: 18,
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.star_border_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  onPressed: () => print("1"),
-                                                ),
-                                              ),
-                                              Container(
-                                                width: 18,
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.star_border_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  onPressed: () => print("1"),
-                                                ),
-                                              ),
-                                              Container(
-                                                width: 18,
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.star_border_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  onPressed: () => print("1"),
-                                                ),
-                                              ),
-                                              Container(
-                                                width: 18,
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.star_border_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  onPressed: () => print("1"),
-                                                ),
-                                              ),
-                                              Container(
-                                                width: 18,
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.star_border_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  onPressed: () => print("1"),
-                                                ),
-                                              ),
-                                            ]),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 150,
-                                        child: TextField(
-                                            decoration: new InputDecoration(
-                                                border: InputBorder.none,
-                                                filled: false,
-                                                hintText: 'Add review')),
-                                      ),
-                                      RaisedButton(
-                                        onPressed: () {},
-                                        child: Text("send"),
-                                        color: Colors.blue,
-                                      )
-                                    ]),
-                                  ),
-                                );
-                              });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReviewForm(
+                                      document: widget.document,
+                                    )),
+                          );
+                          // showDialog(
+                          //     context: context,
+                          //     builder: (BuildContext context) {
+                          //       return AlertDialog(
+                          //         shape: RoundedRectangleBorder(
+                          //             borderRadius: BorderRadius.all(
+                          //                 Radius.circular(10.0))),
+                          //         title: Text("write review"),
+                          //         content: SingleChildScrollView(
+                          //           child: Column(children: [
+                          //             Row(
+                          //               children: [
+                          //                 Text("Rate :"),
+                          //                 Flexible(
+                          //                   child: Row(children: [
+                          //                     Container(
+                          //                       width: 18,
+                          //                       child: IconButton(
+                          //                         icon: Icon(
+                          //                           Icons.star_border_outlined,
+                          //                           color: Colors.grey,
+                          //                         ),
+                          //                         onPressed: () => print("1"),
+                          //                       ),
+                          //                     ),
+                          //                     Container(
+                          //                       width: 18,
+                          //                       child: IconButton(
+                          //                         icon: Icon(
+                          //                           Icons.star_border_outlined,
+                          //                           color: Colors.grey,
+                          //                         ),
+                          //                         onPressed: () => print("1"),
+                          //                       ),
+                          //                     ),
+                          //                     Container(
+                          //                       width: 18,
+                          //                       child: IconButton(
+                          //                         icon: Icon(
+                          //                           Icons.star_border_outlined,
+                          //                           color: Colors.grey,
+                          //                         ),
+                          //                         onPressed: () => print("1"),
+                          //                       ),
+                          //                     ),
+                          //                     Container(
+                          //                       width: 18,
+                          //                       child: IconButton(
+                          //                         icon: Icon(
+                          //                           Icons.star_border_outlined,
+                          //                           color: Colors.grey,
+                          //                         ),
+                          //                         onPressed: () => print("1"),
+                          //                       ),
+                          //                     ),
+                          //                     Container(
+                          //                       width: 18,
+                          //                       child: IconButton(
+                          //                         icon: Icon(
+                          //                           Icons.star_border_outlined,
+                          //                           color: Colors.grey,
+                          //                         ),
+                          //                         onPressed: () => print("1"),
+                          //                       ),
+                          //                     ),
+                          //                   ]),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //             SizedBox(
+                          //               height: 150,
+                          //               child: TextField(
+                          //                   decoration: new InputDecoration(
+                          //                       border: InputBorder.none,
+                          //                       filled: false,
+                          //                       hintText: 'Add review')),
+                          //             ),
+                          //             RaisedButton(
+                          //               onPressed: () {},
+                          //               child: Text("send"),
+                          //               color: Colors.blue,
+                          //             )
+                          //        ]),
+                          //     ),
+                          //   );
+                          // });
                         },
-                        child: Text("Write a Review"),
+                        child: Text(translator.translate('WriteReview')),
                       )
                     ],
                   ),
@@ -295,11 +308,13 @@ class _ProductState extends State<Product> {
     imgList = widget.document['images'];
     image = widget.document['image'];
     description = widget.document['description'].toString();
-    
-    _items.add(MyItem(header: "Description", body: description));
-    _items.add(MyItem(header: "Deliveries and Returns", body: ""));
-    _items2.add(MyItem(header: "Customer Reviews", body: ""));
-    
+
+    _items.add(MyItem(header: translator.translate("des"), body: description));
+    _items.add(MyItem(
+        header: translator.translate("delAndRet"),
+        body:
+            "Once payment of a purchase is received and verified, your order is automatically confirmed and will be processed within the next 24 hours."));
+    _items2.add(MyItem(header: translator.translate("cusRev"), body: ""));
     getReviews(widget.document.documentID).then((value) {
       for (var v in value) {
         revList.add(v);
@@ -307,6 +322,34 @@ class _ProductState extends State<Product> {
           revCount++;
         });
       }
+      for (var v in revList) {
+        overallrate += v.OverallRating;
+      }
+      setState(() {
+        overallrate = overallrate / revCount;
+        print("---------------------------------------");
+        print(overallrate.toDouble());
+      });
+      if (overallrate > 1)
+        setState(() {
+          star1 = Icons.star_rate;
+        });
+      if (overallrate > 2)
+        setState(() {
+          star2 = Icons.star_rate;
+        });
+      if (overallrate > 3)
+        setState(() {
+          star3 = Icons.star_rate;
+        });
+      if (overallrate > 4)
+        setState(() {
+          star4 = Icons.star_rate;
+        });
+      if (overallrate >= 5)
+        setState(() {
+          star5 = Icons.star_rate;
+        });
     });
   }
 
@@ -410,16 +453,11 @@ class _ProductState extends State<Product> {
                       child: Row(children: [
                         Row(
                           children: [
-                            Icon(Icons.star_border_outlined,
-                                color: Colors.grey[300]),
-                            Icon(Icons.star_border_outlined,
-                                color: Colors.grey[300]),
-                            Icon(Icons.star_border_outlined,
-                                color: Colors.grey[300]),
-                            Icon(Icons.star_border_outlined,
-                                color: Colors.grey[300]),
-                            Icon(Icons.star_border_outlined,
-                                color: Colors.grey[300])
+                            Icon(star1, color: Colors.grey[300]),
+                            Icon(star2, color: Colors.grey[300]),
+                            Icon(star3, color: Colors.grey[300]),
+                            Icon(star4, color: Colors.grey[300]),
+                            Icon(star5, color: Colors.grey[300])
                           ],
                         ),
                         Text(
@@ -437,10 +475,16 @@ class _ProductState extends State<Product> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              print("rev");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ReviewForm(
+                                          document: widget.document,
+                                        )),
+                              );
                             },
                             child: Text(
-                              translator.translate("Submit Reviews"),
+                              translator.translate("SubmitReviews"),
                               style: TextStyle(color: Colors.blue),
                             ),
                           ),
@@ -468,7 +512,7 @@ class _ProductState extends State<Product> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          Text(translator.translate("Avalible now "),
+                          Text(translator.translate("Avaliblenow"),
                               style: TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold,
@@ -494,8 +538,8 @@ class _ProductState extends State<Product> {
                                 ),
                                 onPressed: () => {
                                   setState(() {
-                                    if (count < 1) {
-                                      count = 0;
+                                    if (count < 2) {
+                                      count = 1;
                                     } else
                                       count--;
                                   })
@@ -536,7 +580,7 @@ class _ProductState extends State<Product> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Limit 3",
+                              translator.translate('Limit3'),
                               style: TextStyle(
                                   fontSize: 11, fontWeight: FontWeight.bold),
                             ),
@@ -551,11 +595,32 @@ class _ProductState extends State<Product> {
                         child: RaisedButton(
                           color: Colors.orange[900],
                           onPressed: () {
-                            //getReviews(widget.document.documentID);
+                            if (bagID == "") {
+                              Firestore.instance.collection("bags").add({
+                                "userID": _userID,
+                                "productsIDs": [{
+                                  "id": widget.document.documentID,
+                                  "qty": count
+                                }]
+                              }).then((value) => {
+                                    setState(() {
+                                      bagID = value.documentID;
+                                    })
+                                  });
+                              Toast.show(
+                                  translator.translate('AddSuccessfully'),
+                                  context,
+                                  duration: Toast.LENGTH_SHORT,
+                                  gravity: Toast.BOTTOM);
+                            } else {
+                              Toast.show(('ProductAreladyAdded'), context,
+                                  duration: Toast.LENGTH_SHORT,
+                                  gravity: Toast.BOTTOM);
+                            }
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(18.0),
-                            child: Text("Add to Bag"),
+                            child: Text(translator.translate("AddToBag")),
                           ),
                         ),
                       ),
@@ -574,11 +639,38 @@ class _ProductState extends State<Product> {
                                 onPressed: () => {
                                   setState(() {
                                     fav = Icons.favorite;
-                                  })
+                                  }),
+                                  if (wishlist == "")
+                                    {
+                                      Firestore.instance
+                                          .collection("wishlist")
+                                          .add({
+                                        "userID": _userID,
+                                        "productsIDs": {
+                                          "id": widget.document.documentID,
+                                        }
+                                      }).then((value) => {
+                                                setState(() {
+                                                  wishlist = value.documentID;
+                                                })
+                                              })
+                                    }
+                                  else
+                                    {
+                                      Firestore.instance
+                                          .collection("wishlist")
+                                          .document(wishlist)
+                                          .delete()
+                                          .then((value) => print('remo')),
+                                      setState(() {
+                                        fav = Icons.favorite_border_outlined;
+                                        wishlist = "";
+                                      }),
+                                    }
                                 },
                               ),
                               Text(
-                                "Add to wishlist",
+                                translator.translate('AddtoWishlist'),
                                 style: TextStyle(
                                     fontSize: 10, fontWeight: FontWeight.bold),
                               )
@@ -595,7 +687,7 @@ class _ProductState extends State<Product> {
                                 onPressed: () => print("share"),
                               ),
                               Text(
-                                "share",
+                                translator.translate("share"),
                                 style: TextStyle(
                                     fontSize: 10, fontWeight: FontWeight.bold),
                               )
@@ -625,7 +717,7 @@ class _ProductState extends State<Product> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "Ages",
+                                translator.translate("Ages"),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 10),
                               ),
@@ -700,7 +792,7 @@ class _ProductState extends State<Product> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Recommended For You',
+                                translator.translate("Recommended"),
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -739,7 +831,15 @@ class _ProductState extends State<Product> {
                                             child: Column(children: [
                                               GestureDetector(
                                                   onTap: () {
-                                                    print("aaaaa");
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Product(
+                                                                document: widget
+                                                                    .document,
+                                                              )),
+                                                    );
                                                   },
                                                   child: CachedNetworkImage(
                                                     height: 200,
@@ -760,8 +860,13 @@ class _ProductState extends State<Product> {
                                                     children: [
                                                       Flexible(
                                                         child: Text(
-                                                          product['name']
-                                                              .toString(),
+                                                          translator.currentLanguage ==
+                                                                  'en'
+                                                              ? product['name']
+                                                                  .toString()
+                                                              : product[
+                                                                      'arabicName']
+                                                                  .toString(),
                                                           style: TextStyle(
                                                               fontSize: 18.0,
                                                               fontWeight:
@@ -803,14 +908,14 @@ class _ProductState extends State<Product> {
                                                   width: double.infinity,
                                                   child: RaisedButton(
                                                     color: Colors.orange[900],
-                                                    onPressed: () {
-                                                      print("j");
-                                                    },
+                                                    onPressed: () {},
                                                     child: Padding(
                                                       padding:
                                                           const EdgeInsets.all(
                                                               18.0),
-                                                      child: Text("Add to Bag"),
+                                                      child: Text(
+                                                          translator.translate(
+                                                              "AddToBag")),
                                                     ),
                                                   ),
                                                 ),

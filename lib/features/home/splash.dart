@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:LegoApp/components/drawerList.dart';
+import 'package:LegoApp/components/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -27,12 +29,15 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     Widget child;
-
+    DrawerList();
     if (showSpinner == false)
-      child = Home(isDarkTheme: isDarkTheme,
-        onThemeChanged: (bool val) => setState(() => isDarkTheme = val),);
+      child = Register(
+        isDarkTheme: isDarkTheme,
+        onThemeChanged: (bool val) => setState(() => isDarkTheme = val),
+      );
     else if (showSpinner == true) {
-      child = SpinKitFadingCircle(color: Colors.black,
+      child = SpinKitFadingCircle(
+        color: Colors.black,
         size: 120.0,
       );
     }
@@ -48,8 +53,9 @@ class _SplashState extends State<Splash> {
       debugShowCheckedModeBanner: false,
       themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
       darkTheme: ThemeData(brightness: Brightness.dark),
-      theme: ThemeData(brightness: Brightness.light,
-      fontFamily: 'Poppins',
+      theme: ThemeData(
+        brightness: Brightness.light,
+        fontFamily: 'Poppins',
       ),
       //Language
       localizationsDelegates: translator.delegates,

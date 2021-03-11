@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 
 Widget productCard(BuildContext context, DocumentSnapshot document) {
   return Card(
@@ -8,29 +9,32 @@ Widget productCard(BuildContext context, DocumentSnapshot document) {
       children: [
         Image.network(document['image'], fit: BoxFit.fill),
         Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
           child: Container(
             color: Colors.yellow[700],
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
               child: Text(
-                'New',
+                translator.translate('NewProduct'),
                 textAlign: TextAlign.center,
               ),
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
           child: Container(
-            child: Text(document['name'],
+            child: Text(
+                translator.currentLanguage == 'en'
+                    ? document['name']
+                    : document['arabicName'],
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 overflow: TextOverflow.ellipsis),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 5.0),
+          padding: const EdgeInsets.only(left: 5.0, right: 5.0),
           child: Container(
             height: 35,
             child: Row(
@@ -45,7 +49,7 @@ Widget productCard(BuildContext context, DocumentSnapshot document) {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
           child: Container(
             child: Text(
               '\$${document['price']}',
@@ -63,9 +67,12 @@ Widget productCard(BuildContext context, DocumentSnapshot document) {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               color: Colors.orange[800],
-              onPressed: () {},
+              disabledColor: Colors.orange[200],
+              onPressed: document['stock'] <= 0 ? null : () {},
               child: Text(
-                'Add to cart',
+                document['stock'] <= 0
+                    ? translator.translate('OutOfBag')
+                    : translator.translate('AddToBag'),
                 style: TextStyle(fontSize: 18),
               ),
             ),

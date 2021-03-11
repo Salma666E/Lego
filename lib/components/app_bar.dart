@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
-Widget appBar(BuildContext context) {
+Widget appBar(BuildContext context,
+    {bool showBottom = false, List<Widget> tabs}) {
   return AppBar(
+    bottom: showBottom
+        ? TabBar(
+            tabs: tabs,
+            labelColor: Colors.black,
+          )
+        : null,
     leading: Builder(
       builder: (context) => IconButton(
         icon: Icon(
@@ -30,13 +37,18 @@ Widget appBar(BuildContext context) {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.only(right: 15.0, left: 10.0),
+          padding: const EdgeInsets.only(right: 20.0, left: 10.0),
           child: Text(
             translator.translate('Language'),
-            style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 16,
-                color: Colors.blue),
+            style: translator.currentLanguage != 'ar'
+                ? TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 20,
+                    color: Colors.blue)
+                : TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 16,
+                    color: Colors.blue),
           ),
         ),
       )),

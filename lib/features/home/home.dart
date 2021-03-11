@@ -1,5 +1,4 @@
 import 'package:LegoApp/components/login.dart';
-import 'package:LegoApp/helper/addNotification.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,7 +8,7 @@ import '../../components/buildListItem.dart';
 import '../../components/drawerList.dart';
 import '../../components/slider.dart';
 import '../../components/app_bar.dart';
-
+// I need Name,Email and Id for User.................. 
 Firestore firestore = Firestore.instance;
 List<String> wishList;
 Future<List<String>> getWishListArray(String documentId) async {
@@ -20,16 +19,15 @@ Future<List<String>> getWishListArray(String documentId) async {
   wishList = productsIDs;
   return productsIDs;
 }
-
 class Home extends StatefulWidget {
   const Home({
-    Key key,
-    this.isDarkTheme,
-    this.onThemeChanged,
-  }) : super(key: key);
+    this.isDarkTheme = false,
+    this.onThemeChanged = _dummyOnFocusChange,
+  }) : assert(onThemeChanged != null);
 
   final bool isDarkTheme;
   final ValueChanged<bool> onThemeChanged;
+  static dynamic _dummyOnFocusChange(bool val) {}
 
   @override
   _HomeState createState() => _HomeState();
@@ -43,13 +41,12 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     getWishListArray(_userID);
+    setState(() {});
   }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
-
   @override
   void dispose() {
     super.dispose();
@@ -57,8 +54,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {});
     return Scaffold(
-      drawer: DrawerList(), // Drawer Class
+      drawer: DrawerList(),
       appBar: appBar(context),
       body: ListView(
         children: <Widget>[
@@ -143,31 +141,34 @@ class _HomeState extends State<Home> {
                     child: new Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        new Container(
-                            height: 45.0,
-                            width: 45.0,
-                            child: Center(
-                              child: Card(
-                                elevation: 5.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      25.0), // half of height and width of Image
-                                ),
-                                child: IconButton(
-                                  icon: widget.isDarkTheme
-                                      ? Transform.rotate(
-                                          angle: .55,
-                                          child: Icon(
-                                            Icons.brightness_3,
-                                            size: 20.0,
-                                          ))
-                                      : Icon(Icons.brightness_7),
-                                  onPressed: () => widget
-                                      .onThemeChanged(!widget.isDarkTheme),
-                                  tooltip: 'Switch brightness',
-                                ),
-                              ),
-                            )),
+                        // new Container(
+                        //     height: 45.0,
+                        //     width: 45.0,
+                        //     child: Center(
+                        //       child: Card(
+                        //         elevation: 5.0,
+                        //         shape: RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(
+                        //               25.0), // half of height and width of Image
+                        //         ),
+                        //         child: IconButton(
+                        //           icon: widget.isDarkTheme
+                        //               ? Transform.rotate(
+                        //                   angle: .55,
+                        //                   child: Icon(
+                        //                     Icons.brightness_3,
+                        //                     size: 20.0,
+                        //                   ))
+                        //               : Icon(Icons.brightness_7),
+                        //           onPressed: () {
+                        //             widget.onThemeChanged(!widget.isDarkTheme);
+                        //             print("widget.isDarkTheme: " +
+                        //                 widget.isDarkTheme.toString());
+                        //           },
+                        //           tooltip: 'Switch brightness',
+                        //         ),
+                        //       ),
+                        //     )),
                         new Container(
                             height: 45.0,
                             width: 45.0,
@@ -183,7 +184,13 @@ class _HomeState extends State<Home> {
                                     Icons.person,
                                     size: 20.0,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Login()),
+                                    );
+                                  },
                                 ),
                               ),
                             )),
@@ -247,17 +254,6 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                  ),
-                  new FloatingActionButton(
-                    elevation: 0.0,
-                    child: new Icon(Icons.add),
-                    backgroundColor: Colors.black,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Login()),
-                      );
-                    },
                   ),
                 ],
               ),

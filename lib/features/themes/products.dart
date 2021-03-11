@@ -37,7 +37,7 @@ class _ProductsState extends State<Products> {
               },
               backgroundColor: Colors.blueGrey[100],
               title: Text(
-                'Select Category',
+                translator.translate('SelectCategory'),
                 style: TextStyle(
                   color: _selectCategoryColor,
                   fontWeight: FontWeight.bold,
@@ -64,8 +64,11 @@ class _ProductsState extends State<Products> {
                                 snapshot.data.documents[index].documentID
                             ? Colors.orange[800]
                             : Colors.orange,
-                        child:
-                            Text('${snapshot.data.documents[index]["name"]}'),
+                        child: Text(
+                          translator.currentLanguage == 'en'
+                              ? snapshot.data.documents[index]['name']
+                              : snapshot.data.documents[index]['arabicName'],
+                        ),
                       ),
                     );
                   }).toList(),
