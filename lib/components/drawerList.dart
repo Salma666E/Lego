@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'cardCustom.dart';
 
-String _userID = "ggt6vACGkxTV6ZlQeLi7Xm2FOiW2";
+String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
 String userName = "Lego";
 String userEmail="lego.com";
 Future<String> getUserName(String _userID) async {
@@ -44,6 +44,7 @@ class _DrawerListState extends State<DrawerList> {
     print("_userID: " + _userID.toString());
     getUserName(_userID);
     getBagsArray(_userID);
+    
     setState(() {});
   }
 

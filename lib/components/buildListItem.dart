@@ -7,11 +7,10 @@ import 'product.dart';
 import 'package:toast/toast.dart';
 
 Widget buildListItem(BuildContext context, DocumentSnapshot document,
- 
-  String _userID, List<String> wishList) {
+    String _userID, List<String> wishList) {
   Future<bool> changedata(status) async {
     print("status: " + status.toString());
-    if (status ) {
+    if (status) {
       // Remove From WishList
       Firestore.instance.collection("wishlist").document(_userID).updateData({
         "productsIDs": FieldValue.arrayRemove([document.documentID])
@@ -19,7 +18,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
       Toast.show(translator.translate('RemoveWishList'), context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     } else {
-    // Add To WishList
+      // Add To WishList
       Firestore.instance.collection("wishlist").document(_userID).updateData({
         "productsIDs": FieldValue.arrayUnion([document.documentID])
       });
@@ -27,6 +26,49 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     }
     return Future.value(!status);
+  }
+
+  bool exist = false;
+  Add2Bag() async { // Add To My Bag
+    await Firestore.instance
+        .collection("bags")
+        .document(_userID)
+        .get()
+        .then((querySnapshot) async {
+      querySnapshot['productsIDs'].forEach((result) async {
+        if (result['id'].toString() == document.documentID) {
+          exist = true;
+          int qtyOld = result['qty'];
+          await Firestore.instance
+              .collection('bags')
+              .document(_userID)
+              .updateData({
+            'productsIDs': FieldValue.arrayRemove([
+              {'qty': qtyOld, 'id': document.documentID}
+            ])
+          });
+          int qty = result['qty']+1;
+          await Firestore.instance
+              .collection('bags')
+              .document(_userID)
+              .updateData({
+            'productsIDs': FieldValue.arrayUnion([
+              {'qty': qty, 'id': document.documentID}
+            ])
+          });
+          return result;
+        }
+      });
+      if (!exist) {
+        Firestore.instance.collection("bags").document(_userID).updateData({
+          "productsIDs": FieldValue.arrayUnion([
+            {"id": document.documentID, "qty": 1}
+          ])
+        });
+      }
+    });
+    Toast.show(translator.translate('AddSuccessfully'), context,
+        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
   }
 
   return Card(
@@ -39,7 +81,8 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Product(document:document)),
+                  MaterialPageRoute(
+                      builder: (context) => Product(document: document)),
                 );
               },
               child: Image.network(document['image'],
@@ -155,19 +198,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
         Padding(
           padding: const EdgeInsets.only(top: 15.0),
           child: RaisedButton(
-            onPressed: () {
-              // Add To My Bag
-              print("documentID: " + document.documentID);
-              print("_userID: " + _userID);
-              Firestore.instance
-                  .collection("bags")
-                  .document(_userID)
-                  .updateData({
-                "productsIDs": FieldValue.arrayUnion([document.documentID])
-              });
-              Toast.show(translator.translate('AddSuccessfully'), context,
-                  duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-            },
+            onPressed: () => Add2Bag(),
             textColor: Colors.black,
             padding: const EdgeInsets.all(0.0),
             child: Container(
@@ -180,8 +211,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
                 ],
                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                 gradient: LinearGradient(
-                  colors: 
-                  <Color>[
+                  colors: <Color>[
                     Color(0xFFE65100),
                     Color(0xFFEF6C00),
                     Color(0xFFE65100),

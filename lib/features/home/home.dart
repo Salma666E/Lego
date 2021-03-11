@@ -8,7 +8,7 @@ import '../../components/buildListItem.dart';
 import '../../components/drawerList.dart';
 import '../../components/slider.dart';
 import '../../components/app_bar.dart';
-// I need Name,Email and Id for User............................ 
+// I need Name,Email and Id for User.................. 
 Firestore firestore = Firestore.instance;
 List<String> wishList;
 Future<List<String>> getWishListArray(String documentId) async {
@@ -19,33 +19,6 @@ Future<List<String>> getWishListArray(String documentId) async {
   wishList = productsIDs;
   return productsIDs;
 }
-
-String userName;
-String userEmail;
-bool flageDrawer = false;
-Future<String> getUserName(String _userID) async {
-  DocumentSnapshot snapshot =
-      await firestore.collection('users').document(_userID).get();
-  userName = snapshot.data['displayName'];
-  userEmail = snapshot.data['email'];
-  print('userName: ' + userName.toString());
-  print('userEmail: ' + userEmail.toString());
-  flageDrawer = true;
-  return "Name: " + userName + " Email: " + userEmail;
-}
-
-//
-List<String> bags;
-Future<List<String>> getBagsArray(String documentId) async {
-  DocumentSnapshot snapshot =
-      await firestore.collection('bags').document(documentId).get();
-  bags = List.from(snapshot.data['productsIDs']);
-  flageDrawer = true;
-  print('flageDrawer+bags: ' + bags.toString());
-  return bags;
-}
-
-//
 class Home extends StatefulWidget {
   const Home({
     this.isDarkTheme = false,
@@ -62,23 +35,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isDarkTheme = false;
-  String _userID = "ggt6vACGkxTV6ZlQeLi7Xm2FOiW2";
+  String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
 
   @override
   void initState() {
     super.initState();
     getWishListArray(_userID);
-    getUserName(_userID);
-    getBagsArray(_userID);
     setState(() {});
   }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // setState(() {});
   }
-
   @override
   void dispose() {
     super.dispose();
@@ -89,11 +57,6 @@ class _HomeState extends State<Home> {
     setState(() {});
     return Scaffold(
       drawer: DrawerList(),
-      // flageDrawer
-          // ? DrawerList(userName: userName, userEmail: userEmail, bags: bags)
-          // : DrawerList(
-          //     userName: "LegoName", userEmail: "LegoEmail.com", bags: ['1']),
-      // Drawer Class
       appBar: appBar(context),
       body: ListView(
         children: <Widget>[
@@ -292,17 +255,6 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  // new FloatingActionButton(
-                  //   elevation: 0.0,
-                  //   child: new Icon(Icons.add),
-                  //   backgroundColor: Colors.black,
-                  //   onPressed: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(builder: (context) => Login()),
-                  //     );
-                  //   },
-                  // ),
                 ],
               ),
             ),
