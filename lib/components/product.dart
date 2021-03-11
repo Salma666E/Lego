@@ -73,15 +73,15 @@ class _ProductState extends State<Product> {
   int revCount = 0;
   String bagID = "";
   String wishlist = "";
-  double overallrate =0;
-  int overallratefloor=0;
-  String revTitle ="";
-  String revBody ="";
-  IconData star1= Icons.star_border_outlined;
-  IconData star2= Icons.star_border_outlined;
-  IconData star3= Icons.star_border_outlined;
-  IconData star4= Icons.star_border_outlined;
-  IconData star5= Icons.star_border_outlined;
+  double overallrate = 0;
+  int overallratefloor = 0;
+  String revTitle = "";
+  String revBody = "";
+  IconData star1 = Icons.star_border_outlined;
+  IconData star2 = Icons.star_border_outlined;
+  IconData star3 = Icons.star_border_outlined;
+  IconData star4 = Icons.star_border_outlined;
+  IconData star5 = Icons.star_border_outlined;
 
   Widget _buildListPanel() {
     return ExpansionPanelList(
@@ -133,25 +133,18 @@ class _ProductState extends State<Product> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "Overall Rating",
+                          translator.translate('OverallRating'),
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       ),
-                      
                       Row(
-                        children: [   
-                          Icon(star1,
-                              color: Colors.grey[300]),
-                          Icon(star2,
-                              color: Colors.grey[300]),
-                          Icon(star3,
-                              color: Colors.grey[300]),
-                          Icon(star4,
-                              color: Colors.grey[300]),
-                          Icon(star5,
-                              color: Colors.grey[300]),
-                          
+                        children: [
+                          Icon(star1, color: Colors.grey[300]),
+                          Icon(star2, color: Colors.grey[300]),
+                          Icon(star3, color: Colors.grey[300]),
+                          Icon(star4, color: Colors.grey[300]),
+                          Icon(star5, color: Colors.grey[300]),
                         ],
                       )
                     ],
@@ -162,9 +155,12 @@ class _ProductState extends State<Product> {
                       RaisedButton(
                         color: Colors.blue[500],
                         onPressed: () {
-                           Navigator.push(
+                          Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ReviewForm(document: widget.document,)),
+                            MaterialPageRoute(
+                                builder: (context) => ReviewForm(
+                                      document: widget.document,
+                                    )),
                           );
                           // showDialog(
                           //     context: context,
@@ -253,7 +249,7 @@ class _ProductState extends State<Product> {
                           //   );
                           // });
                         },
-                        child: Text("Write a Review"),
+                        child: Text(translator.translate('WriteReview')),
                       )
                     ],
                   ),
@@ -313,12 +309,12 @@ class _ProductState extends State<Product> {
     image = widget.document['image'];
     description = widget.document['description'].toString();
 
-    _items.add(MyItem(header: "Description", body: description));
+    _items.add(MyItem(header: translator.translate("des"), body: description));
     _items.add(MyItem(
-        header: "Deliveries and Returns",
+        header: translator.translate("delAndRet"),
         body:
             "Once payment of a purchase is received and verified, your order is automatically confirmed and will be processed within the next 24 hours."));
-    _items2.add(MyItem(header: "Customer Reviews", body: ""));
+    _items2.add(MyItem(header: translator.translate("cusRev"), body: ""));
     getReviews(widget.document.documentID).then((value) {
       for (var v in value) {
         revList.add(v);
@@ -326,37 +322,34 @@ class _ProductState extends State<Product> {
           revCount++;
         });
       }
-      for (var v in revList){
-        overallrate+=v.OverallRating;
+      for (var v in revList) {
+        overallrate += v.OverallRating;
       }
       setState(() {
-         overallrate=overallrate/revCount;
-         print("---------------------------------------");
-         print(overallrate.toDouble());
-        
+        overallrate = overallrate / revCount;
+        print("---------------------------------------");
+        print(overallrate.toDouble());
       });
-      if(overallrate>1)
-         setState(() {
-           star1=Icons.star_rate;
-         });
-       if(overallrate>2)
-         setState(() {
-           star2=Icons.star_rate;
-         });
-       if(overallrate>3)
-         setState(() {
-           star3=Icons.star_rate;
-         });
-       if(overallrate>4)
-         setState(() {
-           star4=Icons.star_rate;
-         });
-         if(overallrate>=5)
-         setState(() {
-           star5=Icons.star_rate;
-         });
-
-      
+      if (overallrate > 1)
+        setState(() {
+          star1 = Icons.star_rate;
+        });
+      if (overallrate > 2)
+        setState(() {
+          star2 = Icons.star_rate;
+        });
+      if (overallrate > 3)
+        setState(() {
+          star3 = Icons.star_rate;
+        });
+      if (overallrate > 4)
+        setState(() {
+          star4 = Icons.star_rate;
+        });
+      if (overallrate >= 5)
+        setState(() {
+          star5 = Icons.star_rate;
+        });
     });
   }
 
@@ -460,19 +453,11 @@ class _ProductState extends State<Product> {
                       child: Row(children: [
                         Row(
                           children: [
-                            
-                            Icon(
-                              star1,
-                                color: Colors.grey[300]),
-                            Icon(star2,
-                                color: Colors.grey[300]),
-                            Icon(star3,
-                                color: Colors.grey[300]),
-                            Icon(star4,
-                                color: Colors.grey[300]),
-                            Icon(star5,
-                                color: Colors.grey[300])  
-                           
+                            Icon(star1, color: Colors.grey[300]),
+                            Icon(star2, color: Colors.grey[300]),
+                            Icon(star3, color: Colors.grey[300]),
+                            Icon(star4, color: Colors.grey[300]),
+                            Icon(star5, color: Colors.grey[300])
                           ],
                         ),
                         Text(
@@ -490,10 +475,16 @@ class _ProductState extends State<Product> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              print("rev");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ReviewForm(
+                                          document: widget.document,
+                                        )),
+                              );
                             },
                             child: Text(
-                              translator.translate("Submit Reviews"),
+                              translator.translate("SubmitReviews"),
                               style: TextStyle(color: Colors.blue),
                             ),
                           ),
@@ -521,7 +512,7 @@ class _ProductState extends State<Product> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          Text(translator.translate("Avalible now "),
+                          Text(translator.translate("Avaliblenow"),
                               style: TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold,
@@ -589,7 +580,7 @@ class _ProductState extends State<Product> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Limit 3",
+                              translator.translate('Limit3'),
                               style: TextStyle(
                                   fontSize: 11, fontWeight: FontWeight.bold),
                             ),
@@ -629,7 +620,7 @@ class _ProductState extends State<Product> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(18.0),
-                            child: Text("Add to Bag"),
+                            child: Text(translator.translate("AddToBag")),
                           ),
                         ),
                       ),
@@ -651,7 +642,6 @@ class _ProductState extends State<Product> {
                                   }),
                                   if (wishlist == "")
                                     {
-                                      
                                       Firestore.instance
                                           .collection("wishlist")
                                           .add({
@@ -663,25 +653,24 @@ class _ProductState extends State<Product> {
                                                 setState(() {
                                                   wishlist = value.documentID;
                                                 })
-                                      })
+                                              })
                                     }
                                   else
-                                    { 
+                                    {
                                       Firestore.instance
                                           .collection("wishlist")
                                           .document(wishlist)
-                                          .delete().then((value) => print('remo')),
-                                      
+                                          .delete()
+                                          .then((value) => print('remo')),
                                       setState(() {
                                         fav = Icons.favorite_border_outlined;
-                                        wishlist="";
+                                        wishlist = "";
                                       }),
-
                                     }
                                 },
                               ),
                               Text(
-                                "Add to wishlist",
+                                translator.translate('AddtoWishlist'),
                                 style: TextStyle(
                                     fontSize: 10, fontWeight: FontWeight.bold),
                               )
@@ -698,7 +687,7 @@ class _ProductState extends State<Product> {
                                 onPressed: () => print("share"),
                               ),
                               Text(
-                                "share",
+                                translator.translate("share"),
                                 style: TextStyle(
                                     fontSize: 10, fontWeight: FontWeight.bold),
                               )
@@ -728,7 +717,7 @@ class _ProductState extends State<Product> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "Ages",
+                                translator.translate("Ages"),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 10),
                               ),
@@ -803,7 +792,7 @@ class _ProductState extends State<Product> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Recommended For You',
+                                translator.translate("Recommended"),
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -842,7 +831,15 @@ class _ProductState extends State<Product> {
                                             child: Column(children: [
                                               GestureDetector(
                                                   onTap: () {
-                                                    print("aaaaa");
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Product(
+                                                                document: widget
+                                                                    .document,
+                                                              )),
+                                                    );
                                                   },
                                                   child: CachedNetworkImage(
                                                     height: 200,
@@ -863,8 +860,13 @@ class _ProductState extends State<Product> {
                                                     children: [
                                                       Flexible(
                                                         child: Text(
-                                                          product['name']
-                                                              .toString(),
+                                                          translator.currentLanguage ==
+                                                                  'en'
+                                                              ? product['name']
+                                                                  .toString()
+                                                              : product[
+                                                                      'arabicName']
+                                                                  .toString(),
                                                           style: TextStyle(
                                                               fontSize: 18.0,
                                                               fontWeight:
@@ -906,37 +908,14 @@ class _ProductState extends State<Product> {
                                                   width: double.infinity,
                                                   child: RaisedButton(
                                                     color: Colors.orange[900],
-                                                    onPressed: () {
-                                                      print("documentID: " +
-                                                          widget.document
-                                                              .documentID);
-                                                      print("_userID: " +
-                                                          _userID);
-                                                      Firestore.instance
-                                                          .collection("bags")
-                                                          .document(_userID)
-                                                          .updateData({
-                                                        "productsIDs":
-                                                            FieldValue
-                                                                .arrayUnion([
-                                                          widget.document
-                                                              .documentID
-                                                        ])
-                                                      });
-                                                      Toast.show(
-                                                          translator.translate(
-                                                              'AddSuccessfully'),
-                                                          context,
-                                                          duration: Toast
-                                                              .LENGTH_SHORT,
-                                                          gravity:
-                                                              Toast.BOTTOM);
-                                                    },
+                                                    onPressed: () {},
                                                     child: Padding(
                                                       padding:
                                                           const EdgeInsets.all(
                                                               18.0),
-                                                      child: Text("Add to Bag"),
+                                                      child: Text(
+                                                          translator.translate(
+                                                              "AddToBag")),
                                                     ),
                                                   ),
                                                 ),

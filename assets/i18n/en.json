@@ -50,5 +50,26 @@
     "SelectCategory": "Select Category",
     "NewProduct": "New",
     "TabAbout": "About",
-    "TabProducts": "Products"
+    "TabProducts": "Products",
+   
+    "Rate" :"Rate :",
+    "WriteReviewtitle" :"Write Review title ",
+    "WriteReview": "Write Review ",
+    "recommend":"Would you recommend this product ?",
+    "Yes":"Yes",
+    "No":"No",
+    "Send":"Send",
+    "OverallRating":"Overall Rating",
+    "Limit3":"Limit 3",
+    "AddtoWishlist":"Add to wish list",
+    "share":"share",
+    "Ages":"Ages",
+    "Item":"Item",
+    "Pieces":"Pieces",
+    "des":"Description",
+    "delAndRet":"Deliveries and Returns",
+    "cusRev":"Customer Reviews"
+
+
+
 }

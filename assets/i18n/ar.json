@@ -50,5 +50,24 @@
     "SelectCategory":"اختر الفئة",
     "NewProduct": "جديد",
     "TabAbout": "تفاصيل",
-    "TabProducts": "منتجات"
+    "TabProducts": "منتجات",
+
+    "Rate":"التقييم",
+    "WriteReviewtitle":"شارك بتعليقك",
+    "WriteReview":" ماهو وصفك للمنتج ",
+    "recommend":"هل توصي بشراء هذا المنتج ؟",
+    "Yes":"نعم",
+    "No":"لا",
+    "Send":"أرسل",
+    "OverallRating":"التقييم العام",
+    "Limit3":"متاح 3",
+    "AddtoWishlist" : "أضف إلى المفضلة",
+    "share":"شارك",
+    "Ages":"أعمار",
+    "Item":"عنصر",
+    "Pieces":"ٌقطع",
+    "des":"وصف المنتج",
+    "delAndRet":"التوصيل والإرجاع",
+    "cusRev":"آراء العملاء"
+    
 }

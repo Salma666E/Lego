@@ -67,7 +67,7 @@ class _ReviewState extends State<ReviewForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Rate :',
+                translator.translate('Rate'),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Row(
@@ -137,13 +137,14 @@ class _ReviewState extends State<ReviewForm> {
             ],
           ),
         ),
+        
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               Text(
-                "Write Review title :",
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+               translator.translate('WriteReviewtitle'),
+               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
               )
             ],
           ),
@@ -172,7 +173,7 @@ class _ReviewState extends State<ReviewForm> {
           child: Row(
             children: [
               Text(
-                "Write Review :",
+                translator.translate('WriteReview') ,
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
               )
             ],
@@ -202,7 +203,7 @@ class _ReviewState extends State<ReviewForm> {
           child: Row(
             children: [
               Text(
-                "Would you recommend this product ?",
+                translator.translate('recommend'),
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               )
             ],
@@ -225,7 +226,7 @@ class _ReviewState extends State<ReviewForm> {
                         });
                       }),
                   Text(
-                    "yes",
+                    translator.translate('Yes'),
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                   )
                 ],
@@ -242,7 +243,7 @@ class _ReviewState extends State<ReviewForm> {
                         });
                       }),
                   Text(
-                    "No",
+                    translator.translate('No'),
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                   )
                 ],
@@ -262,7 +263,9 @@ class _ReviewState extends State<ReviewForm> {
             Toast.show(('Thank you for sharing your experince'), context,
                 duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
           },
-          child: Text("Send"),
+          child: Text(
+            translator.translate("Send")
+          ),
         )
       ])),
     );
