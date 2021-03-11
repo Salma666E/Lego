@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../services/auth.dart';
+import './profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -533,6 +535,7 @@ class _RegisterState extends State<Register> {
                                       _day,
                                       _year,
                                       checkedValue);
+                                  //dynamic resultdata = await auth.getData();
                                   /*if (result == null) {
                                     setState(() =>
                                        error="Please enter a valid information");
@@ -543,7 +546,7 @@ class _RegisterState extends State<Register> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Home()));
+                                          builder: (context) => Login()));
                                 }
                               },
                               color: Color.fromRGBO(0, 123, 255, 0.8),

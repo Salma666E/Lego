@@ -1,8 +1,12 @@
+import 'package:LegoApp/components/profile.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:LegoApp/services/auth.dart';
 import 'package:flutter/material.dart';
 import '../components/register.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+var id;
 
 class Login extends StatefulWidget {
   @override
@@ -22,6 +26,16 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
 
   final AuthService auth = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    /*getPrefs('UserID').then((value) =>
+      id = value
+    );*/
+    id = "";
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,6 +222,10 @@ class _LoginState extends State<Login> {
                                   _formKey.currentState.save();
                                   dynamic result = await auth.signIn(
                                       loginEmail, loginPassword);
+
+                                  auth.getPrefs('UserID').then((value) => print(value));
+
+                                  
                                   if (result == null) {
                                     setState(() => error =
                                         "Please check your email and passsword!");
@@ -217,7 +235,7 @@ class _LoginState extends State<Login> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => Home(),
+                                          builder: (context) => Profile(),
                                         ));
                                   }
                                 }
@@ -291,3 +309,17 @@ class _LoginState extends State<Login> {
     );
   }
 }
+
+/*Future<void> setPref(dynamic getid) async{
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+   prefs.setString("UserID", getid);
+   //print("SET PREFFFFFFFFFFFFFFFFFFFFFFFS"+ getPrefs());
+ }*/
+
+ Future<String> getPrefs(String key) async{
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+   String getPrefsString = prefs.getString(key);
+   print("AUTH GETTTTTTTTTTTTTTTTTTTTT " + getPrefsString);
+   return getPrefsString;
+ }
+
