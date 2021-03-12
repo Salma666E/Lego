@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import '../components/drawerList.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:email_validator/email_validator.dart';
 
 String _userID = 'GodEdO1YDAKTE2LNDp1V';
 
@@ -24,6 +25,7 @@ class _CheckOutState extends State<CheckOut> {
   int subtotal =0;
   double ordertotal =0 ;
   var listofproducts;
+  String bagId='';
 
   @override
   void initState() {
@@ -32,7 +34,11 @@ class _CheckOutState extends State<CheckOut> {
     Firestore.instance.collection("bags").getDocuments().then((value) {
        value.documents.forEach((element) {
          var data =element.data;
+        
          if(data['userID']==_userID){
+            print("BAGIDDDDDDDDDDD");
+            print(element.documentID);
+
             setState((){
                 listofproducts=data['productsIDs'];
             });
@@ -92,11 +98,13 @@ class _CheckOutState extends State<CheckOut> {
                       ),
                     ),
                     TextField(
+                       
                       controller:myconrollar4,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.email),
                         labelText: "Email ",
-                      ),
+                       
+                      ),     
                     ),
                     TextField(
                       controller:myconrollar5,
