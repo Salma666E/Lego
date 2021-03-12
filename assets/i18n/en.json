@@ -83,6 +83,8 @@
     "Email":"Email",
     "Phone":"Phone",
     "ZIP":"ZIP",
-    "Card":"Card Number"
+    "Card":"Card Number",
+
+    "delretbody":"Once payment of a purchase is received and verified, your order is  automatically confirmed and will be processed within the next 24 hours."
 
 }
