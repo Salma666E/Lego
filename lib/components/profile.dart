@@ -1,3 +1,4 @@
+import 'package:LegoApp/features/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,7 +8,6 @@ import 'package:LegoApp/components/change-password.dart';
 import 'package:LegoApp/components/login.dart';
 import 'package:LegoApp/services/auth.dart';
 import '../components/edit_account.dart';
-
 
 var id = '';
 
@@ -102,7 +102,7 @@ class _ProfileState extends State<Profile> {
                               "MY PROFILE",
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 12,
+                                fontSize: 15,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -122,7 +122,7 @@ class _ProfileState extends State<Profile> {
                               child: Text(
                                 "Hi ${name}",
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 10),
+                                    color: Colors.black, fontSize: 12),
                               ),
                             ),
                           ],
@@ -154,7 +154,7 @@ class _ProfileState extends State<Profile> {
                         onPressed: () {
                           auth.signOut();
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Login()));
+                              MaterialPageRoute(builder: (context) => Home()));
                         },
                         color: Colors.blue[800],
                         shape: RoundedRectangleBorder(
@@ -179,7 +179,7 @@ class _ProfileState extends State<Profile> {
                               child: Text(
                                 "Avatar",
                                 style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -214,7 +214,7 @@ class _ProfileState extends State<Profile> {
                                 child: Text(
                                   "Username",
                                   style: TextStyle(
-                                      fontSize: 11,
+                                      fontSize: 13,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -231,7 +231,7 @@ class _ProfileState extends State<Profile> {
                                 child: TextField(
                                   enabled: false,
                                   style: TextStyle(
-                                      color: Colors.grey[900], fontSize: 10),
+                                      color: Colors.grey[900], fontSize: 12),
                                   decoration: new InputDecoration(
                                     hintText: name,
                                   ),
@@ -249,7 +249,7 @@ class _ProfileState extends State<Profile> {
                                 child: Text(
                                   "Email",
                                   style: TextStyle(
-                                      fontSize: 11,
+                                      fontSize: 13,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -265,7 +265,7 @@ class _ProfileState extends State<Profile> {
                                 width: 300,
                                 child: TextField(
                                   style: TextStyle(
-                                      color: Colors.grey[900], fontSize: 10),
+                                      color: Colors.grey[900], fontSize: 12),
                                   decoration: new InputDecoration(
                                     hintText: email,
                                   ),
@@ -284,7 +284,7 @@ class _ProfileState extends State<Profile> {
                                 child: Text(
                                   "Date of birth",
                                   style: TextStyle(
-                                      fontSize: 11,
+                                      fontSize: 13,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -300,7 +300,7 @@ class _ProfileState extends State<Profile> {
                                 width: 300,
                                 child: TextField(
                                   style: TextStyle(
-                                      color: Colors.grey[900], fontSize: 10),
+                                      color: Colors.grey[900], fontSize: 12),
                                   decoration: new InputDecoration(
                                     hintText: birthday,
                                   ),
@@ -311,65 +311,65 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                          padding: EdgeInsets.only(right: 8.0),
                           child: Row(
                             children: [
                               Container(
-                                  width: 300,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditAccount(), //SingleCard(imgLink: widget.imgLink, post_details: widget.chosen_post)
-                                        ),
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 20),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text("Edit Account",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.bold))
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.3,
-                                                child: Divider(
-                                                  color: Colors.black,
+                                width: 300,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 8),
+                                          child: FlatButton(
+                                            padding: EdgeInsets.zero,
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditAccount(), //SingleCard(imgLink: widget.imgLink, post_details: widget.chosen_post)
                                                 ),
-                                              ),
-                                            ],
+                                              );
+                                            },
+                                            child: Text(
+                                              "Edit Account",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-
-                                  /*TextField(
-                                    style: TextStyle(fontSize: 11),
-                                    decoration: new InputDecoration(
-                                      hintText: "Edit Account",
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 8.0),
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.3,
+                                            child: Divider(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    enabled: false,
-                                  ),*/
-                                  ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -382,7 +382,7 @@ class _ProfileState extends State<Profile> {
                                 child: Text(
                                   "Password",
                                   style: TextStyle(
-                                    fontSize: 11,
+                                    fontSize: 13,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -398,7 +398,7 @@ class _ProfileState extends State<Profile> {
                               Container(
                                 width: 300,
                                 child: TextField(
-                                  style: TextStyle(fontSize: 10),
+                                  style: TextStyle(fontSize: 12),
                                   decoration: new InputDecoration(
                                     hintText: "*******",
                                   ),
@@ -408,66 +408,66 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                         ),
-                         Padding(
-                          padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                        Padding(
+                          padding: EdgeInsets.only(right: 8.0),
                           child: Row(
                             children: [
                               Container(
-                                  width: 300,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ChangePassword(),
-                                        ),
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 20),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text("Change Password",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.bold))
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.4,
-                                                child: Divider(
-                                                  color: Colors.black,
+                                width: 300,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(left:8.0, top: 8.0),
+                                          child: FlatButton(
+                                            padding: EdgeInsets.zero,
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ChangePassword(),
                                                 ),
-                                              ),
-                                            ],
+                                              );
+                                            },
+                                            child: Text(
+                                              "Change Password",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  )
-
-                                  /*TextField(
-                                    style: TextStyle(fontSize: 11),
-                                    decoration: new InputDecoration(
-                                      hintText: "Edit Account",
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 8.0),
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.3,
+                                            child: Divider(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    enabled: false,
-                                  ),*/
-                                  ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -490,4 +490,3 @@ Future<String> getPrefs(String key) async {
   print("AUTH GETTTTTTTTTTTTTTTTTTTTT " + getPrefsString);
   return getPrefsString;
 }
-

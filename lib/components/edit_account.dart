@@ -2,6 +2,7 @@ import 'package:LegoApp/components/profile.dart';
 import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 var id = '';
 
@@ -11,23 +12,32 @@ class EditAccount extends StatefulWidget {
 }
 
 class _EditAccountState extends State<EditAccount> {
+  /*static final DateTime now = DateTime.now().;
+  static final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  String formatted = formatter.format(now);
+  var editFormat = formatted;*/
+
   final AuthService auth = AuthService();
 
-  var usernameGet = '';
-  var usernameSet = '';
+  var usernameGet;
 
-  var monthGet = '';
-  var monthSet = '';
+  var monthGet;
 
-  var dayGet = '';
-  var daySet = '';
+  var dayGet;
 
-  var yearGet = '';
-  var yearSet = '';
+  var yearGet;
+
+  var error = '';
 
   @override
   void initState() {
     super.initState();
+
+    usernameGet = '';
+    monthGet = '';
+    dayGet = '';
+    yearGet = '';
+
     var firestoreInstance = Firestore.instance;
 
     auth.getPrefs('UserID').then((value) {
@@ -169,7 +179,11 @@ class _EditAccountState extends State<EditAccount> {
                       ),
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
-                      onSaved: (newUsername) => usernameSet = newUsername,
+                      onChanged: (newUsername) => {
+                        setState(() {
+                          usernameGet = newUsername;
+                        })
+                      },
                     ),
                   ),
                 ),
@@ -244,16 +258,18 @@ class _EditAccountState extends State<EditAccount> {
                           textInputAction: TextInputAction.next,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (month) {
-                            if (month.isEmpty) {
-                              return 'Required';
-                            } else if (int.parse(month) > 12 ||
-                                int.parse(month) < 0) {
-                              return 'Please enter a number between 1 and 12';
+                            if (int.parse(month) > 12 || int.parse(month) < 0) {
+                              error = 'Please enter a number between 1 and 12';
+                              return null;
                             } else {
                               return null;
                             }
                           },
-                          onSaved: (month) => monthSet = month,
+                          onChanged: (newMonth) => {
+                            setState(() {
+                              monthGet = newMonth;
+                            })
+                          },
                         ),
                       ),
                       Container(
@@ -272,16 +288,18 @@ class _EditAccountState extends State<EditAccount> {
                           textInputAction: TextInputAction.next,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (day) {
-                            if (day.isEmpty) {
-                              return 'Required';
-                            } else if (int.parse(day) > 31 ||
-                                int.parse(day) < 0) {
-                              return 'Please enter a number between 1 and 31';
+                            if (int.parse(day) > 31 || int.parse(day) < 0) {
+                              error = 'Please enter a number between 1 and 31';
+                              return null;
                             } else {
                               return null;
                             }
                           },
-                          onSaved: (day) => daySet = day,
+                          onChanged: (newDay) => {
+                            setState(() {
+                              dayGet = newDay;
+                            })
+                          },
                         ),
                       ),
                       Container(
@@ -300,20 +318,32 @@ class _EditAccountState extends State<EditAccount> {
                           textInputAction: TextInputAction.next,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (year) {
-                            if (year.isEmpty) {
-                              return 'Required';
-                            } else if (int.parse(year) > 2021 ||
-                                int.parse(year) < 0) {
-                              return 'Invalid year';
-                            } else {
+                            try {
+                              int n = int.parse(year);
+                              if (n > 2021 || n < 0) {
+                                error = 'Invalid year';
+                                return null;
+                              } else {
+                                return null;
+                              }
+                            } on FormatException {
                               return null;
                             }
                           },
-                          onSaved: (year) => yearSet = year,
+                          onChanged: (newYear) => {
+                            setState(() {
+                              yearGet = newYear;
+                            })
+                          },
                         ),
                       ),
                     ],
                   ),
+                ),
+                SizedBox(height: 12.0),
+                Text(
+                  error,
+                  style: TextStyle(color: Colors.red, fontSize: 10.0),
                 ),
                 Padding(
                   padding: EdgeInsets.all(20.0),
@@ -323,7 +353,14 @@ class _EditAccountState extends State<EditAccount> {
                       Padding(
                         padding: EdgeInsets.only(right: 10),
                         child: RaisedButton(
-                          onPressed: null,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Profile(),
+                              ),
+                            );
+                          },
                           child: Text(
                             "Cancel",
                             style: TextStyle(fontSize: 12, color: Colors.black),
@@ -337,7 +374,28 @@ class _EditAccountState extends State<EditAccount> {
                         ),
                       ),
                       RaisedButton(
-                        onPressed: null,
+                        onPressed: () {
+                          var firestoreInstance = Firestore.instance;
+
+                          firestoreInstance
+                              .collection('users')
+                              .document(id)
+                              .updateData({
+                            "displayName": usernameGet,
+                            "birthday": {
+                              "month": monthGet,
+                              "day": dayGet,
+                              "year": yearGet
+                            }
+                          }).then((value) => print("success"));
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Profile(),
+                            ),
+                          );
+                        },
                         child: Text(
                           "Save",
                           style: TextStyle(fontSize: 12, color: Colors.white),

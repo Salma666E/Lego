@@ -77,7 +77,8 @@ class _RegisterState extends State<Register> {
           icon: Icon(Icons.arrow_back),
           color: Colors.black,
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Home()));
           },
         ),
         title: Row(
