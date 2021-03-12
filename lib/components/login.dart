@@ -46,7 +46,8 @@ class _LoginState extends State<Login> {
           icon: Icon(Icons.arrow_back),
           color: Colors.black,
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Home()));
           },
         ),
         title: Row(
