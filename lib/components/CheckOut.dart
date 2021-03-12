@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
-import '../components/drawerList.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:email_validator/email_validator.dart';
 
