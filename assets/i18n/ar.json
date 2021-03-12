@@ -69,6 +69,20 @@
     "Pieces":"ٌقطع",
     "des":"وصف المنتج",
     "delAndRet":"التوصيل والإرجاع",
-    "cusRev":"آراء العملاء"
+    "cusRev":"آراء العملاء",
+
+    "PlaceOrder":"تأكيد الطلب ",
+    "OrderSummary":"ملخص الطلب",
+    "SubTotal":"المبلغ",
+    "StandardShipping":"الشحن",
+    "Tax":"الضريبة",
+    "OrderTotal":"الإجمالي الكلي",
+    "Name":"الاسم",
+    "City":"المدينة",
+    "StreetAddress":"العنوان",
+    "Email":"البريد الإلكتروني",
+    "Phone":"الهاتف",
+    "ZIP":"ZIP",
+    "Card":"بطاقة ائتمان"
     
 }
