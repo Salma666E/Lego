@@ -1,4 +1,5 @@
 import 'package:LegoApp/components/login.dart';
+import 'package:LegoApp/services/auth.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +9,9 @@ import '../../components/buildListItem.dart';
 import '../../components/drawerList.dart';
 import '../../components/slider.dart';
 import '../../components/app_bar.dart';
-// I need Name,Email and Id for User.................. 
+
+// I need Name,Email and Id for User..................
+var id = '';
 Firestore firestore = Firestore.instance;
 List<String> wishList;
 Future<List<String>> getWishListArray(String documentId) async {
@@ -19,6 +22,7 @@ Future<List<String>> getWishListArray(String documentId) async {
   wishList = productsIDs;
   return productsIDs;
 }
+
 class Home extends StatefulWidget {
   const Home({
     this.isDarkTheme = false,
@@ -34,19 +38,30 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final AuthService auth = AuthService();
+  String name;
+  String email;
   bool isDarkTheme = false;
-  String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
+  String _userID = "Xhl4PYKbc0ObiSBG1g67jEmylG33";
 
   @override
   void initState() {
     super.initState();
-    getWishListArray(_userID);
+    auth.getPrefs('UserID').then((value) {
+      print('id: ' + id.toString());
+      id = value;
+      setState(() {
+        getWishListArray(id);
+      });
+    });
     setState(() {});
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
+
   @override
   void dispose() {
     super.dispose();

@@ -3,14 +3,15 @@ import 'package:LegoApp/components/MyBag.dart';
 import 'package:LegoApp/components/WishList.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:LegoApp/features/themes/themes.dart';
+import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'cardCustom.dart';
 
-String _userID = "JtvAyccVvjeGrZgt1IoXmYKRAFW2";
+var id = '';
 String userName = "Lego";
-String userEmail="lego.com";
+String userEmail = "lego.com";
 Future<String> getUserName(String _userID) async {
   DocumentSnapshot snapshot =
       await firestore.collection('users').document(_userID).get();
@@ -21,7 +22,7 @@ Future<String> getUserName(String _userID) async {
   return "Name: " + userName + " Email: " + userEmail;
 }
 
-List<String> bags=['1','2'];
+List<String> bags = ['1', '2'];
 Future<List<String>> getBagsArray(String documentId) async {
   DocumentSnapshot snapshot =
       await firestore.collection('bags').document(documentId).get();
@@ -38,13 +39,39 @@ class DrawerList extends StatefulWidget {
 }
 
 class _DrawerListState extends State<DrawerList> {
+  final AuthService auth = AuthService();
+  String name;
+  String email;
   @override
   void initState() {
     super.initState();
-    print("_userID: " + _userID.toString());
-    getUserName(_userID);
-    getBagsArray(_userID);
-    
+    name = '';
+    email = '';
+    var firestoreInstance = Firestore.instance;
+
+    auth.getPrefs('UserID').then((value) {
+      id = value;
+      firestoreInstance
+          .collection('users')
+          .document(id)
+          .get()
+          .then((DocumentSnapshot docsnap) {
+        setState(() {
+          print(docsnap.data["displayName"]);
+          name = docsnap.data["displayName"];
+          name = "${name[0].toUpperCase()}${name.substring(1)}";
+        });
+        setState(() {
+          print(docsnap.data["email"]);
+          email = docsnap.data["email"];
+        });
+        setState(() {
+          print("_userID: " + id.toString());
+          getUserName(id);
+          getBagsArray(id);
+        });
+      });
+    });
     setState(() {});
   }
 
@@ -161,7 +188,6 @@ class _DrawerListState extends State<DrawerList> {
                     color: Colors.blue,
                   ),
                   title: Text(translator.translate('CheckOut')),
-                  // onTap: () => {},
                   onTap: () {
                     Navigator.push(
                       context,
