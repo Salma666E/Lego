@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../components/drawerList.dart';
-import 'package:localize_and_translate/localize_and_translate.dart';
 
 class MyBag extends StatefulWidget {
   MyBag({this.bags});

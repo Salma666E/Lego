@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
   String name;
   String email;
   bool isDarkTheme = false;
-  String _userID = "Xhl4PYKbc0ObiSBG1g67jEmylG33";
+  // String _userID = "Xhl4PYKbc0ObiSBG1g67jEmylG33";
 
   @override
   void initState() {
@@ -142,7 +142,7 @@ class _HomeState extends State<Home> {
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, int index) => buildListItem(context,
-                      snapshot.data.documents[index], _userID, wishList),
+                      snapshot.data.documents[index], id, wishList),
                 );
               }),
           Container(
