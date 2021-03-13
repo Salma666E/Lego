@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'cardCustom.dart';
 
-String _userID = "ggt6vACGkxTV6ZlQeLi7Xm2FOiW2";
+String _userID = "iB57Sf1r85P6uup0jqWdQuh27Ad2";
 String userName = "Lego";
-String userEmail="lego.com";
+String userEmail = "lego.com";
 Future<String> getUserName(String _userID) async {
   DocumentSnapshot snapshot =
       await firestore.collection('users').document(_userID).get();
@@ -21,7 +21,7 @@ Future<String> getUserName(String _userID) async {
   return "Name: " + userName + " Email: " + userEmail;
 }
 
-List<String> bags=['1','2'];
+List<String> bags = ['1', '2'];
 Future<List<String>> getBagsArray(String documentId) async {
   DocumentSnapshot snapshot =
       await firestore.collection('bags').document(documentId).get();
@@ -30,6 +30,17 @@ Future<List<String>> getBagsArray(String documentId) async {
   return bags;
 }
 
+// ***********
+List<String> wishlist = ['1', '2'];
+Future<List<String>> getwishlistArray(String documentId) async {
+  DocumentSnapshot snapshot =
+      await firestore.collection('wishlist').document(documentId).get();
+  wishlist = List.from(snapshot.data['productsIDs']);
+  print('flageDrawer+wishlist: ' + wishlist.toString());
+  return wishlist;
+}
+
+// **********
 class DrawerList extends StatefulWidget {
   DrawerList({Key key}) : super(key: key);
 
@@ -44,6 +55,8 @@ class _DrawerListState extends State<DrawerList> {
     print("_userID: " + _userID.toString());
     getUserName(_userID);
     getBagsArray(_userID);
+    getwishlistArray(_userID);
+
     setState(() {});
   }
 
@@ -112,6 +125,21 @@ class _DrawerListState extends State<DrawerList> {
                     ),
                   },
                 ),
+                ///////////////////////
+                //                 ListTile(
+                //       leading: Icon(
+                //         Icons.favorite_border_outlined,
+                //         color: Colors.blue,
+                //       ),
+                //       title: Text(translator.translate('Test')),
+                //       onTap: () {
+                //         Navigator.push(
+                //           context,
+                // MaterialPageRoute(builder: (context) => Test()),
+                //         );
+                //       },
+                //     ),
+                /////////////////
                 ListTile(
                   leading: Icon(
                     Icons.favorite_border_outlined,
@@ -121,7 +149,9 @@ class _DrawerListState extends State<DrawerList> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WishList()),
+                      // MaterialPageRoute(builder: (context) => WishList()),
+                      MaterialPageRoute(
+                          builder: (context) => WishList(wishlist: wishlist)),
                     );
                   },
                 ),

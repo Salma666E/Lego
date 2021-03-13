@@ -8,7 +8,8 @@ import '../../components/buildListItem.dart';
 import '../../components/drawerList.dart';
 import '../../components/slider.dart';
 import '../../components/app_bar.dart';
-// I need Name,Email and Id for User............................ 
+
+// I need Name,Email and Id for User............................
 Firestore firestore = Firestore.instance;
 List<String> wishList;
 Future<List<String>> getWishListArray(String documentId) async {
@@ -90,9 +91,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       drawer: DrawerList(),
       // flageDrawer
-          // ? DrawerList(userName: userName, userEmail: userEmail, bags: bags)
-          // : DrawerList(
-          //     userName: "LegoName", userEmail: "LegoEmail.com", bags: ['1']),
+      // ? DrawerList(userName: userName, userEmail: userEmail, bags: bags)
+      // : DrawerList(
+      //     userName: "LegoName", userEmail: "LegoEmail.com", bags: ['1']),
       // Drawer Class
       appBar: appBar(context),
       body: ListView(
@@ -178,34 +179,6 @@ class _HomeState extends State<Home> {
                     child: new Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        // new Container(
-                        //     height: 45.0,
-                        //     width: 45.0,
-                        //     child: Center(
-                        //       child: Card(
-                        //         elevation: 5.0,
-                        //         shape: RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(
-                        //               25.0), // half of height and width of Image
-                        //         ),
-                        //         child: IconButton(
-                        //           icon: widget.isDarkTheme
-                        //               ? Transform.rotate(
-                        //                   angle: .55,
-                        //                   child: Icon(
-                        //                     Icons.brightness_3,
-                        //                     size: 20.0,
-                        //                   ))
-                        //               : Icon(Icons.brightness_7),
-                        //           onPressed: () {
-                        //             widget.onThemeChanged(!widget.isDarkTheme);
-                        //             print("widget.isDarkTheme: " +
-                        //                 widget.isDarkTheme.toString());
-                        //           },
-                        //           tooltip: 'Switch brightness',
-                        //         ),
-                        //       ),
-                        //     )),
                         new Container(
                             height: 45.0,
                             width: 45.0,
@@ -292,17 +265,6 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  // new FloatingActionButton(
-                  //   elevation: 0.0,
-                  //   child: new Icon(Icons.add),
-                  //   backgroundColor: Colors.black,
-                  //   onPressed: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(builder: (context) => Login()),
-                  //     );
-                  //   },
-                  // ),
                 ],
               ),
             ),
