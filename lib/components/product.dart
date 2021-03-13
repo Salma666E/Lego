@@ -309,11 +309,14 @@ class _ProductState extends State<Product> {
     image = widget.document['image'];
     description = widget.document['description'].toString();
 
-    _items.add(MyItem(header: translator.translate("des"), body: description));
+    _items.add(MyItem(header: translator.translate("des"), body: 
+       translator.currentLanguage == 'en'
+                                    ? widget.document['description'].toString()
+                                    : widget.document['arabicDescription'].toString(),
+    ));
     _items.add(MyItem(
         header: translator.translate("delAndRet"),
-        body:
-            "Once payment of a purchase is received and verified, your order is automatically confirmed and will be processed within the next 24 hours."));
+        body: translator.translate("delretbody") ));
     _items2.add(MyItem(header: translator.translate("cusRev"), body: ""));
     getReviews(widget.document.documentID).then((value) {
       for (var v in value) {

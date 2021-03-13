@@ -1,6 +1,7 @@
 import 'package:LegoApp/components/CheckOut.dart';
 import 'package:LegoApp/components/MyBag.dart';
 import 'package:LegoApp/components/WishList.dart';
+import 'package:LegoApp/components/edit_account.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:LegoApp/features/themes/themes.dart';
 import 'package:LegoApp/services/auth.dart';
@@ -105,11 +106,11 @@ class _DrawerListState extends State<DrawerList> {
                     color: Colors.blue,
                   ),
                   onTap: () {
-                    Navigator.of(context).pop();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => EditProfile()),
-                    // );
+                    // Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditAccount()),
+                    );
                   },
                 ),
                 ListTile(

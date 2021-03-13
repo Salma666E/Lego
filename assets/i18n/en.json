@@ -69,6 +69,22 @@
     "Pieces":"Pieces",
     "des":"Description",
     "delAndRet":"Deliveries and Returns",
-    "cusRev":"Customer Reviews"
+    "cusRev":"Customer Reviews",
+
+    "PlaceOrder":"Place Order",
+    "OrderSummary":"Order Summary",
+    "SubTotal": "SubTotal",
+    "StandardShipping":"StandardS hipping",
+    "Tax":"Tax",
+    "OrderTotal":"Order Total",
+    "Name":"Name",
+    "City":"City",
+    "StreetAddress":"Street Addree",
+    "Email":"Email",
+    "Phone":"Phone",
+    "ZIP":"ZIP",
+    "Card":"Card Number",
+
+    "delretbody":"Once payment of a purchase is received and verified, your order is  automatically confirmed and will be processed within the next 24 hours."
 
 }

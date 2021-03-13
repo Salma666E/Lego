@@ -118,7 +118,7 @@ class _ProfileState extends State<Profile> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top: 15, bottom: 30),
+                              padding: EdgeInsets.only(top: 15, bottom: 5),
                               child: Text(
                                 "Hi ${name}",
                                 style: TextStyle(
@@ -126,6 +126,23 @@ class _ProfileState extends State<Profile> {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 15, top: 5),
+                        child: RaisedButton(
+                          child: Text("Home",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12)),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Home()));
+                          },
+                          color: Colors.blue[800],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
                         ),
                       ),
                     ],
@@ -421,7 +438,8 @@ class _ProfileState extends State<Profile> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.only(left:8.0, top: 8.0),
+                                          padding: EdgeInsets.only(
+                                              left: 8.0, top: 8.0),
                                           child: FlatButton(
                                             padding: EdgeInsets.zero,
                                             materialTapTargetSize:

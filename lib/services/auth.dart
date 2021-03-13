@@ -57,7 +57,23 @@ class AuthService {
       "birthday": {"month": month, "day": day, "year": year},
       "termsandconditionscheck": termsCheck,
       "isAdmin": false
-    });       
+    });
+
+    firestoreInstance
+        .collection('bags')
+        .document(uid)
+        .setData({
+          "productsIDs": [],
+          "userID": uid
+        }); 
+
+    firestoreInstance
+        .collection('wishlist')
+        .document(uid)
+        .setData({
+          "productsIDs": [],
+          "userID": uid
+        }); 
   }
 
   //sign in
