@@ -2,10 +2,7 @@ import 'package:LegoApp/components/login.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../services/auth.dart';
-import './profile.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Register extends StatefulWidget {
   const Register({
@@ -239,7 +236,9 @@ class _RegisterState extends State<Register> {
                             top: 13, right: 13, left: 13, bottom: 5),
                         child: new Text(
                           "Date of Birth",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(fontSize: 11,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],

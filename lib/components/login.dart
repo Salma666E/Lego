@@ -242,7 +242,7 @@ class _LoginState extends State<Login> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => Profile()/*LoggedInUserPage()*/,
+                                          builder: (context) => LoggedInUserPage()/*Profile()*/,
                                         ));
                                   }
                                 }
@@ -325,17 +325,4 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-}
-
-/*Future<void> setPref(dynamic getid) async{
-   SharedPreferences prefs = await SharedPreferences.getInstance();
-   prefs.setString("UserID", getid);
-   //print("SET PREFFFFFFFFFFFFFFFFFFFFFFFS"+ getPrefs());
- }*/
-
-Future<String> getPrefs(String key) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String getPrefsString = prefs.getString(key);
-  print("AUTH GETTTTTTTTTTTTTTTTTTTTT " + getPrefsString);
-  return getPrefsString;
 }

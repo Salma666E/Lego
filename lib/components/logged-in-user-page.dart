@@ -1,4 +1,7 @@
+import 'package:LegoApp/components/MyBag.dart';
+import 'package:LegoApp/components/WishList.dart';
 import 'package:LegoApp/components/app_bar.dart';
+import 'package:LegoApp/components/profile.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -129,28 +132,132 @@ class _LoggedInUserPageState extends State<LoggedInUserPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.24,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(236, 236, 236, 1),
-                          image: DecorationImage(
-                              image: AssetImage('assets/images/myinfo.png'),
-                              fit: BoxFit.contain),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Profile()));
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.24,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(236, 236, 236, 1),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/myinfo.png',
+                                height: 70,
+                                width: 70,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.24,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(236, 236, 236, 1),
-                          image: DecorationImage(
-                              image: AssetImage('assets/images/truckTrial.png'),
-                              fit: BoxFit.contain),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyBag()));
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.24,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(236, 236, 236, 1),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/truckTrial.png',
+                                height: 70,
+                                width: 70,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text("My Profile", style: TextStyle(fontWeight: FontWeight.bold, color:Colors.black, fontSize: 15),),
+                      Text("My Bag", style: TextStyle(fontWeight: FontWeight.bold, color:Colors.black, fontSize: 15),),
+                    ],)
+                ),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WishList()));
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.24,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(236, 236, 236, 1),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/mywishlist.png',
+                                height: 70,
+                                width: 70,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Home()));
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.24,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(236, 236, 236, 1),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/lego.png',
+                                height: 70,
+                                width: 70,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text("My Wishlist", style: TextStyle(fontWeight: FontWeight.bold, color:Colors.black, fontSize: 15),),
+                      Text("Home", style: TextStyle(fontWeight: FontWeight.bold, color:Colors.black, fontSize: 15),),
+                    ],)
                 ),
               ],
             ),
