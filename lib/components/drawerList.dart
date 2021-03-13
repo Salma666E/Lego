@@ -106,11 +106,7 @@ class _DrawerListState extends State<DrawerList> {
                     color: Colors.blue,
                   ),
                   onTap: () {
-                    // Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EditAccount()),
-                    );
+                    Navigator.of(context).pop();
                   },
                 ),
                 ListTile(
@@ -193,6 +189,19 @@ class _DrawerListState extends State<DrawerList> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => CheckOut()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.person,
+                    color: Colors.blue,
+                  ),
+                  title: Text(translator.translate('EditProfile')),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditAccount()),
                     );
                   },
                 )

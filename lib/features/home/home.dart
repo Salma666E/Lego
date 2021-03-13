@@ -1,4 +1,5 @@
 import 'package:LegoApp/components/login.dart';
+import 'package:LegoApp/components/register.dart';
 import 'package:LegoApp/services/auth.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
@@ -10,7 +11,6 @@ import '../../components/drawerList.dart';
 import '../../components/slider.dart';
 import '../../components/app_bar.dart';
 
-// I need Name,Email and Id for User..................
 var id = '';
 Firestore firestore = Firestore.instance;
 List<String> wishList;
@@ -42,7 +42,6 @@ class _HomeState extends State<Home> {
   String name;
   String email;
   bool isDarkTheme = false;
-  // String _userID = "Xhl4PYKbc0ObiSBG1g67jEmylG33";
 
   @override
   void initState() {
@@ -203,7 +202,7 @@ class _HomeState extends State<Home> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Login()),
+                                          builder: (context) => Register()),
                                     );
                                   },
                                 ),
