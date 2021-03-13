@@ -111,7 +111,6 @@
 
 //////////////////////////////////////////////////////
 import 'package:LegoApp/components/app_bar.dart';
-import 'package:LegoApp/features/home/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -119,7 +118,6 @@ import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:toast/toast.dart';
 import '../components/drawerList.dart';
-import 'package:localize_and_translate/localize_and_translate.dart';
 
 // String _userID = "iB57Sf1r85P6uup0jqWdQuh27Ad2";
 
@@ -298,6 +296,7 @@ class _MyBagState extends State<MyBag> {
                               if (snapshot.data == null)
                                 return CircularProgressIndicator();
                               return CarouselSlider(
+<<<<<<< HEAD
                                 options: CarouselOptions(height: 250.0),
                                 items: snapshot.data.documents.map((doc) {
                                   // setState(() {
@@ -307,6 +306,14 @@ class _MyBagState extends State<MyBag> {
                                           .contains(doc.documentID)
                                           .toString() ==
                                       "true") {
+=======
+                                options: CarouselOptions(height: 400.0),
+                                items: snapshot.data.documents.map((doc) {
+                                  if (widget.bags
+                                          .contains(doc.documentID)
+                                          .toString() ==
+                                      "true")
+>>>>>>> 7c5269c83815cba7734041fad3cd30f54cb233c2
                                     return Builder(
                                       builder: (BuildContext context) {
                                         return Container(
@@ -325,7 +332,11 @@ class _MyBagState extends State<MyBag> {
                                                   const EdgeInsets.all(8.0),
                                               child: Column(children: [
                                                 Container(
+<<<<<<< HEAD
                                                   height: 200,
+=======
+                                                  height: 150,
+>>>>>>> 7c5269c83815cba7734041fad3cd30f54cb233c2
                                                   child: Card(
                                                     color: Colors.white,
                                                     child: Row(
@@ -377,6 +388,7 @@ class _MyBagState extends State<MyBag> {
                                                               Expanded(
                                                                 flex: 50,
                                                                 child: Center(
+<<<<<<< HEAD
                                                                   child:
                                                                       IconButton(
                                                                     icon: Icon(
@@ -473,6 +485,22 @@ class _MyBagState extends State<MyBag> {
                                                                   },
                                                                 ),
                                                               ),
+=======
+                                                                    child: Icon(
+                                                                  Icons.delete,
+                                                                  color: Colors
+                                                                      .blue,
+                                                                )),
+                                                              ),
+                                                              Expanded(
+                                                                  flex: 25,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .favorite_outline_sharp,
+                                                                    color: Colors
+                                                                        .blue,
+                                                                  )),
+>>>>>>> 7c5269c83815cba7734041fad3cd30f54cb233c2
                                                             ],
                                                           ),
                                                         )
@@ -484,7 +512,10 @@ class _MyBagState extends State<MyBag> {
                                         );
                                       },
                                     );
+<<<<<<< HEAD
                                   }
+=======
+>>>>>>> 7c5269c83815cba7734041fad3cd30f54cb233c2
                                 }).toList(),
                               );
                             }),
@@ -498,6 +529,7 @@ class _MyBagState extends State<MyBag> {
                 thickness: 1,
                 width: 30,
               ),
+<<<<<<< HEAD
               ////////////////CardShipping Detail/////////////////
               Padding(
                 padding: const EdgeInsets.all(15.0),
@@ -594,6 +626,8 @@ class _MyBagState extends State<MyBag> {
                   ),
                 ),
               ),
+=======
+>>>>>>> 7c5269c83815cba7734041fad3cd30f54cb233c2
               ////////////Payment Method//////////////////
               Padding(
                 padding: const EdgeInsets.all(15.0),

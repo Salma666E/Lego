@@ -1,4 +1,6 @@
 import 'package:LegoApp/components/login.dart';
+import 'package:LegoApp/components/register.dart';
+import 'package:LegoApp/services/auth.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,7 +11,7 @@ import '../../components/drawerList.dart';
 import '../../components/slider.dart';
 import '../../components/app_bar.dart';
 
-// I need Name,Email and Id for User............................
+var id = '';
 Firestore firestore = Firestore.instance;
 List<String> wishList;
 Future<List<String>> getWishListArray(String documentId) async {
@@ -21,32 +23,6 @@ Future<List<String>> getWishListArray(String documentId) async {
   return productsIDs;
 }
 
-String userName;
-String userEmail;
-bool flageDrawer = false;
-Future<String> getUserName(String _userID) async {
-  DocumentSnapshot snapshot =
-      await firestore.collection('users').document(_userID).get();
-  userName = snapshot.data['displayName'];
-  userEmail = snapshot.data['email'];
-  print('userName: ' + userName.toString());
-  print('userEmail: ' + userEmail.toString());
-  flageDrawer = true;
-  return "Name: " + userName + " Email: " + userEmail;
-}
-
-//
-List<String> bags;
-Future<List<String>> getBagsArray(String documentId) async {
-  DocumentSnapshot snapshot =
-      await firestore.collection('bags').document(documentId).get();
-  bags = List.from(snapshot.data['productsIDs']);
-  flageDrawer = true;
-  print('flageDrawer+bags: ' + bags.toString());
-  return bags;
-}
-
-//
 class Home extends StatefulWidget {
   const Home({
     this.isDarkTheme = false,
@@ -62,22 +38,30 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final AuthService auth = AuthService();
+  String name;
+  String email;
   bool isDarkTheme = false;
-  String _userID = "ggt6vACGkxTV6ZlQeLi7Xm2FOiW2";
 
   @override
   void initState() {
     super.initState();
-    getWishListArray(_userID);
-    getUserName(_userID);
-    getBagsArray(_userID);
-    setState(() {});
+    auth.getPrefs('UserID').then((value) {
+      print('id: ' + id.toString());
+      id = value;
+      setState(() {
+        getWishListArray(id);
+      });
+    });
+    if (id.isNotEmpty)
+      // setState(() {
+      getWishListArray(id);
+    // });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // setState(() {});
   }
 
   @override
@@ -90,11 +74,6 @@ class _HomeState extends State<Home> {
     setState(() {});
     return Scaffold(
       drawer: DrawerList(),
-      // flageDrawer
-      // ? DrawerList(userName: userName, userEmail: userEmail, bags: bags)
-      // : DrawerList(
-      //     userName: "LegoName", userEmail: "LegoEmail.com", bags: ['1']),
-      // Drawer Class
       appBar: appBar(context),
       body: ListView(
         children: <Widget>[
@@ -126,7 +105,7 @@ class _HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
             child: Container(
-                height: 500,
+                height: 350,
                 child: Column(
                   children: [
                     Image(
@@ -164,8 +143,8 @@ class _HomeState extends State<Home> {
                   physics: ScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, int index) => buildListItem(context,
-                      snapshot.data.documents[index], _userID, wishList),
+                  itemBuilder: (context, int index) => buildListItem(
+                      context, snapshot.data.documents[index], id, wishList),
                 );
               }),
           Container(
@@ -198,7 +177,7 @@ class _HomeState extends State<Home> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Login()),
+                                          builder: (context) => Register()),
                                     );
                                   },
                                 ),

@@ -1,8 +1,13 @@
+import 'package:LegoApp/components/logged-in-user-page.dart';
+import 'package:LegoApp/components/profile.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:LegoApp/services/auth.dart';
 import 'package:flutter/material.dart';
 import '../components/register.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+var id;
 
 class Login extends StatefulWidget {
   @override
@@ -12,7 +17,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool _showPassword = false;
 
-  String error = '';
+  String error;
   String loginEmail = "";
   String loginPassword = "";
 
@@ -24,6 +29,17 @@ class _LoginState extends State<Login> {
   final AuthService auth = AuthService();
 
   @override
+  void initState() {
+    super.initState();
+    error = "";
+    /*getPrefs('UserID').then((value) =>
+      id = value
+    );*/
+    auth.signOut();
+    id = "";
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(248, 249, 250, 0.4),
@@ -32,7 +48,8 @@ class _LoginState extends State<Login> {
           icon: Icon(Icons.arrow_back),
           color: Colors.black,
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Home()));
           },
         ),
         title: Row(
@@ -93,7 +110,7 @@ class _LoginState extends State<Login> {
                             top: 13, right: 13, left: 13, bottom: 5),
                         child: new Text(
                           "Email",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(fontSize: 11, color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -118,7 +135,7 @@ class _LoginState extends State<Login> {
                         autovalidateMode: AutovalidateMode.disabled,
                         validator: (email) {
                           if (email.isEmpty) {
-                            return 'Email Address should not be empty!';
+                            return 'Email Address is required!';
                           } else if (EmailValidator.validate(email) == true) {
                             return null;
                           } else {
@@ -137,7 +154,7 @@ class _LoginState extends State<Login> {
                             top: 13, right: 13, left: 13, bottom: 5),
                         child: new Text(
                           "Password",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(fontSize: 11, color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -175,20 +192,25 @@ class _LoginState extends State<Login> {
                               r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
                           RegExp regex = new RegExp(pattern);
                           if (password.isEmpty) {
-                            return 'Password is required';
+                            return 'Password is required!';
                           } else if (!regex.hasMatch(password))
-                            return 'Password is invalid!'; 
-                            //must be at least 8 characters long and contain an uppercase letter, a lowercase letter and a number.
-                          else 
+                            return 'Password is invalid!';
+                          //must be at least 8 characters long and contain an uppercase letter, a lowercase letter and a number.
+                          else
                             return null;
                         },
                         onSaved: (password) => loginPassword = password),
+                  ),
+                  SizedBox(height: 12.0),
+                  Text(
+                    error,
+                    style: TextStyle(color: Colors.red, fontSize: 14.0),
                   ),
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       new Padding(
-                        padding: EdgeInsets.all(25.0),
+                        padding: EdgeInsets.all(15.0),
                         child: new Row(
                           children: <Widget>[
                             new RaisedButton(
@@ -208,16 +230,19 @@ class _LoginState extends State<Login> {
                                   _formKey.currentState.save();
                                   dynamic result = await auth.signIn(
                                       loginEmail, loginPassword);
+
+                                  auth
+                                      .getPrefs('UserID')
+                                      .then((value) => print(value));
+
                                   if (result == null) {
                                     setState(() => error =
                                         "Please check your email and passsword!");
                                   } else {
-                                    setState(
-                                        () => error = "Login was successful");
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => Home(),
+                                          builder: (context) => LoggedInUserPage()/*Profile()*/,
                                         ));
                                   }
                                 }
@@ -228,21 +253,23 @@ class _LoginState extends State<Login> {
                       )
                     ],
                   ),
-                  /*SizedBox(height: 12.0),
-                  Text(
-                    error,
-                    style: TextStyle(color: Colors.red, fontSize: 14.0),
-                  )*/
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(bottom: 19),
-                        child: new Text(
-                          "Forgot Password?",
-                          style: TextStyle(
-                              fontSize: 9,
-                              color: Color.fromRGBO(0, 123, 255, 0.8)),
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: FlatButton(
+                          padding: EdgeInsets.zero,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          color: Color.fromRGBO(18, 97, 160, 1),
+                          onPressed: null,
+                          child: new Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: Color.fromRGBO(0, 123, 255, 0.8)),
+                          ),
                         ),
                       ),
                     ],
@@ -251,10 +278,10 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(bottom: 6),
+                        padding: EdgeInsets.only(bottom: 2),
                         child: new Text(
                           "Don't have a LEGO Account?",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(fontSize: 11),
                         ),
                       ),
                     ],
@@ -262,24 +289,32 @@ class _LoginState extends State<Login> {
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: FlatButton(
+                          padding: EdgeInsets.zero,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          //color: Color.fromRGBO(18, 97, 160, 1),
+                          onPressed: (){
+                            Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  Register(), //SingleCard(imgLink: widget.imgLink, post_details: widget.chosen_post)
+                                  Register(),
                             ),
                           );
-                        },
-                        child: new Text(
+                          },
+                          child: new Text(
                           "Create Account",
                           style: TextStyle(
-                              fontSize: 9,
+                              fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: Color.fromRGBO(0, 123, 255, 0.8)),
                         ),
+                        ),
                       ),
+                      
                     ],
                   ),
                 ],

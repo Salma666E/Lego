@@ -1,14 +1,16 @@
 import 'package:LegoApp/components/CheckOut.dart';
 import 'package:LegoApp/components/MyBag.dart';
 import 'package:LegoApp/components/WishList.dart';
+import 'package:LegoApp/components/edit_account.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:LegoApp/features/themes/themes.dart';
+import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'cardCustom.dart';
 
-String _userID = "iB57Sf1r85P6uup0jqWdQuh27Ad2";
+var id = '';
 String userName = "Lego";
 String userEmail = "lego.com";
 Future<String> getUserName(String _userID) async {
@@ -49,14 +51,47 @@ class DrawerList extends StatefulWidget {
 }
 
 class _DrawerListState extends State<DrawerList> {
+  final AuthService auth = AuthService();
+  String name;
+  String email;
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
     print("_userID: " + _userID.toString());
     getUserName(_userID);
     getBagsArray(_userID);
     getwishlistArray(_userID);
 
+=======
+    name = '';
+    email = '';
+    var firestoreInstance = Firestore.instance;
+
+    auth.getPrefs('UserID').then((value) {
+      id = value;
+      firestoreInstance
+          .collection('users')
+          .document(id)
+          .get()
+          .then((DocumentSnapshot docsnap) {
+        setState(() {
+          print(docsnap.data["displayName"]);
+          name = docsnap.data["displayName"];
+          name = "${name[0].toUpperCase()}${name.substring(1)}";
+        });
+        setState(() {
+          print(docsnap.data["email"]);
+          email = docsnap.data["email"];
+        });
+        setState(() {
+          print("_userID: " + id.toString());
+          getUserName(id);
+          getBagsArray(id);
+        });
+      });
+    });
+>>>>>>> 7c5269c83815cba7734041fad3cd30f54cb233c2
     setState(() {});
   }
 
@@ -91,10 +126,6 @@ class _DrawerListState extends State<DrawerList> {
                   ),
                   onTap: () {
                     Navigator.of(context).pop();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => EditProfile()),
-                    // );
                   },
                 ),
                 ListTile(
@@ -190,11 +221,23 @@ class _DrawerListState extends State<DrawerList> {
                     color: Colors.blue,
                   ),
                   title: Text(translator.translate('CheckOut')),
-                  // onTap: () => {},
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => CheckOut()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.person,
+                    color: Colors.blue,
+                  ),
+                  title: Text(translator.translate('EditProfile')),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditAccount()),
                     );
                   },
                 )

@@ -30,6 +30,7 @@
     "AddSuccessfully":"Added successfully",
     "RemoveWishList":"Removed From your favorites list",
     "AddWishList":"Add to your favorites list",
+    "EditProfile":"Edit Profile",
 
     "LegoSpiderManTitle": "LEGO® Marvel Spider-Man",
     "LegoSpiderManDescription": "Our friendly neighborhood Spider-Man is going places! Can’t poor Peter Parker go on a nice, quiet school trip like a normal teen? More trouble for Spider-Man means more fun for you – with new friends and foes, new battles and locations, and new adventures and toy playsets to build, rebuild, roleplay and reimagine.",
@@ -51,6 +52,7 @@
     "NewProduct": "New",
     "TabAbout": "About",
     "TabProducts": "Products",
+    "OutOfBag": "Out of stock",
    
     "Rate" :"Rate :",
     "WriteReviewtitle" :"Write Review title ",
@@ -68,8 +70,22 @@
     "Pieces":"Pieces",
     "des":"Description",
     "delAndRet":"Deliveries and Returns",
-    "cusRev":"Customer Reviews"
+    "cusRev":"Customer Reviews",
 
+    "PlaceOrder":"Place Order",
+    "OrderSummary":"Order Summary",
+    "SubTotal": "SubTotal",
+    "StandardShipping":"StandardS hipping",
+    "Tax":"Tax",
+    "OrderTotal":"Order Total",
+    "Name":"Name",
+    "City":"City",
+    "StreetAddress":"Street Addree",
+    "Email":"Email",
+    "Phone":"Phone",
+    "ZIP":"ZIP",
+    "Card":"Card Number",
 
+    "delretbody":"Once payment of a purchase is received and verified, your order is  automatically confirmed and will be processed within the next 24 hours."
 
 }

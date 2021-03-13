@@ -7,11 +7,10 @@ import 'product.dart';
 import 'package:toast/toast.dart';
 
 Widget buildListItem(BuildContext context, DocumentSnapshot document,
- 
-  String _userID, List<String> wishList) {
+    String _userID, List<String> wishList) {
   Future<bool> changedata(status) async {
     print("status: " + status.toString());
-    if (status ) {
+    if (status) {
       // Remove From WishList
       Firestore.instance.collection("wishlist").document(_userID).updateData({
         "productsIDs": FieldValue.arrayRemove([document.documentID])
@@ -19,7 +18,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
       Toast.show(translator.translate('RemoveWishList'), context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     } else {
-    // Add To WishList
+      // Add To WishList
       Firestore.instance.collection("wishlist").document(_userID).updateData({
         "productsIDs": FieldValue.arrayUnion([document.documentID])
       });
@@ -27,6 +26,49 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     }
     return Future.value(!status);
+  }
+
+  bool exist = false;
+  Add2Bag() async { // Add To My Bag
+    await Firestore.instance
+        .collection("bags")
+        .document(_userID)
+        .get()
+        .then((querySnapshot) async {
+      querySnapshot['productsIDs'].forEach((result) async {
+        if (result['id'].toString() == document.documentID) {
+          exist = true;
+          int qtyOld = result['qty'];
+          await Firestore.instance
+              .collection('bags')
+              .document(_userID)
+              .updateData({
+            'productsIDs': FieldValue.arrayRemove([
+              {'qty': qtyOld, 'id': document.documentID}
+            ])
+          });
+          int qty = result['qty']+1;
+          await Firestore.instance
+              .collection('bags')
+              .document(_userID)
+              .updateData({
+            'productsIDs': FieldValue.arrayUnion([
+              {'qty': qty, 'id': document.documentID}
+            ])
+          });
+          return result;
+        }
+      });
+      if (!exist) {
+        Firestore.instance.collection("bags").document(_userID).updateData({
+          "productsIDs": FieldValue.arrayUnion([
+            {"id": document.documentID, "qty": 1}
+          ])
+        });
+      }
+    });
+    Toast.show(translator.translate('AddSuccessfully'), context,
+        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
   }
 
   return Card(
@@ -39,7 +81,8 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Product(document:document)),
+                  MaterialPageRoute(
+                      builder: (context) => Product(document: document)),
                 );
               },
               child: Image.network(document['image'],
@@ -144,44 +187,56 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
                 );
             }
           },
-          onRatingUpdate: (rating) {
-            print(rating);
-            // to update rating's data in firebase
-            document.reference.updateData({'rating': rating});
-          },
-          updateOnDrag: true,
+          // onRatingUpdate: (rating) {
+          //   print(rating);
+          //   // to update rating's data in firebase
+          //   document.reference.updateData({'rating': rating});
+          // },
+          // updateOnDrag: true,
         ),
         // End Ratimg
         Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: RaisedButton(
-            onPressed: () {
-              // Add To My Bag
-              print("documentID: " + document.documentID);
-              print("_userID: " + _userID);
-              Firestore.instance
-                  .collection("bags")
-                  .document(_userID)
-                  .updateData({
-                "productsIDs": FieldValue.arrayUnion([document.documentID])
-              });
-              Toast.show(translator.translate('AddSuccessfully'), context,
-                  duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-            },
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: 
+          //     RaisedButton(
+          //       padding: const EdgeInsets.symmetric(vertical: 15.0),
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(10.0),
+          //       ),
+          //       color: Colors.orange[800],
+          //       disabledColor: Colors.orange[200],
+          //       onPressed: document['stock'] <= 0 ? null : () => Add2Bag(),
+          //       child: Text(
+          //         document['stock'] <= 0
+          //             ? translator.translate('OutOfBag')
+          //             : translator.translate('AddToBag'),
+          //         style: TextStyle(fontSize: 18),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          RaisedButton(
+            onPressed: document['stock'] <= 0 ? null : () => Add2Bag(),
             textColor: Colors.black,
             padding: const EdgeInsets.all(0.0),
+            shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
             child: Container(
-              width: 300,
+            width: double.infinity,
               height: 55,
               decoration: const BoxDecoration(
                 boxShadow: [
                   BoxShadow(
                       blurRadius: 10, color: Colors.grey, offset: Offset(1, 3))
                 ],
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 gradient: LinearGradient(
-                  colors: 
-                  <Color>[
+                  colors: <Color>[
                     Color(0xFFE65100),
                     Color(0xFFEF6C00),
                     Color(0xFFE65100),
@@ -192,10 +247,16 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
               ),
               padding: const EdgeInsets.all(10.0),
               child: Center(
-                child: Text(translator.translate('AddToBag'),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
+                child: Text(
+                document['stock'] <= 0
+                    ? translator.translate('OutOfBag')
+                    : translator.translate('AddToBag'),
+                style: TextStyle(fontSize: 18),
+              ),
+                // child: Text(translator.translate('AddToBag'),
+                //     style: TextStyle(
+                //       fontWeight: FontWeight.bold,
+                //       fontSize: 22,
                     )),
               ),
             ),
