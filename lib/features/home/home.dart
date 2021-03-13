@@ -53,7 +53,10 @@ class _HomeState extends State<Home> {
         getWishListArray(id);
       });
     });
-    setState(() {});
+    if(id.isNotEmpty)
+    // setState(() {
+        getWishListArray(id);
+    // });
   }
 
   @override
@@ -102,7 +105,7 @@ class _HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
             child: Container(
-                height: 500,
+                height: 350,
                 child: Column(
                   children: [
                     Image(

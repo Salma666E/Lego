@@ -187,29 +187,54 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
                 );
             }
           },
-          onRatingUpdate: (rating) {
-            print(rating);
-            // to update rating's data in firebase
-            document.reference.updateData({'rating': rating});
-          },
-          updateOnDrag: true,
+          // onRatingUpdate: (rating) {
+          //   print(rating);
+          //   // to update rating's data in firebase
+          //   document.reference.updateData({'rating': rating});
+          // },
+          // updateOnDrag: true,
         ),
         // End Ratimg
         Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: RaisedButton(
-            onPressed: () => Add2Bag(),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: 
+          //     RaisedButton(
+          //       padding: const EdgeInsets.symmetric(vertical: 15.0),
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(10.0),
+          //       ),
+          //       color: Colors.orange[800],
+          //       disabledColor: Colors.orange[200],
+          //       onPressed: document['stock'] <= 0 ? null : () => Add2Bag(),
+          //       child: Text(
+          //         document['stock'] <= 0
+          //             ? translator.translate('OutOfBag')
+          //             : translator.translate('AddToBag'),
+          //         style: TextStyle(fontSize: 18),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          RaisedButton(
+            onPressed: document['stock'] <= 0 ? null : () => Add2Bag(),
             textColor: Colors.black,
             padding: const EdgeInsets.all(0.0),
+            shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
             child: Container(
-              width: 300,
+            width: double.infinity,
               height: 55,
               decoration: const BoxDecoration(
                 boxShadow: [
                   BoxShadow(
                       blurRadius: 10, color: Colors.grey, offset: Offset(1, 3))
                 ],
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 gradient: LinearGradient(
                   colors: <Color>[
                     Color(0xFFE65100),
@@ -222,10 +247,16 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
               ),
               padding: const EdgeInsets.all(10.0),
               child: Center(
-                child: Text(translator.translate('AddToBag'),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
+                child: Text(
+                document['stock'] <= 0
+                    ? translator.translate('OutOfBag')
+                    : translator.translate('AddToBag'),
+                style: TextStyle(fontSize: 18),
+              ),
+                // child: Text(translator.translate('AddToBag'),
+                //     style: TextStyle(
+                //       fontWeight: FontWeight.bold,
+                //       fontSize: 22,
                     )),
               ),
             ),
