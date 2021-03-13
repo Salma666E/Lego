@@ -22,7 +22,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   bool isDarkTheme = false;
-  
+
   bool _obscureText = true;
   bool _confirmObscureText = true;
 
@@ -32,7 +32,7 @@ class _RegisterState extends State<Register> {
   var _month = "";
   var _day = "";
   var _year = "";
-  bool checkedValue = false;
+  bool checkedValue;
   bool checked = true;
 
   final usernameController = TextEditingController();
@@ -53,20 +53,19 @@ class _RegisterState extends State<Register> {
     yearController.clear();
   }
 
-  String error = '';
+  String error;
+  String checkedError;
 
   final _formKey = GlobalKey<FormState>();
 
-  void toastMessage(String message) {
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIos: 5,
-        fontSize: 16.0);
-  }
-
   final AuthService auth = AuthService();
+
+  @override
+  void initState() {
+    error = '';
+    checkedError = "";
+    checkedValue = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +77,7 @@ class _RegisterState extends State<Register> {
           color: Colors.black,
           onPressed: () {
             Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Home()));
+                context, MaterialPageRoute(builder: (context) => Home()));
           },
         ),
         title: Row(
@@ -122,7 +121,7 @@ class _RegisterState extends State<Register> {
                         child: Text(
                           "Create User Account",
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -135,7 +134,7 @@ class _RegisterState extends State<Register> {
                         width: 300,
                         child: Text(
                           "We just need a few pieces of information for your LEGO Account.",
-                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                          style: TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                       ),
                     ],
@@ -148,7 +147,10 @@ class _RegisterState extends State<Register> {
                             top: 13, right: 13, left: 13, bottom: 5),
                         child: new Text(
                           "Username",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -190,7 +192,10 @@ class _RegisterState extends State<Register> {
                             top: 13, right: 13, left: 13, bottom: 5),
                         child: new Text(
                           "Email Address",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -246,21 +251,30 @@ class _RegisterState extends State<Register> {
                         padding: EdgeInsets.only(bottom: 5),
                         child: new Text(
                           "Month",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       new Padding(
                         padding: EdgeInsets.only(bottom: 5),
                         child: new Text(
                           "Day",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       new Padding(
                         padding: EdgeInsets.only(bottom: 5),
                         child: new Text(
                           "Year",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -296,7 +310,10 @@ class _RegisterState extends State<Register> {
                                 return 'Required';
                               } else if (int.parse(month) > 12 ||
                                   int.parse(month) < 0) {
-                                return 'Please enter a number between 1 and 12';
+                                    setState(() {
+                                      error = 'Please enter a number between 1 and 12';
+                                    });
+                                return null;
                               } else {
                                 return null;
                               }
@@ -329,7 +346,10 @@ class _RegisterState extends State<Register> {
                                 return 'Required';
                               } else if (int.parse(day) > 31 ||
                                   int.parse(day) < 0) {
-                                return 'Please enter a number between 1 and 31';
+                                    setState(() {
+                                      error = 'Please enter a number between 1 and 31';
+                                    });
+                                return null;
                               } else {
                                 return null;
                               }
@@ -362,13 +382,27 @@ class _RegisterState extends State<Register> {
                                 return 'Required';
                               } else if (int.parse(year) > 2021 ||
                                   int.parse(year) < 0) {
-                                return 'Invalid year';
+                                    setState(() {
+                                      error = 'Invalid year';
+                                    });
+                                return null;
                               } else {
                                 return null;
                               }
                             },
                             onSaved: (year) => _year = year,
                           ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12.0,
+                    child: Row(
+                      children: [
+                        Text(
+                          error,
+                          style: TextStyle(color: Colors.red, fontSize: 14.0),
                         ),
                       ],
                     ),
@@ -381,7 +415,10 @@ class _RegisterState extends State<Register> {
                             top: 13, right: 13, left: 13, bottom: 5),
                         child: new Text(
                           "Password",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -435,7 +472,10 @@ class _RegisterState extends State<Register> {
                             top: 13, right: 13, left: 13, bottom: 5),
                         child: new Text(
                           "Confirm Password",
-                          style: TextStyle(fontSize: 9),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -485,7 +525,7 @@ class _RegisterState extends State<Register> {
                       title: Text(
                         "Accept Terms and Conditions",
                         style: TextStyle(
-                            fontSize: 9,
+                            fontSize: 11,
                             color: Color.fromRGBO(0, 123, 255, 0.8)),
                       ),
                       activeColor: Colors.black,
@@ -498,14 +538,17 @@ class _RegisterState extends State<Register> {
                       controlAffinity: ListTileControlAffinity.leading,
                     ),
                   ),
-                  /*SizedBox(height: 12.0, child:
-                   Row (
-                     children: [
-                    Text(
-                    "Please accept terms and conditions!",
-                    style: TextStyle(color: Colors.red, fontSize: 14.0),
-                  ),
-                  ],),),*/
+                  /*SizedBox(
+                    height: 12.0,
+                    child: Row(
+                      children: [
+                        Text(
+                          checkedError,
+                          style: TextStyle(color: Colors.red, fontSize: 14.0),
+                        ),
+                      ],
+                    ),
+                  ),*/
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -515,7 +558,7 @@ class _RegisterState extends State<Register> {
                         width: 300,
                         child: Text(
                           "When you agree to the Terms and Conditions you also consent to our use of your personal information to process and operate your LEGO Account. To see how to control your personal data, please see our privace policy.",
-                          style: TextStyle(fontSize: 7, color: Colors.grey),
+                          style: TextStyle(fontSize: 9, color: Colors.grey),
                         ),
                       ),
                     ],
@@ -532,10 +575,10 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.white)),
                               onPressed: () async {
-                                if (checkedValue == false) {
-                                  setState(() => error =
+                                /*if (checkedValue == false) {
+                                  setState(() => checkedError =
                                       "Please check the Terms and Conditions");
-                                }
+                                }*/
                                 if (_formKey.currentState.validate()) {
                                   _formKey.currentState.save();
                                   dynamic result = await auth.register(
@@ -582,21 +625,28 @@ class _RegisterState extends State<Register> {
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Login(),
-                            ),
-                          );
-                        },
-                        child: new Text(
-                          "Already have a LEGO Account?",
-                          style: TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(0, 123, 255, 0.8)),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: FlatButton(
+                          padding: EdgeInsets.zero,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          //color: Color.fromRGBO(18, 97, 160, 1),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Login(),
+                              ),
+                            );
+                          },
+                          child: new Text(
+                            "Already have a LEGO Account?",
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromRGBO(0, 123, 255, 0.8)),
+                          ),
                         ),
                       ),
                     ],
@@ -616,24 +666,23 @@ class _RegisterState extends State<Register> {
                     ],
                   ),
                   new FloatingActionButton(
-                    elevation: 0.0,
-                    child: new IconButton(
-                                  icon: widget.isDarkTheme
-                                      ? Transform.rotate(
-                                          angle: .55,
-                                          child: Icon(
-                                            Icons.brightness_3,
-                                            size: 20.0,
-                                          ))
-                                      : Icon(Icons.brightness_7),
-                                  onPressed: () {
-                                    widget.onThemeChanged(!widget.isDarkTheme);
-                                    print("widget.isDarkTheme: " +
-                                        widget.isDarkTheme.toString());
-                                  },
-                                  tooltip: 'Switch brightness',
-                                )
-                  ),
+                      elevation: 0.0,
+                      child: new IconButton(
+                        icon: widget.isDarkTheme
+                            ? Transform.rotate(
+                                angle: .55,
+                                child: Icon(
+                                  Icons.brightness_3,
+                                  size: 20.0,
+                                ))
+                            : Icon(Icons.brightness_7),
+                        onPressed: () {
+                          widget.onThemeChanged(!widget.isDarkTheme);
+                          print("widget.isDarkTheme: " +
+                              widget.isDarkTheme.toString());
+                        },
+                        tooltip: 'Switch brightness',
+                      )),
                 ],
               ),
             ),
