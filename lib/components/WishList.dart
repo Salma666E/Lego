@@ -368,6 +368,7 @@
 //////////////////////////////////////////////////////
 import 'package:LegoApp/components/app_bar.dart';
 import 'package:LegoApp/features/home/home.dart';
+import 'package:LegoApp/services/auth.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -377,9 +378,11 @@ import 'package:toast/toast.dart';
 import '../components/drawerList.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
+var id = '';
+
 // Widget buildListItem(BuildContext context,DocumentSnapshot document,String _userID)
 
-String _userID = "Xhl4PYKbc0ObiSBG1g67jEmylG33";
+// String _userID = "Xhl4PYKbc0ObiSBG1g67jEmylG33";
 
 class WishList extends StatefulWidget {
   WishList({this.wishlist});
@@ -398,12 +401,46 @@ class _WishListState extends State<WishList> {
     return wishlist;
   }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getWishListArray(_userID);
+
+  //   setState(() {});
+  // }
+  final AuthService auth = AuthService();
+  String name;
+  String email;
   @override
   void initState() {
     super.initState();
-    getWishListArray(_userID);
+    name = '';
+    email = '';
+    var firestoreInstance = Firestore.instance;
 
-    // getwishlistArray(_userID);
+    auth.getPrefs('UserID').then((value) {
+      id = value;
+      firestoreInstance
+          .collection('users')
+          .document(id)
+          .get()
+          .then((DocumentSnapshot docsnap) {
+        setState(() {
+          print(docsnap.data["displayName"]);
+          name = docsnap.data["displayName"];
+          name = "${name[0].toUpperCase()}${name.substring(1)}";
+        });
+        setState(() {
+          print(docsnap.data["email"]);
+          email = docsnap.data["email"];
+        });
+        setState(() {
+          print("id: " + id.toString());
+          getBagsArray(id);
+          getWishListArray(id);
+        });
+      });
+    });
     setState(() {});
   }
 
@@ -413,26 +450,20 @@ class _WishListState extends State<WishList> {
     // Add To My Bag
     await Firestore.instance
         .collection("bags")
-        .document(_userID)
+        .document(id)
         .get()
         .then((querySnapshot) async {
       querySnapshot['productsIDs'].forEach((result) async {
         if (result['id'].toString() == document.documentID) {
           exist = true;
           int qtyOld = result['qty'];
-          await Firestore.instance
-              .collection('bags')
-              .document(_userID)
-              .updateData({
+          await Firestore.instance.collection('bags').document(id).updateData({
             'productsIDs': FieldValue.arrayRemove([
               {'qty': qtyOld, 'id': document.documentID}
             ])
           });
           int qty = result['qty'] + 1;
-          await Firestore.instance
-              .collection('bags')
-              .document(_userID)
-              .updateData({
+          await Firestore.instance.collection('bags').document(id).updateData({
             'productsIDs': FieldValue.arrayUnion([
               {'qty': qty, 'id': document.documentID}
             ])
@@ -441,7 +472,7 @@ class _WishListState extends State<WishList> {
         }
       });
       if (!exist) {
-        Firestore.instance.collection("bags").document(_userID).updateData({
+        Firestore.instance.collection("bags").document(id).updateData({
           "productsIDs": FieldValue.arrayUnion([
             {"id": document.documentID, "qty": 1}
           ])
@@ -530,14 +561,14 @@ class _WishListState extends State<WishList> {
       print("status: " + status.toString());
       if (status) {
         // Remove From WishList
-        Firestore.instance.collection("wishlist").document(_userID).updateData({
+        Firestore.instance.collection("wishlist").document(id).updateData({
           "productsIDs": FieldValue.arrayRemove([document.documentID])
         });
         Toast.show(translator.translate('RemoveWishList'), context,
             duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       } else {
         // Add To WishList
-        Firestore.instance.collection("wishlist").document(_userID).updateData({
+        Firestore.instance.collection("wishlist").document(id).updateData({
           "productsIDs": FieldValue.arrayUnion([document.documentID])
         });
         Toast.show(translator.translate('AddWishList'), context,
@@ -670,14 +701,21 @@ class _WishListState extends State<WishList> {
                                                                       .collection(
                                                                           "wishlist")
                                                                       .document(
-                                                                          _userID)
-                                                                      .updateData({
-                                                                    "productsIDs":
-                                                                        FieldValue
-                                                                            .arrayRemove([
-                                                                      doc.documentID
-                                                                    ])
-                                                                  });
+                                                                          id)
+                                                                      .delete();
+                                                                  // Firestore
+                                                                  //     .instance
+                                                                  //     .collection(
+                                                                  //         "wishlist")
+                                                                  //     .document(
+                                                                  //         id)
+                                                                  //     .updateData({
+                                                                  //   "productsIDs":
+                                                                  //       FieldValue
+                                                                  //           .arrayRemove([
+                                                                  //     doc.documentID
+                                                                  //   ])
+                                                                  // });
 
                                                                   Toast.show(
                                                                       translator

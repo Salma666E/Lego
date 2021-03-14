@@ -57,13 +57,6 @@ class _DrawerListState extends State<DrawerList> {
   @override
   void initState() {
     super.initState();
-<<<<<<< HEAD
-    print("_userID: " + _userID.toString());
-    getUserName(_userID);
-    getBagsArray(_userID);
-    getwishlistArray(_userID);
-
-=======
     name = '';
     email = '';
     var firestoreInstance = Firestore.instance;
@@ -88,10 +81,10 @@ class _DrawerListState extends State<DrawerList> {
           print("_userID: " + id.toString());
           getUserName(id);
           getBagsArray(id);
+          getwishlistArray(id);
         });
       });
     });
->>>>>>> 7c5269c83815cba7734041fad3cd30f54cb233c2
     setState(() {});
   }
 
