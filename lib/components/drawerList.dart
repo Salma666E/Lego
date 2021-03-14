@@ -11,17 +11,17 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'cardCustom.dart';
 
 var id = '';
-String userName = "Lego";
-String userEmail = "lego.com";
-Future<String> getUserName(String _userID) async {
-  DocumentSnapshot snapshot =
-      await firestore.collection('users').document(_userID).get();
-  userName = snapshot.data['displayName'];
-  userEmail = snapshot.data['email'];
-  print('userName: ' + userName.toString());
-  print('userEmail: ' + userEmail.toString());
-  return "Name: " + userName + " Email: " + userEmail;
-}
+// String userName = "Lego";
+// String userEmail = "lego.com";
+// Future<String> getUserName(String _userID) async {
+//   DocumentSnapshot snapshot =
+//       await firestore.collection('users').document(_userID).get();
+//   userName = snapshot.data['displayName'];
+//   userEmail = snapshot.data['email'];
+//   print('userName: ' + userName.toString());
+//   print('userEmail: ' + userEmail.toString());
+//   return "Name: " + userName + " Email: " + userEmail;
+// }
 
 List<String> bags = ['1', '2'];
 Future<List<String>> getBagsArray(String documentId) async {
@@ -79,7 +79,7 @@ class _DrawerListState extends State<DrawerList> {
         });
         setState(() {
           print("_userID: " + id.toString());
-          getUserName(id);
+          // getUserName(id);
           getBagsArray(id);
           getwishlistArray(id);
         });
@@ -103,12 +103,12 @@ class _DrawerListState extends State<DrawerList> {
                   leading: CircleAvatar(
                       backgroundImage: NetworkImage(
                           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIMJf32XCdIMPR005aLZbkk5TldBubjW2CfA&usqp=CAU")),
-                  title: Text(userName,
+                  title: Text(name,
                       style: TextStyle(
                         color: Colors.blue,
                       )),
                   subtitle: Text(
-                    userEmail,
+                    email,
                     style: TextStyle(
                       fontSize: 12,
                     ),

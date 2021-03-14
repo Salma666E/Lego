@@ -1,4 +1,5 @@
 import 'package:LegoApp/components/review.dart';
+import 'package:LegoApp/services/auth.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,8 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:LegoApp/models/review.dart';
 import 'package:toast/toast.dart';
 
-String _userID = 'GodEdO1YDAKTE2LNDp1V';
-
+String _userID = '';
 Future<List<Review>> getReviews(String prdId) async {
   List<Review> reviews = [];
   final QuerySnapshot snapshot =
@@ -57,6 +57,9 @@ class MyItem {
 }
 
 class _ProductState extends State<Product> {
+  final AuthService auth = AuthService();
+  bool exist = false;
+
   Color notselected = Colors.white;
   Color selected = Colors.blue;
   IconData fav = Icons.favorite_border_outlined;
@@ -82,7 +85,7 @@ class _ProductState extends State<Product> {
   IconData star3 = Icons.star_border_outlined;
   IconData star4 = Icons.star_border_outlined;
   IconData star5 = Icons.star_border_outlined;
-
+  bool existwishlist = false;
   Widget _buildListPanel() {
     return ExpansionPanelList(
       expansionCallback: (int index, bool isExpand) {
@@ -162,92 +165,6 @@ class _ProductState extends State<Product> {
                                       document: widget.document,
                                     )),
                           );
-                          // showDialog(
-                          //     context: context,
-                          //     builder: (BuildContext context) {
-                          //       return AlertDialog(
-                          //         shape: RoundedRectangleBorder(
-                          //             borderRadius: BorderRadius.all(
-                          //                 Radius.circular(10.0))),
-                          //         title: Text("write review"),
-                          //         content: SingleChildScrollView(
-                          //           child: Column(children: [
-                          //             Row(
-                          //               children: [
-                          //                 Text("Rate :"),
-                          //                 Flexible(
-                          //                   child: Row(children: [
-                          //                     Container(
-                          //                       width: 18,
-                          //                       child: IconButton(
-                          //                         icon: Icon(
-                          //                           Icons.star_border_outlined,
-                          //                           color: Colors.grey,
-                          //                         ),
-                          //                         onPressed: () => print("1"),
-                          //                       ),
-                          //                     ),
-                          //                     Container(
-                          //                       width: 18,
-                          //                       child: IconButton(
-                          //                         icon: Icon(
-                          //                           Icons.star_border_outlined,
-                          //                           color: Colors.grey,
-                          //                         ),
-                          //                         onPressed: () => print("1"),
-                          //                       ),
-                          //                     ),
-                          //                     Container(
-                          //                       width: 18,
-                          //                       child: IconButton(
-                          //                         icon: Icon(
-                          //                           Icons.star_border_outlined,
-                          //                           color: Colors.grey,
-                          //                         ),
-                          //                         onPressed: () => print("1"),
-                          //                       ),
-                          //                     ),
-                          //                     Container(
-                          //                       width: 18,
-                          //                       child: IconButton(
-                          //                         icon: Icon(
-                          //                           Icons.star_border_outlined,
-                          //                           color: Colors.grey,
-                          //                         ),
-                          //                         onPressed: () => print("1"),
-                          //                       ),
-                          //                     ),
-                          //                     Container(
-                          //                       width: 18,
-                          //                       child: IconButton(
-                          //                         icon: Icon(
-                          //                           Icons.star_border_outlined,
-                          //                           color: Colors.grey,
-                          //                         ),
-                          //                         onPressed: () => print("1"),
-                          //                       ),
-                          //                     ),
-                          //                   ]),
-                          //                 ),
-                          //               ],
-                          //             ),
-                          //             SizedBox(
-                          //               height: 150,
-                          //               child: TextField(
-                          //                   decoration: new InputDecoration(
-                          //                       border: InputBorder.none,
-                          //                       filled: false,
-                          //                       hintText: 'Add review')),
-                          //             ),
-                          //             RaisedButton(
-                          //               onPressed: () {},
-                          //               child: Text("send"),
-                          //               color: Colors.blue,
-                          //             )
-                          //        ]),
-                          //     ),
-                          //   );
-                          // });
                         },
                         child: Text(translator.translate('WriteReview')),
                       )
@@ -305,18 +222,44 @@ class _ProductState extends State<Product> {
   @override
   void initState() {
     super.initState();
+    auth.getPrefs('UserID').then((value) {
+      print('id: ' + _userID.toString());
+      setState(() {
+        _userID = value;
+        print('---------------------IDDDDDDDDDD---------------------------');
+        print(_userID);
+        Firestore.instance
+            .collection("wishlist")
+            .document(_userID)
+            .get()
+            .then((value) {
+          var products = value.data['productsIDs'];
+          print(products);
+          for (var prd in products) {
+            if (prd == widget.document.documentID) {
+              setState(() {
+                existwishlist = true;
+                fav = Icons.favorite;
+              });
+            }
+          }
+        });
+      });
+    });
+
     imgList = widget.document['images'];
     image = widget.document['image'];
     description = widget.document['description'].toString();
 
-    _items.add(MyItem(header: translator.translate("des"), body: 
-       translator.currentLanguage == 'en'
-                                    ? widget.document['description'].toString()
-                                    : widget.document['arabicDescription'].toString(),
+    _items.add(MyItem(
+      header: translator.translate("des"),
+      body: translator.currentLanguage == 'en'
+          ? widget.document['description'].toString()
+          : widget.document['arabicDescription'].toString(),
     ));
     _items.add(MyItem(
         header: translator.translate("delAndRet"),
-        body: translator.translate("delretbody") ));
+        body: translator.translate("delretbody")));
     _items2.add(MyItem(header: translator.translate("cusRev"), body: ""));
     getReviews(widget.document.documentID).then((value) {
       for (var v in value) {
@@ -330,8 +273,7 @@ class _ProductState extends State<Product> {
       }
       setState(() {
         overallrate = overallrate / revCount;
-        print("---------------------------------------");
-        print(overallrate.toDouble());
+        print(overallrate.floor());
       });
       if (overallrate > 1)
         setState(() {
@@ -598,28 +540,58 @@ class _ProductState extends State<Product> {
                         child: RaisedButton(
                           color: Colors.orange[900],
                           onPressed: () {
-                            if (bagID == "") {
-                              Firestore.instance.collection("bags").add({
-                                "userID": _userID,
-                                "productsIDs": [{
-                                  "id": widget.document.documentID,
-                                  "qty": count
-                                }]
-                              }).then((value) => {
-                                    setState(() {
-                                      bagID = value.documentID;
-                                    })
+                            Firestore.instance
+                                .collection("bags")
+                                .document(_userID)
+                                .get()
+                                .then((querySnapshot) async {
+                              querySnapshot['productsIDs']
+                                  .forEach((result) async {
+                                if (result['id'].toString() ==
+                                    widget.document.documentID) {
+                                  exist = true;
+                                  int qtyOld = result['qty'];
+                                  await Firestore.instance
+                                      .collection('bags')
+                                      .document(_userID)
+                                      .updateData({
+                                    'productsIDs': FieldValue.arrayRemove([
+                                      {
+                                        'qty': qtyOld,
+                                        'id': widget.document.documentID
+                                      }
+                                    ])
                                   });
-                              Toast.show(
-                                  translator.translate('AddSuccessfully'),
-                                  context,
-                                  duration: Toast.LENGTH_SHORT,
-                                  gravity: Toast.BOTTOM);
-                            } else {
-                              Toast.show(('ProductAreladyAdded'), context,
-                                  duration: Toast.LENGTH_SHORT,
-                                  gravity: Toast.BOTTOM);
-                            }
+                                  int qty = result['qty'] + count;
+                                  await Firestore.instance
+                                      .collection('bags')
+                                      .document(_userID)
+                                      .updateData({
+                                    'productsIDs': FieldValue.arrayUnion([
+                                      {
+                                        'qty': qty,
+                                        'id': widget.document.documentID
+                                      }
+                                    ])
+                                  });
+                                  return result;
+                                }
+                              });
+                              if (!exist) {
+                                Firestore.instance
+                                    .collection("bags")
+                                    .document(_userID)
+                                    .updateData({
+                                  "productsIDs": FieldValue.arrayUnion([
+                                    {"id": widget.document.documentID, "qty": count}
+                                  ])
+                                });
+                              }
+                            });
+                            Toast.show(translator.translate('AddSuccessfully'),
+                                context,
+                                duration: Toast.LENGTH_SHORT,
+                                gravity: Toast.BOTTOM);
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(18.0),
@@ -640,35 +612,44 @@ class _ProductState extends State<Product> {
                                   color: Colors.blue,
                                 ),
                                 onPressed: () => {
-                                  setState(() {
-                                    fav = Icons.favorite;
-                                  }),
-                                  if (wishlist == "")
+                                  if (existwishlist == false)
                                     {
+                                      setState(() {
+                                        fav = Icons.favorite;
+                                        existwishlist = true;
+                                      }),
                                       Firestore.instance
                                           .collection("wishlist")
-                                          .add({
-                                        "userID": _userID,
-                                        "productsIDs": {
-                                          "id": widget.document.documentID,
-                                        }
-                                      }).then((value) => {
-                                                setState(() {
-                                                  wishlist = value.documentID;
-                                                })
-                                              })
+                                          .document(_userID)
+                                          .updateData({
+                                        "productsIDs": FieldValue.arrayUnion(
+                                            [widget.document.documentID])
+                                      }),
+                                      Toast.show(
+                                          translator.translate('AddWishList'),
+                                          context,
+                                          duration: Toast.LENGTH_SHORT,
+                                          gravity: Toast.BOTTOM)
                                     }
-                                  else
+                                  else if (existwishlist == true)
                                     {
-                                      Firestore.instance
-                                          .collection("wishlist")
-                                          .document(wishlist)
-                                          .delete()
-                                          .then((value) => print('remo')),
                                       setState(() {
                                         fav = Icons.favorite_border_outlined;
-                                        wishlist = "";
+                                        existwishlist = false;
                                       }),
+                                      Firestore.instance
+                                          .collection("wishlist")
+                                          .document(_userID)
+                                          .updateData({
+                                        "productsIDs": FieldValue.arrayRemove(
+                                            [widget.document.documentID])
+                                      }),
+                                      Toast.show(
+                                          translator
+                                              .translate('RemoveWishList'),
+                                          context,
+                                          duration: Toast.LENGTH_SHORT,
+                                          gravity: Toast.BOTTOM)
                                     }
                                 },
                               ),
@@ -911,7 +892,87 @@ class _ProductState extends State<Product> {
                                                   width: double.infinity,
                                                   child: RaisedButton(
                                                     color: Colors.orange[900],
-                                                    onPressed: () {},
+                                                    onPressed: () {
+                                                      Firestore.instance
+                                                          .collection("bags")
+                                                          .document(_userID)
+                                                          .get()
+                                                          .then(
+                                                              (querySnapshot) async {
+                                                        querySnapshot[
+                                                                'productsIDs']
+                                                            .forEach(
+                                                                (result) async {
+                                                          if (result['id']
+                                                                  .toString() ==
+                                                              product.documentID) {
+                                                            exist = true;
+                                                            int qtyOld =
+                                                                result['qty'];
+                                                            await Firestore
+                                                                .instance
+                                                                .collection(
+                                                                    'bags')
+                                                                .document(
+                                                                    _userID)
+                                                                .updateData({
+                                                              'productsIDs':
+                                                                  FieldValue
+                                                                      .arrayRemove([
+                                                                {
+                                                                  'qty': qtyOld,
+                                                                  'id': product.documentID
+                                                                }
+                                                              ])
+                                                            });
+                                                            int qty =
+                                                                result['qty'] +
+                                                                    1;
+                                                            await Firestore
+                                                                .instance
+                                                                .collection(
+                                                                    'bags')
+                                                                .document(
+                                                                    _userID)
+                                                                .updateData({
+                                                              'productsIDs':
+                                                                  FieldValue
+                                                                      .arrayUnion([
+                                                                {
+                                                                  'qty': qty,
+                                                                  'id':product.documentID
+                                                                }
+                                                              ])
+                                                            });
+                                                            return result;
+                                                          }
+                                                        });
+                                                        if (!exist) {
+                                                          Firestore.instance
+                                                              .collection(
+                                                                  "bags")
+                                                              .document(_userID)
+                                                              .updateData({
+                                                            "productsIDs":
+                                                                FieldValue
+                                                                    .arrayUnion([
+                                                              {
+                                                                "id":product.documentID,
+                                                                "qty": 1
+                                                              }
+                                                            ])
+                                                          });
+                                                        }
+                                                      });
+                                                      Toast.show(
+                                                          translator.translate(
+                                                              'AddSuccessfully'),
+                                                          context,
+                                                          duration: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity:
+                                                              Toast.BOTTOM);
+                                                    },
                                                     child: Padding(
                                                       padding:
                                                           const EdgeInsets.all(

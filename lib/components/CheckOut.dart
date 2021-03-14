@@ -1,4 +1,5 @@
 import 'package:LegoApp/features/home/home.dart';
+import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:toast/toast.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:email_validator/email_validator.dart';
 
-String _userID = 'GodEdO1YDAKTE2LNDp1V';
+String _userID = '';
 
 class CheckOut extends StatefulWidget {
   @override
@@ -17,58 +18,105 @@ class CheckOut extends StatefulWidget {
 class _CheckOutState extends State<CheckOut> {
   final _formKey = GlobalKey<FormState>();
 
-  String _name="";
-  String _city="";
-  String _address="";
-  String _email="";
-  String _phone ="";
-  String _zip="";
+  String _name = "";
+  String _city = "";
+  String _address = "";
+  String _email = "";
+  String _phone = "";
+  String _zip = "";
 
   final myconrollar1 = TextEditingController();
   final myconrollar2 = TextEditingController();
   final myconrollar3 = TextEditingController();
   final myconrollar4 = TextEditingController();
   final myconrollar5 = TextEditingController();
-  final myconrollar6= TextEditingController();
-  int subtotal =0;
-  double ordertotal =0 ;
+  final myconrollar6 = TextEditingController();
+  num  subtotal = 0;
+  num ordertotal = 0;
   var listofproducts;
-  String bagId='';
+  String bagId = '';
 
   @override
   void initState() {
     super.initState();
-    print("-------------------------------------------------------------------------------------");
-    Firestore.instance.collection("bags").getDocuments().then((value) {
-       value.documents.forEach((element) {
-         var data =element.data;
-        
-         if(data['userID']==_userID){
-            print("BAGIDDDDDDDDDDD");
-            print(element.documentID);
+    print(
+        "-------------------------------------------------------------------------------------");
+    final AuthService auth = AuthService();
 
-            setState((){
-                listofproducts=data['productsIDs'];
+    auth.getPrefs('UserID').then((value) {
+      setState(() {
+        _userID = value;
+        print('---------------------IDDDDDDDDDD---------------------------');
+        print(_userID);
+        Firestore.instance
+            .collection("bags")
+            .document(_userID)
+            .get()
+            .then((value) {
+          print(value.data);
+          var data = value.data;
+          setState(() {
+            listofproducts = data['productsIDs'];
+          });
+          for (var v in data['productsIDs']) {
+            print(v);
+            Firestore.instance
+                .collection("products")
+                .document(v['id'])
+                .get()
+                .then((val) {
+              print("2---");
+              
+
+              var prd = val.data;
+              num p = prd['price'];
+              num price =p.toDouble();
+              int qty = v['qty'];
+              print('priceeeeeeeeeeeeeeeeeeeeeeeeee');
+              print(price);
+              print(qty);
+              setState(() {
+                subtotal += (price * qty);
+                ordertotal += subtotal + (subtotal * 14 / 100);
+                print(subtotal);
+                print(ordertotal);
+              });
             });
-            for (var v in data['productsIDs']) {
-              Firestore.instance.collection("products").document(v['id']).get().then(
-                (val){
-                  print("PRODUCTTT");
-                  var prd=val.data;
-                  int price =prd['price'];
-                  int qty=v['qty'];
-                  setState(() {
-                    subtotal+=(price*qty);
-                    ordertotal+=subtotal+(subtotal*14/100);
-                  });
-                });
-            }
-         }
-       });
-    }); 
+          }
+          subtotal = num.parse(subtotal.toStringAsFixed(2));
+          ordertotal = num.parse(ordertotal.toStringAsFixed(2));
+        });
+      });
+    });
 
+    //   Firestore.instance.collection("bags").getDocuments().then((value) {
+    //      value.documents.forEach((element) {
+    //        var data =element.data;
+
+    //        if(data['userID']==_userID){
+    //           print("BAGIDDDDDDDDDDD");
+    //           print(element.documentID);
+
+    //           setState((){
+    //               listofproducts=data['productsIDs'];
+    //           });
+    //           for (var v in data['productsIDs']) {
+    //             Firestore.instance.collection("products").document(v['id']).get().then(
+    //               (val){
+    //                 print("PRODUCTTT");
+    //                 var prd=val.data;
+    //                 int price =prd['price'];
+    //                 int qty=v['qty'];
+    //                 setState(() {
+    //                   subtotal+=(price*qty);
+    //                   ordertotal+=subtotal+(subtotal*14/100);
+    //                 });
+    //               });
+    //           }
+    //        }
+    //      });
+    //   });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -83,15 +131,14 @@ class _CheckOutState extends State<CheckOut> {
               child: Container(
                 padding: EdgeInsets.all(10.0),
                 child: Form(
-                    key: _formKey,
-                    child: Column(
+                  key: _formKey,
+                  child: Column(
                     children: <Widget>[
                       TextFormField(
-                        controller:myconrollar1,
+                        controller: myconrollar1,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.person),
                           labelText: translator.translate("Name"),
-
                         ),
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
@@ -104,10 +151,9 @@ class _CheckOutState extends State<CheckOut> {
                           }
                         },
                         onSaved: (username) => _name = username,
-                        
                       ),
                       TextFormField(
-                        controller:myconrollar2,
+                        controller: myconrollar2,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.store_mall_directory_outlined),
                           labelText: translator.translate("City"),
@@ -125,7 +171,7 @@ class _CheckOutState extends State<CheckOut> {
                         onSaved: (city) => _city = city,
                       ),
                       TextFormField(
-                        controller:myconrollar3,
+                        controller: myconrollar3,
                         decoration: new InputDecoration(
                           prefixIcon: Icon(Icons.store_mall_directory),
                           labelText: translator.translate("StreetAddress"),
@@ -136,20 +182,18 @@ class _CheckOutState extends State<CheckOut> {
                         validator: (address) {
                           if (address.isEmpty) {
                             return 'street should not be empty!';
-                          } 
-                          else if(address.length<5){
+                          } else if (address.length < 5) {
                             return 'please enter valid street address!';
-                          }
-                          else {
+                          } else {
                             return null;
                           }
                         },
                         onSaved: (address) => _address = address,
                       ),
                       TextFormField(
-                        controller:myconrollar4,
+                        controller: myconrollar4,
                         decoration: new InputDecoration(
-                          prefixIcon: Icon(Icons.email),  
+                          prefixIcon: Icon(Icons.email),
                           labelText: translator.translate("Email"),
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -166,9 +210,9 @@ class _CheckOutState extends State<CheckOut> {
                         },
                         onSaved: (email) => _email = email,
                       ),
-                  
+
                       TextFormField(
-                        controller:myconrollar5,
+                        controller: myconrollar5,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.call),
                           labelText: translator.translate("Phone"),
@@ -179,18 +223,16 @@ class _CheckOutState extends State<CheckOut> {
                         validator: (phone) {
                           if (phone.isEmpty) {
                             return 'street should not be empty!';
-                          } 
-                          else if(phone.length!=11){
+                          } else if (phone.length != 11) {
                             return 'Phone Number must consist of 11 digits !';
-                          }
-                          else {
+                          } else {
                             return null;
                           }
                         },
                         onSaved: (phone) => _phone = phone,
                       ),
                       TextFormField(
-                        controller:myconrollar6,
+                        controller: myconrollar6,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.home_work),
                           labelText: translator.translate("ZIP"),
@@ -201,8 +243,7 @@ class _CheckOutState extends State<CheckOut> {
                         validator: (phone) {
                           if (phone.isEmpty) {
                             return 'zip should not be empty!';
-                          } 
-                          else {
+                          } else {
                             return null;
                           }
                         },
@@ -219,11 +260,9 @@ class _CheckOutState extends State<CheckOut> {
                         validator: (cardnum) {
                           if (cardnum.isEmpty) {
                             return 'credit card should not be empty!';
-                          } 
-                          else if(cardnum.length!=16){
+                          } else if (cardnum.length != 16) {
                             return 'Phone Number must consist of 16 digit !';
-                          }
-                          else {
+                          } else {
                             return null;
                           }
                         },
@@ -236,32 +275,32 @@ class _CheckOutState extends State<CheckOut> {
                         borderRadius: BorderRadius.circular(30.0),
                         child: MaterialButton(
                           onPressed: () => {
-                           if (_formKey.currentState.validate()) {
-                                  _formKey.currentState.save(),
-                                Firestore.instance.collection("orders").add(
+                            if (_formKey.currentState.validate())
                               {
-                                "address":{
-                                  "city":myconrollar2.text ,
-                                  "street": myconrollar3.text,
-                                  "zip" : myconrollar6.text
-                                },
-                                "date":DateFormat('yMd').format(new DateTime.now()),
-                                "mobilePhone":myconrollar5.text,
-                                "productsIDs":listofproducts,
-                                "totalPrice":ordertotal,
-                                "userID":_userID
-
-                              }).then((value)=>print("SUCCSE")),
-
-                              Toast.show(('Thank you for shopping from lego your order be ready in few days'), context,
-                              duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM),
-
-                              Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Home()))
-                           }
-             
+                                _formKey.currentState.save(),
+                                Firestore.instance.collection("orders").add({
+                                  "address": {
+                                    "city": myconrollar2.text,
+                                    "street": myconrollar3.text,
+                                    "zip": myconrollar6.text
+                                  },
+                                  "date": DateFormat('yMd')
+                                      .format(new DateTime.now()),
+                                  "mobilePhone": myconrollar5.text,
+                                  "productsIDs": listofproducts,
+                                  "totalPrice": ordertotal,
+                                  "userID": _userID
+                                }).then((value) => print("SUCCSE")),
+                                Toast.show(
+                                    ('Thank you for shopping from lego your order be ready in few days'),
+                                    context,
+                                    duration: Toast.LENGTH_SHORT,
+                                    gravity: Toast.BOTTOM),
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Home()))
+                              }
                           },
                           minWidth: 150.0,
                           height: 50.0,
@@ -283,7 +322,7 @@ class _CheckOutState extends State<CheckOut> {
                           child: Column(
                             children: [
                               ListTile(
-                                title:  Text( translator.translate("PlaceOrder")),
+                                title: Text(translator.translate("PlaceOrder")),
                               ),
                               Text(
                                 '━━━━━━━━━━━━━━━━━━━━━━━━',
@@ -293,7 +332,7 @@ class _CheckOutState extends State<CheckOut> {
                                 child: Row(
                                   children: <Widget>[
                                     Text(
-                                     translator.translate("SubTotal"),
+                                      translator.translate("SubTotal"),
                                       style: TextStyle(fontSize: 15),
                                     ),
                                     Spacer(),
@@ -310,7 +349,7 @@ class _CheckOutState extends State<CheckOut> {
                                 child: Row(
                                   children: <Widget>[
                                     Text(
-                                     translator.translate("StandardShipping"),
+                                      translator.translate("StandardShipping"),
                                       style: TextStyle(fontSize: 15),
                                     ),
                                     Spacer(),
