@@ -32,6 +32,17 @@ Future<List<String>> getBagsArray(String documentId) async {
   return bags;
 }
 
+// ***********
+List<String> wishlist = ['1', '2'];
+Future<List<String>> getwishlistArray(String documentId) async {
+  DocumentSnapshot snapshot =
+      await firestore.collection('wishlist').document(documentId).get();
+  wishlist = List.from(snapshot.data['productsIDs']);
+  print('flageDrawer+wishlist: ' + wishlist.toString());
+  return wishlist;
+}
+
+// **********
 class DrawerList extends StatefulWidget {
   DrawerList({Key key}) : super(key: key);
 
@@ -137,6 +148,21 @@ class _DrawerListState extends State<DrawerList> {
                     ),
                   },
                 ),
+                ///////////////////////
+                //                 ListTile(
+                //       leading: Icon(
+                //         Icons.favorite_border_outlined,
+                //         color: Colors.blue,
+                //       ),
+                //       title: Text(translator.translate('Test')),
+                //       onTap: () {
+                //         Navigator.push(
+                //           context,
+                // MaterialPageRoute(builder: (context) => Test()),
+                //         );
+                //       },
+                //     ),
+                /////////////////
                 ListTile(
                   leading: Icon(
                     Icons.favorite_border_outlined,
@@ -146,7 +172,9 @@ class _DrawerListState extends State<DrawerList> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WishList()),
+                      // MaterialPageRoute(builder: (context) => WishList()),
+                      MaterialPageRoute(
+                          builder: (context) => WishList(wishlist: wishlist)),
                     );
                   },
                 ),

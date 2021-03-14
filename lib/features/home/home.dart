@@ -53,9 +53,9 @@ class _HomeState extends State<Home> {
         getWishListArray(id);
       });
     });
-    if(id.isNotEmpty)
-    // setState(() {
-        getWishListArray(id);
+    if (id.isNotEmpty)
+      // setState(() {
+      getWishListArray(id);
     // });
   }
 
