@@ -18,7 +18,7 @@ Future<List<String>> getWishListArray(String documentId) async {
   DocumentSnapshot snapshot =
       await firestore.collection('wishlist').document(documentId).get();
   List<String> productsIDs = List.from(snapshot.data['productsIDs']);
-  print('productsIDs: ' + productsIDs.toString());
+  print('productsIDs HOME: ' + productsIDs.toString());
   wishList = productsIDs;
   return productsIDs;
 }

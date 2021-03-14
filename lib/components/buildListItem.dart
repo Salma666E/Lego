@@ -108,7 +108,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
                 ),
                 mainAxisAlignment: MainAxisAlignment.start,
                 likeBuilder: (isLiked) {
-                  if (wishList.isNotEmpty) if (wishList
+                  if (wishList
                       .contains(document.documentID)) {
                     isLiked = true;
                     wishList.remove(document.documentID);
