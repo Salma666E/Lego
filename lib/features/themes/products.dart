@@ -2,6 +2,7 @@ import 'package:LegoApp/features/themes/productCard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:LegoApp/services/auth.dart';
 
 class Products extends StatefulWidget {
   @override
@@ -9,9 +10,20 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
-  // List<String> _locations = ['A', 'B', 'C']; // Option 2
-  String _selectedCategory = "nothing"; // Option 2
+  final AuthService auth = AuthService();
+  String _selectedCategory = "nothing";
   Color _selectCategoryColor = Colors.grey[800];
+  String id = '';
+
+  @override
+  void initState() {
+    super.initState();
+    auth.getPrefs('UserID').then((value) {
+      setState(() {
+        id = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +104,8 @@ class _ProductsState extends State<Products> {
               return ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return productCard(context, snapshot.data.documents[index]);
+                  return productCard(
+                      context, snapshot.data.documents[index], id);
                 },
               );
             },

@@ -2,8 +2,54 @@ import 'package:LegoApp/components/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:toast/toast.dart';
 
-Widget productCard(BuildContext context, DocumentSnapshot document) {
+Widget productCard(
+    BuildContext context, DocumentSnapshot document, String _userID) {
+  bool exist = false;
+  Add2Bag() async {
+    // Add To My Bag
+    await Firestore.instance
+        .collection("bags")
+        .document(_userID)
+        .get()
+        .then((querySnapshot) async {
+      querySnapshot['productsIDs'].forEach((result) async {
+        if (result['id'].toString() == document.documentID) {
+          exist = true;
+          int qtyOld = result['qty'];
+          await Firestore.instance
+              .collection('bags')
+              .document(_userID)
+              .updateData({
+            'productsIDs': FieldValue.arrayRemove([
+              {'qty': qtyOld, 'id': document.documentID}
+            ])
+          });
+          int qty = result['qty'] + 1;
+          await Firestore.instance
+              .collection('bags')
+              .document(_userID)
+              .updateData({
+            'productsIDs': FieldValue.arrayUnion([
+              {'qty': qty, 'id': document.documentID}
+            ])
+          });
+          return result;
+        }
+      });
+      if (!exist) {
+        Firestore.instance.collection("bags").document(_userID).updateData({
+          "productsIDs": FieldValue.arrayUnion([
+            {"id": document.documentID, "qty": 1}
+          ])
+        });
+      }
+    });
+    Toast.show(translator.translate('AddSuccessfully'), context,
+        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+  }
+
   return GestureDetector(
     onTap: () {
       Navigator.push(
@@ -77,7 +123,7 @@ Widget productCard(BuildContext context, DocumentSnapshot document) {
                 ),
                 color: Colors.orange[800],
                 disabledColor: Colors.orange[200],
-                onPressed: document['stock'] <= 0 ? null : () {},
+                onPressed: document['stock'] <= 0 ? null : () => Add2Bag(),
                 child: Text(
                   document['stock'] <= 0
                       ? translator.translate('OutOfBag')
