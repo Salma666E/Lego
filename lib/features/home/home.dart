@@ -1,4 +1,5 @@
-import 'package:LegoApp/components/login.dart';
+import 'package:LegoApp/components/register.dart';
+import 'package:LegoApp/services/auth.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,17 +9,19 @@ import '../../components/buildListItem.dart';
 import '../../components/drawerList.dart';
 import '../../components/slider.dart';
 import '../../components/app_bar.dart';
-// I need Name,Email and Id for User.................. 
+
+var id = '';
 Firestore firestore = Firestore.instance;
-List<String> wishList;
+List<String> wishList=[""];
 Future<List<String>> getWishListArray(String documentId) async {
   DocumentSnapshot snapshot =
       await firestore.collection('wishlist').document(documentId).get();
   List<String> productsIDs = List.from(snapshot.data['productsIDs']);
-  print('productsIDs: ' + productsIDs.toString());
+  print('productsIDs HOME: ' + productsIDs.toString());
   wishList = productsIDs;
   return productsIDs;
 }
+
 class Home extends StatefulWidget {
   const Home({
     this.isDarkTheme = false,
@@ -34,23 +37,31 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final AuthService auth = AuthService();
+  String name;
+  String email;
   bool isDarkTheme = false;
-  String _userID = "Xhl4PYKbc0ObiSBG1g67jEmylG33";
 
   @override
   void initState() {
     super.initState();
-    getWishListArray(_userID);
-    setState(() {});
+    auth.getPrefs('UserID').then((value) {
+      print('id: ' + id.toString());
+      id = value;
+      setState(() {
+        getWishListArray(id);
+      });
+    });
+    if (id.isNotEmpty)
+      // setState(() {
+      getWishListArray(id);
+    // });
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
-  /*@override
-  void dispose() {
-    super.dispose();
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +74,21 @@ class _HomeState extends State<Home> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
             child: Container(
-              height: 50,
-              child: header(widget.isDarkTheme),
+              // height: 50,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
+                child: header(widget.isDarkTheme),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
             child: Container(
-              height: 250,
-              child: slider(),
+              // height: 250,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 6.0),
+                child: slider(),
+              ),
             ),
           ),
           Padding(
@@ -87,20 +104,23 @@ class _HomeState extends State<Home> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
-            child: Container(
-                height: 500,
-                child: Column(
-                  children: [
-                    Image(
-                        image: AssetImage(
-                            'assets/images/Gallery-2-Tall-Large_1.jpg')),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(translator.translate('SuperMario')),
-                    ),
-                    Text(translator.translate('SuperMarioDescr')),
-                  ],
-                )),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Container(
+                  // height: 350,
+                  child: Column(
+                    children: [
+                      Image(
+                          image: AssetImage(
+                              'assets/images/Gallery-2-Tall-Large_1.jpg')),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(translator.translate('SuperMario')),
+                      ),
+                      Text(translator.translate('SuperMarioDescr')),
+                    ],
+                  )),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
@@ -115,21 +135,24 @@ class _HomeState extends State<Home> {
                   ),
                 )),
           ),
-          StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('products').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData)
-                  return Center(child: Text(translator.translate('Lodding')));
-                return ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemExtent: 410.0,
-                  physics: ScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, int index) => buildListItem(context,
-                      snapshot.data.documents[index], _userID, wishList),
-                );
-              }),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 3.0),
+            child: StreamBuilder<QuerySnapshot>(
+                stream: Firestore.instance.collection('products').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData)
+                    return Center(child: Text(translator.translate('Lodding')));
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    // itemExtent: 410.0,
+                    physics: ScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, int index) => buildListItem(context,
+                        snapshot.data.documents[index], id, wishList),
+                  );
+                }),
+          ),
           Container(
             height: 400,
             child: Center(
@@ -142,7 +165,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         // new Container(
-                        //     height: 45.0,
+                            // height: 45.0,
                         //     width: 45.0,
                         //     child: Center(
                         //       child: Card(
@@ -188,7 +211,7 @@ class _HomeState extends State<Home> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Login()),
+                                          builder: (context) => Register()),
                                     );
                                   },
                                 ),

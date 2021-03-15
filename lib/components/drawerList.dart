@@ -1,20 +1,18 @@
+import 'package:LegoApp/features/home/home.dart';
+import 'package:LegoApp/features/themes/themes.dart';
 import 'package:LegoApp/components/CheckOut.dart';
 import 'package:LegoApp/components/MyBag.dart';
 import 'package:LegoApp/components/WishList.dart';
 import 'package:LegoApp/components/login.dart';
 import 'package:LegoApp/components/profile.dart';
-import 'package:LegoApp/features/home/home.dart';
-import 'package:LegoApp/features/themes/themes.dart';
-import 'package:LegoApp/models/user.dart';
 import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'cardCustom.dart';
-import 'package:provider/provider.dart';
 
 
-var _userID = "MW5sJcYLYvauF0fAt49HQJEp22G3";
+//var _userID = "MW5sJcYLYvauF0fAt49HQJEp22G3";
 var userName = "Lego";
 var userEmail = "lego.com";
 Future<String> getUserName(String _userID) async {
@@ -36,6 +34,17 @@ Future<List<String>> getBagsArray(String documentId) async {
   return bags;
 }
 
+// ***********
+List<String> wishlist = ['1', '2'];
+Future<List<String>> getwishlistArray(String documentId) async {
+  DocumentSnapshot snapshot =
+      await firestore.collection('wishlist').document(documentId).get();
+  wishlist = List.from(snapshot.data['productsIDs']);
+  print('flageDrawer+wishlist: ' + wishlist.toString());
+  return wishlist;
+}
+
+// **********
 class DrawerList extends StatefulWidget {
   DrawerList({Key key}) : super(key: key);
 
@@ -45,26 +54,44 @@ class DrawerList extends StatefulWidget {
 
 class _DrawerListState extends State<DrawerList> {
   final AuthService auth = AuthService();
+
+  String name;
+  String email;
   var id = '';
   String account = translator.translate("Sign In");
   var userGet;
   @override
   void initState() {
     super.initState();
-    print("_userID: " + _userID.toString());
-    getUserName(_userID);
-    getBagsArray(_userID);
+    name = '';
+    email = '';
+    var firestoreInstance = Firestore.instance;
 
     auth.getPrefs('UserID').then((value) {
-      
-      setState(() {
-        id = value;
-        account =translator.translate("Account");
+      id = value;
+      account =translator.translate("Account");
+      firestoreInstance
+          .collection('users')
+          .document(id)
+          .get()
+          .then((DocumentSnapshot docsnap) {
+        setState(() {
+          print(docsnap.data["displayName"]);
+          name = docsnap.data["displayName"];
+          name = "${name[0].toUpperCase()}${name.substring(1)}";
+        });
+        setState(() {
+          print(docsnap.data["email"]);
+          email = docsnap.data["email"];
+        });
+        setState(() {
+          print("_userID: " + id.toString());
+          // getUserName(id);
+          getBagsArray(id);
+          getwishlistArray(id);
+        });
       });
-      
     });
-    //userGet = Provider.of<User>(context);
-
     setState(() {});
   }
 
@@ -83,12 +110,12 @@ class _DrawerListState extends State<DrawerList> {
                   leading: CircleAvatar(
                       backgroundImage: NetworkImage(
                           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIMJf32XCdIMPR005aLZbkk5TldBubjW2CfA&usqp=CAU")),
-                  title: Text(userName,
+                  title: Text(name,
                       style: TextStyle(
                         color: Colors.blue,
                       )),
                   subtitle: Text(
-                    userEmail,
+                    email,
                     style: TextStyle(
                       fontSize: 12,
                     ),
@@ -99,10 +126,6 @@ class _DrawerListState extends State<DrawerList> {
                   ),
                   onTap: () {
                     Navigator.of(context).pop();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => EditProfile()),
-                    // );
                   },
                 ),
                 ListTile(
@@ -133,6 +156,21 @@ class _DrawerListState extends State<DrawerList> {
                     ),
                   },
                 ),
+                ///////////////////////
+                //                 ListTile(
+                //       leading: Icon(
+                //         Icons.favorite_border_outlined,
+                //         color: Colors.blue,
+                //       ),
+                //       title: Text(translator.translate('Test')),
+                //       onTap: () {
+                //         Navigator.push(
+                //           context,
+                // MaterialPageRoute(builder: (context) => Test()),
+                //         );
+                //       },
+                //     ),
+                /////////////////
                 ListTile(
                   leading: Icon(
                     Icons.favorite_border_outlined,
@@ -142,7 +180,9 @@ class _DrawerListState extends State<DrawerList> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WishList()),
+                      // MaterialPageRoute(builder: (context) => WishList()),
+                      MaterialPageRoute(
+                          builder: (context) => WishList(wishlist: wishlist)),
                     );
                   },
                 ),
@@ -180,8 +220,7 @@ class _DrawerListState extends State<DrawerList> {
                     Icons.vpn_key_outlined,
                     color: Colors.blue,
                   ),
-                  title: Text(translator.translate("CheckOut")),
-                  // onTap: () => {},
+                  title: Text(translator.translate('CheckOut')),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -204,14 +243,12 @@ class _DrawerListState extends State<DrawerList> {
                         MaterialPageRoute(builder: (context) => Login()),
                       );
                       id='';
-                      print("ggggg");
                     } else {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Profile()),
                       );
                       id='';
-                      print("kkkkkk");
                     }
                   },
                 ),
