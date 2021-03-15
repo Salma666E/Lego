@@ -285,7 +285,10 @@ class _ReviewState extends State<ReviewForm> {
               }).then((value) => print(value.documentID));
               Toast.show(('Thank you for sharing your experince'), context,
                   duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+              
+              Navigator.pop(context);
              }
+
             },
             child: Text(translator.translate("Send")),
           )
