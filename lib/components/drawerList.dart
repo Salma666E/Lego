@@ -1,16 +1,22 @@
 import 'package:LegoApp/components/CheckOut.dart';
 import 'package:LegoApp/components/MyBag.dart';
 import 'package:LegoApp/components/WishList.dart';
+import 'package:LegoApp/components/login.dart';
+import 'package:LegoApp/components/profile.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:LegoApp/features/themes/themes.dart';
+import 'package:LegoApp/models/user.dart';
+import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'cardCustom.dart';
+import 'package:provider/provider.dart';
 
-String _userID = "Xhl4PYKbc0ObiSBG1g67jEmylG33";
-String userName = "Lego";
-String userEmail="lego.com";
+
+var _userID = "MW5sJcYLYvauF0fAt49HQJEp22G3";
+var userName = "Lego";
+var userEmail = "lego.com";
 Future<String> getUserName(String _userID) async {
   DocumentSnapshot snapshot =
       await firestore.collection('users').document(_userID).get();
@@ -21,7 +27,7 @@ Future<String> getUserName(String _userID) async {
   return "Name: " + userName + " Email: " + userEmail;
 }
 
-List<String> bags=['1','2'];
+List<String> bags = ['1', '2'];
 Future<List<String>> getBagsArray(String documentId) async {
   DocumentSnapshot snapshot =
       await firestore.collection('bags').document(documentId).get();
@@ -38,13 +44,27 @@ class DrawerList extends StatefulWidget {
 }
 
 class _DrawerListState extends State<DrawerList> {
+  final AuthService auth = AuthService();
+  var id = '';
+  String account = translator.translate("Sign In");
+  var userGet;
   @override
   void initState() {
     super.initState();
     print("_userID: " + _userID.toString());
     getUserName(_userID);
     getBagsArray(_userID);
-    
+
+    auth.getPrefs('UserID').then((value) {
+      
+      setState(() {
+        id = value;
+        account =translator.translate("Account");
+      });
+      
+    });
+    //userGet = Provider.of<User>(context);
+
     setState(() {});
   }
 
@@ -160,7 +180,7 @@ class _DrawerListState extends State<DrawerList> {
                     Icons.vpn_key_outlined,
                     color: Colors.blue,
                   ),
-                  title: Text(translator.translate('CheckOut')),
+                  title: Text(translator.translate("CheckOut")),
                   // onTap: () => {},
                   onTap: () {
                     Navigator.push(
@@ -168,7 +188,33 @@ class _DrawerListState extends State<DrawerList> {
                       MaterialPageRoute(builder: (context) => CheckOut()),
                     );
                   },
-                )
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.account_circle_outlined,
+                    color: Colors.blue,
+                  ),
+                  title: Text(account),
+                      
+                  onTap: () {
+                    print("iddddddddddddddddddddddd" + id);
+                    if (id == '') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
+                      id='';
+                      print("ggggg");
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Profile()),
+                      );
+                      id='';
+                      print("kkkkkk");
+                    }
+                  },
+                ),
               ],
             ),
           ),

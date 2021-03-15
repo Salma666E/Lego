@@ -4,7 +4,6 @@ import 'package:LegoApp/components/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'home.dart';
 
 class Splash extends StatefulWidget {
   @override

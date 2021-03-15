@@ -1,7 +1,9 @@
+import 'package:LegoApp/components/edit_account.dart';
 import 'package:LegoApp/components/profile.dart';
 import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 
 var id = '';
 
@@ -20,7 +22,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   var oldPass;
   var error;
-  
+
   @override
   void initState() {
     super.initState();
@@ -39,11 +41,11 @@ class _ChangePasswordState extends State<ChangePassword> {
           .document(id)
           .get()
           .then((DocumentSnapshot docsnap) {
-            setState(() {
-              passwordGet = docsnap.data["password"];
-            });
-          });
+        setState(() {
+          passwordGet = docsnap.data["password"];
+        });
       });
+    });
   }
 
   @override
@@ -55,7 +57,6 @@ class _ChangePasswordState extends State<ChangePassword> {
           child: new Column(
             children: [
               Container(
-                width: MediaQuery.of(context).size.width,
                 child: Padding(
                   padding: EdgeInsets.only(top: 30),
                   child: Row(
@@ -80,7 +81,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Change Password",
+                    translator.translate("ChangePassword"),
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
@@ -96,18 +97,78 @@ class _ChangePasswordState extends State<ChangePassword> {
                     padding: EdgeInsets.only(
                         top: 40, right: 13, left: 13, bottom: 15),
                     child: new Text(
-                      "Old Password",
+                      translator.translate("OldPassword"),
                       style:
                           TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
-              Container(
-                width: 320,
+              Padding(
+                padding: EdgeInsets.only(left: 13, right:13, top:13),
                 child: new TextFormField(
                   style: TextStyle(fontSize: 11),
-                  //controller: passwordController,
+                  decoration: new InputDecoration(
+                    contentPadding: EdgeInsets.all(3.0),
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: new OutlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.grey)),
+                    //hintText: " ••••••••",
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.remove_red_eye,
+                        color: this._showPassword ? Colors.grey : Colors.blue,
+                      ),
+                      onPressed: () {
+                        setState(
+                            () => this._showPassword = !this._showPassword);
+                      },
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                  obscureText: _showPassword,
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (password) {
+                    Pattern pattern =
+                        r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
+                    RegExp regex = new RegExp(pattern);
+                    if (password.isEmpty) {
+                      return translator.translate("PasswordRequired");
+                    } else if (!regex.hasMatch(password))
+                      return translator.translate("PasswordInvalid");
+                    //must be at least 8 characters long and contain an uppercase letter, a lowercase letter and a number.
+                    else
+                      return null;
+                  },
+                  onChanged: (oldPassword) {
+                    setState(() {
+                      oldPass = oldPassword;
+                    });
+                  },
+                ),
+              ),
+              //NEW PASSWORD
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Padding(
+                    padding: EdgeInsets.only(
+                        top: 40, right: 13, left: 13, bottom: 15),
+                    child: new Text(
+                      translator.translate("NewPassword"),
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 13, right:13, top:13),
+                child: new TextFormField(
+                  style: TextStyle(fontSize: 11),
+                  controller: passwordController,
                   decoration: new InputDecoration(
                       contentPadding: EdgeInsets.all(3.0),
                       fillColor: Colors.white,
@@ -135,74 +196,14 @@ class _ChangePasswordState extends State<ChangePassword> {
                         r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
                     RegExp regex = new RegExp(pattern);
                     if (password.isEmpty) {
-                      return 'Password is required';
+                      return translator.translate("PasswordRequired");
                     } else if (!regex.hasMatch(password))
-                      return 'Password is invalid!';
+                      return translator.translate("PasswordInvalid");
                     //must be at least 8 characters long and contain an uppercase letter, a lowercase letter and a number.
                     else
                       return null;
                   },
-                  onChanged: (oldPassword){
-                    setState(() {
-                      oldPass = oldPassword;
-                    });
-                  } ,
-                ),
-              ),
-              //NEW PASSWORD
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new Padding(
-                    padding: EdgeInsets.only(
-                        top: 40, right: 13, left: 13, bottom: 15),
-                    child: new Text(
-                      "New Password",
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: 320,
-                child: new TextFormField(
-                  style: TextStyle(fontSize: 11),
-                  controller: passwordController,
-                  decoration: new InputDecoration(
-                      contentPadding: EdgeInsets.all(3.0),
-                      fillColor: Colors.white,
-                      filled: true,
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.grey)),
-                      //hintText: " ••••••••",
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          Icons.remove_red_eye,
-                          color: this._showPassword ? Colors.grey : Colors.blue,
-                        ),
-                        onPressed: () {
-                          setState(
-                              () => this._showPassword = !this._showPassword);
-                        },
-                      )),
-                  keyboardType: TextInputType.text,
-                  obscureText: _showPassword,
-                  textInputAction: TextInputAction.next,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (password) {
-                    Pattern pattern =
-                        r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
-                    RegExp regex = new RegExp(pattern);
-                    if (password.isEmpty) {
-                      return 'Password is required';
-                    } else if (!regex.hasMatch(password))
-                      return 'Password is invalid!';
-                    //must be at least 8 characters long and contain an uppercase letter, a lowercase letter and a number.
-                    else
-                      return null;
-                  },
-                  //onSaved: (password) => loginPassword = password),
+                onChanged: (password) => passwordController.text = password
                 ),
               ),
               //CONFIRM PASSWORD
@@ -213,15 +214,15 @@ class _ChangePasswordState extends State<ChangePassword> {
                     padding: EdgeInsets.only(
                         top: 40, right: 13, left: 13, bottom: 15),
                     child: new Text(
-                      "Confirm Password",
+                      translator.translate("ConfirmPassword"),
                       style:
                           TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
-              Container(
-                width: 320,
+              Padding(
+                padding: EdgeInsets.only(left: 13, right:13, top:13),
                 child: new TextFormField(
                   style: TextStyle(fontSize: 11),
                   controller: confirmPasswordController,
@@ -251,93 +252,97 @@ class _ChangePasswordState extends State<ChangePassword> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (confirmPassword) {
                     if (confirmPassword.isEmpty) {
-                      return 'Confirm Password is required';
+                      return translator.translate("ConfirmRequired");
                     }
                     if (confirmPassword != passwordController.text) {
-                      return "The passwords don't match";
+                      return translator.translate("NotMatching");
                     } else
                       return null;
                   },
+                  onChanged: (password) => confirmPasswordController.text = password
                 ),
               ),
               SizedBox(height: 12.0),
               Text(
-                  error,
-                  style: TextStyle(color: Colors.red, fontSize: 15.0),
-                ),
-              
+                error,
+                style: TextStyle(color: Colors.red, fontSize: 15.0),
+              ),
               Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 10, top: 20),
-                      child: RaisedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Profile(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          "Cancel",
-                          style: TextStyle(fontSize: 12, color: Colors.black),
-                        ),
-                        color: Color.fromRGBO(185, 177, 169, 1),
-                        disabledColor: Color.fromRGBO(185, 177, 169, 1),
-                        textColor: Colors.black,
-                        disabledTextColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                      ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 13.0, vertical: 2.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: RaisedButton(
-                        onPressed: () { 
-                          if(passwordController.text.isEmpty || confirmPasswordController.text.isEmpty)
-                          {
-                            setState(() {
-                              error = 'New Password field is empty!';
-                            });
-                            return null;
-                          }
-                          if(oldPass == passwordGet){
-                            var firestoreInstance = Firestore.instance;
-
-                          firestoreInstance
-                              .collection('users')
-                              .document(id)
-                              .updateData({
-                            "password": passwordController.text
-                          }).then((value) => print("success"));
-                          }
-                          else{
-                            setState(() {
-                              error = "Old Password is wrong!";
-                            });
-                            return null;
-                          }
-                        },
-                        child: Text(
-                          "Save",
-                          style: TextStyle(fontSize: 12, color: Colors.white),
+                    color: Colors.white38,
+                    disabledColor: Colors.white24,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Profile(),
                         ),
-                        color: Color.fromRGBO(18, 97, 160, 1),
-                        disabledColor: Color.fromRGBO(18, 97, 160, 1),
-                        textColor: Colors.white,
-                        disabledTextColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                      ),
+                      );
+                    },
+                    child: Text(
+                      translator.translate("Cancel"),
+                      style: TextStyle(fontSize: 12, color: Colors.black),
                     ),
-                  ],
+                  ),
                 ),
               ),
-              
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 13.0, vertical: 15.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    color: Color.fromRGBO(18, 97, 160, 1),
+                    disabledColor: Color.fromRGBO(18, 97, 160, 1),
+                    onPressed: () {
+                      if (passwordController.text.isEmpty ||
+                          confirmPasswordController.text.isEmpty) {
+                        setState(() {
+                          error = translator.translate("newPassEmpty");
+                        });
+                        return null;
+                      }
+                      if (oldPass == passwordGet) {
+                        var firestoreInstance = Firestore.instance;
+
+                        firestoreInstance
+                            .collection('users')
+                            .document(id)
+                            .updateData({
+                          "password": passwordController.text
+                        }).then((value) => print("success"));
+                        Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditAccount(),
+                              ),
+                            );
+                      } else {
+                        setState(() {
+                          error = translator.translate("oldPassWrong");
+                        });
+                        return null;
+                      }
+                    },
+                    child: Text(
+                      translator.translate("Save"),
+                      style: TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

@@ -1,11 +1,12 @@
+import 'package:LegoApp/components/drawerList.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:ui';
 import 'package:LegoApp/components/app_bar.dart';
 import 'package:LegoApp/components/change-password.dart';
-import 'package:LegoApp/components/login.dart';
 import 'package:LegoApp/services/auth.dart';
 import '../components/edit_account.dart';
 
@@ -57,12 +58,12 @@ class _ProfileState extends State<Profile> {
           month = docsnap.data["birthday"]["month"].toString();
           day = docsnap.data["birthday"]["day"].toString();
           year = docsnap.data["birthday"]["year"].toString();
-          if (int.parse(month) < 10) {
+          /*if (int.parse(month) < 10) {
             month = "0${docsnap.data["birthday"]["month"].toString()}";
           }
           if (int.parse(day) < 10) {
             day = "0${docsnap.data["birthday"]["day"].toString()}";
-          }
+          }*/
           birthday = "${year}-${month}-${day}";
           print(birthday);
         });
@@ -79,6 +80,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: DrawerList(),
       appBar: appBar(context),
       body: SingleChildScrollView(
         child: new Padding(
@@ -87,7 +89,6 @@ class _ProfileState extends State<Profile> {
             child: new Column(
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(236, 236, 236, 1),
                   ),
@@ -99,7 +100,7 @@ class _ProfileState extends State<Profile> {
                           Padding(
                             padding: EdgeInsets.only(top: 20, bottom: 6),
                             child: Text(
-                              "MY PROFILE",
+                              translator.translate("MYPROFILE"),
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
@@ -110,7 +111,6 @@ class _ProfileState extends State<Profile> {
                         ],
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           color: Color.fromRGBO(236, 236, 236, 1),
                         ),
@@ -120,7 +120,7 @@ class _ProfileState extends State<Profile> {
                             Padding(
                               padding: EdgeInsets.only(top: 15, bottom: 5),
                               child: Text(
-                                "Hi ${name}",
+                                "${translator.translate("Hi")} $name",
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 12),
                               ),
@@ -129,20 +129,27 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(bottom: 15, top: 5),
-                        child: RaisedButton(
-                          child: Text("Home",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12)),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Home()));
-                          },
-                          color: Colors.blue[800],
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 15.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: RaisedButton(
+                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            color: Colors.blue[800],
+                            disabledColor: Colors.blue[800],
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Home()));
+                            },
+                            child: Text(translator.translate("Home"),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12)),
+                          ),
                         ),
                       ),
                     ],
@@ -154,28 +161,12 @@ class _ProfileState extends State<Profile> {
                     Padding(
                       padding: EdgeInsets.only(bottom: 5, top: 30),
                       child: Text(
-                        "ACCOUNT",
+                        translator.translate("Account"),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 5, top: 30),
-                      child: RaisedButton(
-                        child: Text("Logout",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12)),
-                        onPressed: () {
-                          auth.signOut();
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Home()));
-                        },
-                        color: Colors.blue[800],
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
                       ),
                     ),
                   ],
@@ -194,7 +185,7 @@ class _ProfileState extends State<Profile> {
                             Padding(
                               padding: EdgeInsets.only(top: 15, bottom: 30),
                               child: Text(
-                                "Avatar",
+                                translator.translate("Avatar"),
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.black,
@@ -229,7 +220,7 @@ class _ProfileState extends State<Profile> {
                               Padding(
                                 padding: EdgeInsets.only(top: 15),
                                 child: Text(
-                                  "Username",
+                                  translator.translate("Username"),
                                   style: TextStyle(
                                       fontSize: 13,
                                       color: Colors.black,
@@ -240,21 +231,43 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                          padding: EdgeInsets.only(left: 11, right: 11),
+                          child: new TextFormField(
+                            enabled: false,
+                            style: TextStyle(fontSize: 12),
+                            decoration: new InputDecoration(
+                              contentPadding: EdgeInsets.all(3.0),
+                              hintText: name,
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              Container(
-                                width: 300,
-                                child: TextField(
-                                  enabled: false,
+                              Padding(
+                                padding: EdgeInsets.only(top: 15),
+                                child: Text(
+                                  translator.translate("Email"),
                                   style: TextStyle(
-                                      color: Colors.grey[900], fontSize: 12),
-                                  decoration: new InputDecoration(
-                                    hintText: name,
-                                  ),
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 11, right: 11),
+                          child: new TextFormField(
+                            enabled: false,
+                            style: TextStyle(fontSize: 12),
+                            decoration: new InputDecoration(
+                              contentPadding: EdgeInsets.all(3.0),
+                              hintText: email,
+                            ),
                           ),
                         ),
                         Padding(
@@ -264,7 +277,7 @@ class _ProfileState extends State<Profile> {
                               Padding(
                                 padding: EdgeInsets.only(top: 15),
                                 child: Text(
-                                  "Email",
+                                  translator.translate("DateOfBirth"),
                                   style: TextStyle(
                                       fontSize: 13,
                                       color: Colors.black,
@@ -275,56 +288,14 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 300,
-                                child: TextField(
-                                  style: TextStyle(
-                                      color: Colors.grey[900], fontSize: 12),
-                                  decoration: new InputDecoration(
-                                    hintText: email,
-                                  ),
-                                  enabled: false,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(top: 15),
-                                child: Text(
-                                  "Date of birth",
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 300,
-                                child: TextField(
-                                  style: TextStyle(
-                                      color: Colors.grey[900], fontSize: 12),
-                                  decoration: new InputDecoration(
-                                    hintText: birthday,
-                                  ),
-                                  enabled: false,
-                                ),
-                              ),
-                            ],
+                          padding: EdgeInsets.only(left: 11, right: 11),
+                          child: new TextFormField(
+                            enabled: false,
+                            style: TextStyle(fontSize: 12),
+                            decoration: new InputDecoration(
+                              contentPadding: EdgeInsets.all(3.0),
+                              hintText: birthday,
+                            ),
                           ),
                         ),
                         Padding(
@@ -356,7 +327,7 @@ class _ProfileState extends State<Profile> {
                                               );
                                             },
                                             child: Text(
-                                              "Edit Account",
+                                              translator.translate("EditAccount"),
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 13,
@@ -397,7 +368,7 @@ class _ProfileState extends State<Profile> {
                               Padding(
                                 padding: EdgeInsets.only(top: 15),
                                 child: Text(
-                                  "Password",
+                                  translator.translate("Password"),
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: Colors.black,
@@ -409,20 +380,14 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 300,
-                                child: TextField(
-                                  style: TextStyle(fontSize: 12),
-                                  decoration: new InputDecoration(
-                                    hintText: "*******",
-                                  ),
-                                  enabled: false,
-                                ),
-                              ),
-                            ],
+                          padding: EdgeInsets.only(left: 11, right: 11),
+                          child: new TextFormField(
+                            enabled: false,
+                            style: TextStyle(fontSize: 12),
+                            decoration: new InputDecoration(
+                              contentPadding: EdgeInsets.all(3.0),
+                              hintText: "********",
+                            ),
                           ),
                         ),
                         Padding(
@@ -455,7 +420,7 @@ class _ProfileState extends State<Profile> {
                                               );
                                             },
                                             child: Text(
-                                              "Change Password",
+                                              translator.translate("ChangePassword"),
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 13,
@@ -487,6 +452,32 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ),
                             ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 15.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              color: Colors.blue[800],
+                              disabledColor: Colors.blue[800],
+                              onPressed: () async {
+                                await auth.signOut();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Home()));
+                              },
+                              child: Text(translator.translate("Logout"),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12)),
+                            ),
                           ),
                         ),
                       ],

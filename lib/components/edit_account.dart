@@ -3,7 +3,7 @@ import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 
 var id = '';
 
@@ -30,7 +30,7 @@ class _EditAccountState extends State<EditAccount> {
 
   var yearGet;
 
-  var error = '';
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -57,26 +57,37 @@ class _EditAccountState extends State<EditAccount> {
               "${usernameGet[0].toUpperCase()}${usernameGet.substring(1)}";
         });
 
-        print(id);
-        print(usernameGet);
-
         setState(() {
           monthGet = docsnap.data["birthday"]["month"].toString();
           dayGet = docsnap.data["birthday"]["day"].toString();
           yearGet = docsnap.data["birthday"]["year"].toString();
-          if (int.parse(monthGet) < 10) {
+          /*if (int.parse(monthGet) < 10) {
             monthGet = "0${docsnap.data["birthday"]["month"].toString()}";
           }
           if (int.parse(dayGet) < 10) {
             dayGet = "0${docsnap.data["birthday"]["day"].toString()}";
-          }
-
-          print(monthGet);
-          print(dayGet);
-          print(yearGet);
+          }*/
         });
       });
     });
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate, // Refer step 1
+      firstDate: DateTime(1930),
+      lastDate: DateTime(2022),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+
+        monthGet = selectedDate.toString().substring(5, 7);
+        dayGet = selectedDate.toString().substring(8, 10);
+        yearGet = selectedDate.toString().substring(0, 4);
+      });
+    }
   }
 
   @override
@@ -88,7 +99,6 @@ class _EditAccountState extends State<EditAccount> {
             child: new Column(
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width,
                   child: Padding(
                     padding: EdgeInsets.only(top: 30),
                     child: Row(
@@ -113,7 +123,7 @@ class _EditAccountState extends State<EditAccount> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Edit Account",
+                      translator.translate("EditAccount"),
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -127,7 +137,7 @@ class _EditAccountState extends State<EditAccount> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Avatar",
+                        translator.translate("Avatar"),
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                     ],
@@ -156,12 +166,12 @@ class _EditAccountState extends State<EditAccount> {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(11.0),
+                            padding: EdgeInsets.all(13.0),
                             child: new Text(
-                              "Username",
+                              translator.translate("Username"),
                               style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -171,280 +181,148 @@ class _EditAccountState extends State<EditAccount> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(bottom: 13),
-                        child: Container(
-                          width: 320,
-                          child: new TextFormField(
-                            style: TextStyle(fontSize: 13),
-                            //initialValue: usernameGet,
-                            //controller: usernameGet,
-                            decoration: new InputDecoration(
-                              hintText: usernameGet,
-                              contentPadding: EdgeInsets.all(3.0),
-                              border: new OutlineInputBorder(
-                                  borderSide:
-                                      new BorderSide(color: Colors.grey)),
+                        padding: EdgeInsets.all(13),
+                        child: new TextFormField(
+                          style: TextStyle(fontSize: 13),
+                          decoration: new InputDecoration(
+                            hintText: usernameGet,
+                            contentPadding: EdgeInsets.all(3.0),
+                            border: new OutlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.grey)),
+                          ),
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          onChanged: (newUsername) => {
+                            setState(() {
+                              usernameGet = newUsername;
+                            })
+                          },
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(13.0),
+                            child: new Text(
+                              translator.translate("DateOfBirth"),
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
                             ),
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            onChanged: (newUsername) => {
-                              setState(() {
-                                usernameGet = newUsername;
-                              })
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(11.0),
+                            child: new Text(
+                              "${translator.translate("DateOfBirth")}: $yearGet - $monthGet - $dayGet",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 13.0, vertical: 15.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: RaisedButton(
+                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            color: Colors.white38,
+                            disabledColor: Colors.white38,
+                            onPressed: () => _selectDate(context),
+                            child: new Text(
+                              translator.translate("ChooseDate"),
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 13.0, vertical: 2.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: RaisedButton(
+                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            color: Colors.white38,
+                            disabledColor: Colors.white24,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Profile(),
+                                ),
+                              );
                             },
+                            child: Text(
+                              translator.translate("Cancel"),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.black),
+                            ),
                           ),
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(11.0),
-                            child: new Text(
-                              "Date of birth",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          new Padding(
-                            padding: EdgeInsets.only(bottom: 5),
-                            child: new Text(
-                              "Month",
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          new Padding(
-                            padding: EdgeInsets.only(bottom: 5),
-                            child: new Text(
-                              "Day",
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          new Padding(
-                            padding: EdgeInsets.only(bottom: 5),
-                            child: new Text(
-                              "Year",
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
                       Padding(
-                        padding:
-                            EdgeInsets.only(left: 13, right: 13, bottom: 13),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              width: 102,
-                              child: TextFormField(
-                                maxLength: 2,
-                                style: TextStyle(fontSize: 10),
-                                decoration: new InputDecoration(
-                                  contentPadding: EdgeInsets.all(3.0),
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.grey)),
-                                  hintText: monthGet,
-                                  counterText: "",
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
-                                ],
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (month) {
-                                  //int monthINT = int.parse("+${month}");
-                                  /*print("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-                              assert (monthINT is int); 
-                              print(monthINT.runtimeType);*/
-                              
-                                  /*if (int.tryParse(month) > 12 || int.tryParse(month) < 0) {
-                                    error =
-                                        'Please enter a number between 1 and 12';
-                                  } else {
-                                    return null;
-                                  }*/
-
-                                  Pattern pattern = r'^(0[1-9]|1[012])$';
-                                  RegExp regex = new RegExp(pattern);
-                                  if (!regex.hasMatch(month))
-                                    error = 'Invalid monthh';
-                                  else
-                                    return null;
-                                },
-                                onChanged: (newMonth) => {
-                                  setState(() {
-                                    monthGet = newMonth;
-                                  })
-                                },
-                              ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 13.0, vertical: 15.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: RaisedButton(
+                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                            Container(
-                              width: 100,
-                              child: TextFormField(
-                                maxLength: 2,
-                                style: TextStyle(fontSize: 10),
-                                decoration: new InputDecoration(
-                                  contentPadding: EdgeInsets.all(3.0),
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.grey)),
-                                  hintText: dayGet,
-                                  counterText: "",
-                                ),
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (day) {
-                                  if (int.parse(day) > 31 ||
-                                      int.parse(day) < 0) {
-                                    error =
-                                        'Please enter a number between 1 and 31';
-                                    return null;
-                                  } else {
-                                    return null;
+                            color: Color.fromRGBO(18, 97, 160, 1),
+                            disabledColor: Color.fromRGBO(18, 97, 160, 1),
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                _formKey.currentState.save();
+                                var firestoreInstance = Firestore.instance;
+
+                                firestoreInstance
+                                    .collection('users')
+                                    .document(id)
+                                    .updateData({
+                                  "displayName": usernameGet,
+                                  "birthday": {
+                                    "month": monthGet,
+                                    "day": dayGet,
+                                    "year": yearGet
                                   }
-                                },
-                                onChanged: (newDay) => {
-                                  setState(() {
-                                    dayGet = newDay;
-                                  })
-                                },
-                              ),
-                            ),
-                            Container(
-                              width: 102,
-                              child: TextFormField(
-                                maxLength: 4,
-                                style: TextStyle(fontSize: 10),
-                                decoration: new InputDecoration(
-                                  contentPadding: EdgeInsets.all(3.0),
-                                  border: new OutlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.grey)),
-                                  hintText: yearGet,
-                                  counterText: "",
-                                ),
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (year) {
-                                  try {
-                                    int n = int.parse(year);
-                                    if (n > 2021 || n < 0) {
-                                      error = 'Invalid year';
-                                      return null;
-                                    } else {
-                                      return null;
-                                    }
-                                  } on FormatException {
-                                    return null;
-                                  }
-                                },
-                                onChanged: (newYear) => {
-                                  setState(() {
-                                    yearGet = newYear;
-                                  })
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 12.0),
-                      Text(
-                        error,
-                        style: TextStyle(color: Colors.red, fontSize: 10.0),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 10),
-                              child: RaisedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Profile(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.black),
-                                ),
-                                color: Color.fromRGBO(185, 177, 169, 1),
-                                disabledColor: Color.fromRGBO(185, 177, 169, 1),
-                                textColor: Colors.black,
-                                disabledTextColor: Colors.black,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                              ),
-                            ),
-                            RaisedButton(
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  _formKey.currentState.save();
-                                  var firestoreInstance = Firestore.instance;
+                                }).then((value) => print("success"));
 
-                                  firestoreInstance
-                                      .collection('users')
-                                      .document(id)
-                                      .updateData({
-                                    "displayName": usernameGet,
-                                    "birthday": {
-                                      "month": monthGet,
-                                      "day": dayGet,
-                                      "year": yearGet
-                                    }
-                                  }).then((value) => print("success"));
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Profile(),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Text(
-                                "Save",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                              ),
-                              color: Color.fromRGBO(18, 97, 160, 1),
-                              disabledColor: Color.fromRGBO(18, 97, 160, 1),
-                              textColor: Colors.white,
-                              disabledTextColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Profile(),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Text(
+                              translator.translate("Save"),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ],
