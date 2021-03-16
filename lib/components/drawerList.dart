@@ -11,20 +11,9 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'cardCustom.dart';
 
 var id = '';
-// String userName = "Lego";
-// String userEmail = "lego.com";
-// Future<String> getUserName(String _userID) async {
-//   DocumentSnapshot snapshot =
-//       await firestore.collection('users').document(_userID).get();
-//   userName = snapshot.data['displayName'];
-//   userEmail = snapshot.data['email'];
-//   print('userName: ' + userName.toString());
-//   print('userEmail: ' + userEmail.toString());
-//   return "Name: " + userName + " Email: " + userEmail;
-// }
-
-List<String> bags = ['1', '2'];
-Future<List<String>> getBagsArray(String documentId) async {
+List bags = [{'id':'1','qty':1}];
+// List<String> bags = ['1', '2'];
+Future<List> getBagsArray(String documentId) async {
   DocumentSnapshot snapshot =
       await firestore.collection('bags').document(documentId).get();
   bags = List.from(snapshot.data['productsIDs']);
@@ -173,7 +162,6 @@ class _DrawerListState extends State<DrawerList> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      // MaterialPageRoute(builder: (context) => WishList()),
                       MaterialPageRoute(
                           builder: (context) => WishList(wishlist: wishlist)),
                     );

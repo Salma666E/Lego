@@ -1,11 +1,14 @@
-import 'package:LegoApp/components/login.dart';
-import 'package:LegoApp/components/register.dart';
+import 'package:LegoApp/components/profile.dart';
 import 'package:LegoApp/services/auth.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:LegoApp/components/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+import 'package:toast/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../components/buildListItem.dart';
 import '../../components/drawerList.dart';
 import '../../components/slider.dart';
@@ -13,7 +16,7 @@ import '../../components/app_bar.dart';
 
 var id = '';
 Firestore firestore = Firestore.instance;
-List<String> wishList=[""];
+List<String> wishList = [""];
 Future<List<String>> getWishListArray(String documentId) async {
   DocumentSnapshot snapshot =
       await firestore.collection('wishlist').document(documentId).get();
@@ -39,6 +42,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService auth = AuthService();
+  TextEditingController emailSender = new TextEditingController();
   String name;
   String email;
   bool isDarkTheme = false;
@@ -115,17 +119,17 @@ class _HomeState extends State<Home> {
               child: Container(
                   // height: 350,
                   child: Column(
-                    children: [
-                      Image(
-                          image: AssetImage(
-                              'assets/images/Gallery-2-Tall-Large_1.jpg')),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(translator.translate('SuperMario')),
-                      ),
-                      Text(translator.translate('SuperMarioDescr')),
-                    ],
-                  )),
+                children: [
+                  Image(
+                      image: AssetImage(
+                          'assets/images/Gallery-2-Tall-Large_1.jpg')),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(translator.translate('SuperMario')),
+                  ),
+                  Text(translator.translate('SuperMarioDescr')),
+                ],
+              )),
             ),
           ),
           Padding(
@@ -154,8 +158,8 @@ class _HomeState extends State<Home> {
                     physics: ScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, int index) => buildListItem(context,
-                        snapshot.data.documents[index], id, wishList),
+                    itemBuilder: (context, int index) => buildListItem(
+                        context, snapshot.data.documents[index], id, wishList),
                   );
                 }),
           ),
@@ -171,7 +175,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         // new Container(
-                            // height: 45.0,
+                        // height: 45.0,
                         //     width: 45.0,
                         //     child: Center(
                         //       child: Card(
@@ -217,7 +221,7 @@ class _HomeState extends State<Home> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Register()),
+                                          builder: (context) => Profile()),
                                     );
                                   },
                                 ),
@@ -249,6 +253,7 @@ class _HomeState extends State<Home> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                       child: TextField(
+                        controller: emailSender,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: translator.translate('EnterYourEmail'),
@@ -258,7 +263,22 @@ class _HomeState extends State<Home> {
                   ),
                   Center(
                     child: AnimatedButton(
-                      onPress: () {},
+                      onPress: () {
+                        print("emailSender: " + emailSender.text);
+                        if (emailSender.text != null) {
+                          _launchURL(
+                              emailSender.text, "Lego App", "Thanks For You!!");
+                          Toast.show(translator.translate('emailSenderSucces'),
+                              context,
+                              duration: Toast.LENGTH_SHORT,
+                              gravity: Toast.BOTTOM);
+                        } else {
+                          Toast.show(
+                              translator.translate('enterYourMail'), context,
+                              duration: Toast.LENGTH_SHORT,
+                              gravity: Toast.BOTTOM);
+                        }
+                      },
                       height: 60,
                       width: 200,
                       text: translator.translate('Submit'),
@@ -292,4 +312,49 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+  _launchURL(String toMailId, String subject, String body) async {
+    print("toMailId: " + toMailId);
+    var url = 'mailto:$toMailId?subject=$subject&body=$body';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }
+
+// sendMail() async {
+//   String username =
+//       'salmaessam6666@yahoo.com'; //emailSender.text; //'yourname@domain.com';
+//   String password = '';
+//   // String domainSmtp = emailSender.text;
+//   // 'mail.domain.com';
+
+//   //also use for gmail smtp
+//   //final smtpServer = gmail(username, password);
+
+//   //user for your own domain
+//   final smtpServer = yahoo(username, password);
+//   //  SmtpServer(domainSmtp,
+//   // username: username, password: password, port: 587);
+
+//   final message = Message()
+//     ..from = Address(username, 'LegoApp')
+//     ..recipients.add(emailSender.text)
+//     //..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+//     //..bccRecipients.add(Address('bccAddress@example.com'))
+//     ..subject = 'Dart Mailer library :: 😀 :: ${DateTime.now()}'
+//     ..text = 'This is the plain text.\nThis is line 2 of the text part.'
+//     ..html = "<h1>Shawon</h1>\n<p>Hey! Here's some HTML content</p>";
+
+//   try {
+//     final sendReport = await send(message, smtpServer);
+//     print('Message sent: ' + sendReport.toString());
+//   } on MailerException catch (e) {
+//     print('Message not sent.');
+//     for (var p in e.problems) {
+//       print('Problem: ${p.code}: ${p.msg}');
+//     }
+//   }
+// }

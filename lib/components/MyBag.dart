@@ -14,7 +14,7 @@ var id = '';
 
 class MyBag extends StatefulWidget {
   MyBag({this.bags});
-  final List<String> bags;
+  final List bags;
   @override
   _MyBagState createState() => _MyBagState();
 }
@@ -45,6 +45,7 @@ class _MyBagState extends State<MyBag> {
   @override
   void initState() {
     super.initState();
+    print("bags:+++" + bags.toString());
     name = '';
     email = '';
     var firestoreInstance = Firestore.instance;
@@ -66,7 +67,7 @@ class _MyBagState extends State<MyBag> {
           email = docsnap.data["email"];
         });
         setState(() {
-          print("id: " + id.toString());
+          print("id: " + id);
           getBagsArray(id);
           getWishListArray(id);
         });

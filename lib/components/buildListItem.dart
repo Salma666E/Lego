@@ -22,6 +22,7 @@ Widget buildListItem(BuildContext context, DocumentSnapshot document,
       Firestore.instance.collection("wishlist").document(_userID).updateData({
         "productsIDs": FieldValue.arrayUnion([document.documentID])
       });
+      // wishList.add(document.documentID);
       Toast.show(translator.translate('AddWishList'), context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     }
