@@ -24,6 +24,9 @@ double Tax = .14;
 
 class _MyBagState extends State<MyBag> {
   List<String> wishlist;
+
+List<String>
+        BAG=[];
   Future<List<String>> getwishlistArray(String documentId) async {
     DocumentSnapshot snapshot =
         await firestore.collection('wishlist').document(documentId).get();
@@ -46,6 +49,13 @@ class _MyBagState extends State<MyBag> {
   void initState() {
     super.initState();
     print("bags:+++" + bags.toString());
+     //= List.from(bags.where((x) => x[1] is String ));//&& map["kind"] == "foo"//bags.forEach(element => print(element));List.from();
+    for (var element in bags) {
+      print('element: ' + element['id'].toString());
+      BAG.add(element['id'].toString());
+      // return element;
+    }
+    print("BAG:+++" + BAG.toString());
     name = '';
     email = '';
     var firestoreInstance = Firestore.instance;
@@ -74,77 +84,6 @@ class _MyBagState extends State<MyBag> {
       });
     });
     setState(() {});
-  }
-
-  getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.documents.map((doc) {
-      if (widget.bags.contains(doc.documentID).toString() == "true")
-        return Container(
-          height: 150,
-          child: Card(
-            color: Colors.white,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 33,
-                  child: Image.network(
-                    doc['image'],
-                  ),
-                ),
-                Expanded(
-                  flex: 66,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 50,
-                        child: Center(
-                            child: Text(
-                          doc['name'],
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.end,
-                        )),
-                      ),
-                      Expanded(
-                          flex: 25,
-                          child: Text(
-                            'Available Now',
-                            style: TextStyle(color: Colors.green),
-                          )),
-                      Expanded(flex: 25, child: Text(doc['price'].toString())),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 66,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 50,
-                        child: Center(
-                          child: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                          flex: 25,
-                          child: Icon(
-                            Icons.favorite_outline_sharp,
-                            color: Colors.blue,
-                          )),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
-      else
-        return Container(
-          height: 1,
-        );
-    }).toList();
   }
 
   @override
@@ -214,8 +153,7 @@ class _MyBagState extends State<MyBag> {
                                   // setState(() {
                                   Total += doc['price'];
                                   // });
-                                  if (widget.bags
-                                          .contains(doc.documentID)
+                                  if (BAG.contains(doc.documentID)
                                           .toString() ==
                                       "true") {
                                     return Builder(

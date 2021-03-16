@@ -96,14 +96,15 @@ class _RegisterState extends State<Register> {
       backgroundColor: Color.fromRGBO(248, 249, 250, 0.4),
       ///////app bar///////
       appBar: AppBar(
-        leading: new IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: Colors.black,
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Home()));
-          },
-        ),
+        // leading: new IconButton(
+        //   icon: Icon(Icons.arrow_back),
+        //   color: Colors.black,
+        //   onPressed: () {
+        //     Navigator.push(
+        //         context, MaterialPageRoute(builder: (context) => Home()));
+        //   },
+        // ),
+        automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -114,10 +115,10 @@ class _RegisterState extends State<Register> {
             Padding(
               padding: EdgeInsets.only(right: 80),
               child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Home()));
-                },
+                // onTap: () {
+                //   Navigator.push(
+                //       context, MaterialPageRoute(builder: (context) => Home()));
+                // },
                 child: Text(
                   translator.translate('Account'),
                   style: TextStyle(color: Colors.black),

@@ -1,4 +1,5 @@
 import 'package:LegoApp/components/drawerList.dart';
+import 'package:LegoApp/components/login.dart';
 import 'package:LegoApp/features/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -472,7 +473,7 @@ class _ProfileState extends State<Profile> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Home()));
+                                        builder: (context) => Login()));
                               },
                               child: Text(translator.translate("Logout"),
                                   style: TextStyle(

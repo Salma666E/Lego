@@ -21,7 +21,7 @@ main() async {
   runApp(
     DevicePreview(
       builder: (context) => LocalizedApp(
-        child: StartingPoint()/*Splash()*/,
+        child: Splash(),
       ),
       enabled: !kReleaseMode,
     ),

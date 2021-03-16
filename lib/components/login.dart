@@ -39,14 +39,15 @@ class _LoginState extends State<Login> {
       backgroundColor: Color.fromRGBO(248, 249, 250, 0.4),
       ///////appbar///////
       appBar: AppBar(
-        leading: new IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: Colors.black,
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Home()));
-          },
-        ),
+        automaticallyImplyLeading: false,
+        // leading: new IconButton(
+        //   icon: Icon(Icons.arrow_back),
+        //   color: Colors.black,
+        //   onPressed: () {
+        //     Navigator.push(
+        //         context, MaterialPageRoute(builder: (context) => Home()));
+        //   },
+        // ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -57,10 +58,10 @@ class _LoginState extends State<Login> {
             Padding(
               padding: EdgeInsets.only(right: 80),
               child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Home()));
-                },
+                // onTap: () {
+                //   Navigator.push(
+                //       context, MaterialPageRoute(builder: (context) => Home()));
+                // },
                 child: Text(
                   translator.translate("Account"),
                   style: TextStyle(color: Colors.black),

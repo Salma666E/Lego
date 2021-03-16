@@ -12,7 +12,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'cardCustom.dart';
 
 var id = '';
-List bags = [{'id':'1','qty':1}];
+List bags = [];
 // List<String> bags = ['1', '2'];
 Future<List> getBagsArray(String documentId) async {
   DocumentSnapshot snapshot =
