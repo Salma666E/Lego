@@ -1,9 +1,10 @@
+import 'package:LegoApp/features/home/home.dart';
+import 'package:LegoApp/features/themes/themes.dart';
 import 'package:LegoApp/components/CheckOut.dart';
 import 'package:LegoApp/components/MyBag.dart';
 import 'package:LegoApp/components/WishList.dart';
-import 'package:LegoApp/components/edit_account.dart';
-import 'package:LegoApp/features/home/home.dart';
-import 'package:LegoApp/features/themes/themes.dart';
+import 'package:LegoApp/components/login.dart';
+import 'package:LegoApp/components/profile.dart';
 import 'package:LegoApp/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +42,12 @@ class DrawerList extends StatefulWidget {
 
 class _DrawerListState extends State<DrawerList> {
   final AuthService auth = AuthService();
+
   String name;
   String email;
+  var id = '';
+  String account = translator.translate("Sign In");
+  var userGet;
   @override
   void initState() {
     super.initState();
@@ -52,6 +57,7 @@ class _DrawerListState extends State<DrawerList> {
 
     auth.getPrefs('UserID').then((value) {
       id = value;
+      account =translator.translate("Account");
       firestoreInstance
           .collection('users')
           .document(id)
@@ -211,17 +217,28 @@ class _DrawerListState extends State<DrawerList> {
                 ),
                 ListTile(
                   leading: Icon(
-                    Icons.person,
+                    Icons.account_circle_outlined,
                     color: Colors.blue,
                   ),
-                  title: Text(translator.translate('EditProfile')),
+                  title: Text(account),
+                      
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EditAccount()),
-                    );
+                    print("iddddddddddddddddddddddd" + id);
+                    if (id == '') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
+                      id='';
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Profile()),
+                      );
+                      id='';
+                    }
                   },
-                )
+                ),
               ],
             ),
           ),

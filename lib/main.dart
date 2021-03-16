@@ -1,5 +1,6 @@
 // import 'dart:js';
 
+import 'package:LegoApp/components/startingPoint.dart';
 import 'package:LegoApp/features/home/splash.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
@@ -20,7 +21,7 @@ main() async {
   runApp(
     DevicePreview(
       builder: (context) => LocalizedApp(
-        child: Splash(),
+        child: StartingPoint()/*Splash()*/,
       ),
       enabled: !kReleaseMode,
     ),

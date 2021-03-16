@@ -31,9 +31,6 @@ class AuthService {
   });*/
 
   //create user obj based on Firebase User
-  /*User userFromFirebaseUser (User user){
-    return user != null ? User(uid: user.uid, displayName: user.displayName, email: user.email, password: user.password, month: user.month, day: user.day, year: user.year, termsCheck: user.termsCheck) : null;
-  } */
   User userFromFirebaseUser(FirebaseUser user) {
     return user != null ? User(uid: user.uid) : null;
   }
@@ -41,6 +38,7 @@ class AuthService {
   Stream<User> get user {
     return auth.onAuthStateChanged.map(userFromFirebaseUser);
   }
+
 
   //save data to the firestore
   Future setData(String uid, String email, String password, String displayName,
@@ -76,17 +74,20 @@ class AuthService {
         }); 
   }
 
+  Future forgotPassword(String email) async{
+    try{
+      auth.sendPasswordResetEmail(email: email);
+    }catch (e) {
+      return null;
+    }
+  }
+
   //sign in
   Future signIn(String email, String password) async {
     try {
       AuthResult result = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-      
-      /*getUser().then((String value) =>  currentUserSetter(value));
-      print("USERRRRRRRRRRRRRRRRRRRRRRRRR " + currentUserGetter().toString());
-
-      setPref(currentUserGetter().toString());*/
       
       setPref(result.user.uid);
       return userFromFirebaseUser(user);
