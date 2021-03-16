@@ -31,7 +31,7 @@ class _CheckOutState extends State<CheckOut> {
   final myconrollar4 = TextEditingController();
   final myconrollar5 = TextEditingController();
   final myconrollar6 = TextEditingController();
-  num  subtotal = 0;
+  num subtotal = 0;
   num ordertotal = 0;
   var listofproducts;
   String bagId = '';
@@ -65,14 +65,10 @@ class _CheckOutState extends State<CheckOut> {
                 .document(v['id'])
                 .get()
                 .then((val) {
-              print("2---");
-              
-
               var prd = val.data;
               num p = prd['price'];
-              num price =p.toDouble();
+              num price = p.toDouble();
               int qty = v['qty'];
-              print('priceeeeeeeeeeeeeeeeeeeeeeeeee');
               print(price);
               print(qty);
               setState(() {
@@ -80,11 +76,16 @@ class _CheckOutState extends State<CheckOut> {
                 ordertotal += subtotal + (subtotal * 14 / 100);
                 print(subtotal);
                 print(ordertotal);
+                subtotal = num.parse(subtotal.toStringAsFixed(2));
+                ordertotal = num.parse(ordertotal.toStringAsFixed(2));
               });
             });
           }
-          subtotal = num.parse(subtotal.toStringAsFixed(2));
-          ordertotal = num.parse(ordertotal.toStringAsFixed(2));
+
+          Firestore.instance
+              .collection('bags')
+              .document(_userID)
+              .updateData({'productsIDs': []});
         });
       });
     });
@@ -261,7 +262,7 @@ class _CheckOutState extends State<CheckOut> {
                           if (cardnum.isEmpty) {
                             return 'credit card should not be empty!';
                           } else if (cardnum.length != 16) {
-                            return 'Phone Number must consist of 16 digit !';
+                            return 'credit card must consist of 16 digit !';
                           } else {
                             return null;
                           }
@@ -395,8 +396,6 @@ class _CheckOutState extends State<CheckOut> {
                                   ],
                                 ),
                               ),
-                              // Image.network(
-                              //     'https://picsum.photos/seed/picsum/200/300'),
                             ],
                           ),
                         ),
