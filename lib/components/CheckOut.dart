@@ -81,11 +81,6 @@ class _CheckOutState extends State<CheckOut> {
               });
             });
           }
-
-          Firestore.instance
-              .collection('bags')
-              .document(_userID)
-              .updateData({'productsIDs': []});
         });
       });
     });
@@ -291,7 +286,12 @@ class _CheckOutState extends State<CheckOut> {
                                   "productsIDs": listofproducts,
                                   "totalPrice": ordertotal,
                                   "userID": _userID
-                                }).then((value) => print("SUCCSE")),
+                                }).then((value) {
+                                  Firestore.instance
+                                      .collection('bags')
+                                      .document(_userID)
+                                      .updateData({'productsIDs': []});
+                                }),
                                 Toast.show(
                                     ('Thank you for shopping from lego your order be ready in few days'),
                                     context,
