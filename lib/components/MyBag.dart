@@ -25,8 +25,7 @@ double Tax = .14;
 class _MyBagState extends State<MyBag> {
   List<String> wishlist;
 
-List<String>
-        BAG=[];
+  List<String> BAG = [];
   Future<List<String>> getwishlistArray(String documentId) async {
     DocumentSnapshot snapshot =
         await firestore.collection('wishlist').document(documentId).get();
@@ -49,7 +48,7 @@ List<String>
   void initState() {
     super.initState();
     print("bags:+++" + bags.toString());
-     //= List.from(bags.where((x) => x[1] is String ));//&& map["kind"] == "foo"//bags.forEach(element => print(element));List.from();
+    //= List.from(bags.where((x) => x[1] is String ));//&& map["kind"] == "foo"//bags.forEach(element => print(element));List.from();
     for (var element in bags) {
       print('element: ' + element['id'].toString());
       BAG.add(element['id'].toString());
@@ -153,8 +152,7 @@ List<String>
                                   // setState(() {
                                   Total += doc['price'];
                                   // });
-                                  if (BAG.contains(doc.documentID)
-                                          .toString() ==
+                                  if (BAG.contains(doc.documentID).toString() ==
                                       "true") {
                                     return Builder(
                                       builder: (BuildContext context) {
